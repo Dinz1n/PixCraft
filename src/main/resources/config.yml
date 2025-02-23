@@ -1,0 +1,29 @@
+mercadopago:
+  access-token: "TOKEN"
+
+  # Configuração do endpoint para notificações de pagamento.
+  endpoint:
+    enable: false  # Se "false", o plugin usará a verificação periódica por padrão.
+    port: 8080
+
+storage:
+  type: "h2" # Pode ser "mysql" ou "h2"
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "pixcraft"
+    username: "root"
+    password: "senha"
+
+discord-notification:
+  enable: false
+  webhook-url: "webhook_url"
+  embed:
+    player-head-icon: true
+    color: "#1aff00"
+    title: "Nova venda efetuada!"
+    description: "Comprador: {player}"
+    field:
+      enable: true
+      title: "Produto: {product} Valor pago: R${price}"
+      description: "Data da compra: {date}"
