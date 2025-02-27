@@ -11,6 +11,8 @@ import com.mercadopago.resources.payment.Payment;
 import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class MercadoPagoAPI {
     private static PaymentClient client;
@@ -23,35 +25,37 @@ public class MercadoPagoAPI {
         Bukkit.getLogger().info("[PixCraft] Access Token atualizado.");
     }
 
-    public static Long createPayment(String productName, double price, String playerName) {
+    public static CompletableFuture<Long> createPayment(String productName, double price, String playerName) {
         PaymentCreateRequest paymentCreateRequest = PaymentCreateRequest.builder()
                 .transactionAmount(new BigDecimal(price))
                 .description(productName)
                 .paymentMethodId("pix")
                 .payer(
                         PaymentPayerRequest.builder()
-                                .email("payment@din.com")
+                                .email(playerName + "@din.me")
                                 .firstName(playerName)
                                 .lastName("")
                                 .build())
                 .build();
 
-        try {
-            Payment payment = client.create(paymentCreateRequest);
-            if (payment == null || payment.getId() == null) {
-                Bukkit.getLogger().severe("[PixCraft] Erro: criação do pagamento falhou e retornou null.");
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Payment payment = client.create(paymentCreateRequest);
+                if (payment == null || payment.getId() == null) {
+                    Bukkit.getLogger().severe("[PixCraft] Erro: criação do pagamento falhou e retornou null.");
+                    return null;
+                }
+                return payment.getId();
+            } catch (MPApiException e) {
+                Bukkit.getLogger().severe("[PixCraft] Erro ao criar pagamento: " + e.getMessage());
+                Bukkit.getLogger().severe("[PixCraft] Código do erro: " + e.getApiResponse().getStatusCode());
+                Bukkit.getLogger().severe("[PixCraft] Resposta da API: " + e.getApiResponse().getContent());
+                return null;
+            } catch (MPException e) {
+                Bukkit.getLogger().severe("[PixCraft] Erro inesperado no Mercado Pago: " + e.getMessage());
                 return null;
             }
-            return payment.getId();
-        } catch (MPApiException e) {
-            Bukkit.getLogger().severe("[PixCraft] Erro ao criar pagamento: " + e.getMessage());
-            Bukkit.getLogger().severe("[PixCraft] Código do erro: " + e.getApiResponse().getStatusCode());
-            Bukkit.getLogger().severe("[PixCraft] Resposta da API: " + e.getApiResponse().getContent());
-            return null;
-        } catch (MPException e) {
-            Bukkit.getLogger().severe("[PixCraft] Erro inesperado no Mercado Pago: " + e.getMessage());
-            return null;
-        }
+        });
     }
 
     public static PaymentStatus getPaymentStatus(Long paymentId) {
