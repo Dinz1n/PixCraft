@@ -70,7 +70,12 @@ public class WebhookServer {
 
                     Bukkit.getScheduler().runTask(PixCraft.getInstance(), () -> {
                         PaymentStatus status = MercadoPagoAPI.getPaymentStatus(paymentId);
-                        Order order = OrderManager.getOrderById(paymentId);
+                        Order order = null;
+                        for (Order orderV : OrderManager.getOrders().values()) {
+                            if (orderV.getStatus().equals(paymentId)) {
+                                order = orderV;
+                            }
+                        }
                         if (order != null && order.getStatus() != status) {
                             order.setStatus(status);
                             Bukkit.getPluginManager().callEvent(new PaymentStatusUpdateEvent(order));
