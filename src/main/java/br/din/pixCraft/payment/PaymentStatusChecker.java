@@ -19,17 +19,16 @@ public class PaymentStatusChecker extends BukkitRunnable {
 
     @Override
     public void run() {
-        List<Long> pendingPayments = OrderManager.getPendingPaymentIds();
+        List<Order> pendingPayments = OrderManager.getPendingPaymentIds();
         if (pendingPayments.isEmpty()) return;
 
-        for (Long paymentId : pendingPayments) {
-            PaymentStatus status = MercadoPagoAPI.getPaymentStatus(paymentId);
+        for (Order order : pendingPayments) {
+            PaymentStatus status = MercadoPagoAPI.getPaymentStatus(order.getPaymentID());
             if (status == null) continue;
 
-            Order order = OrderManager.getOrderById(paymentId);
             if (order == null || order.getStatus() == status) continue;
 
-            OrderManager.updateOrderStatus(paymentId, status);
+            OrderManager.updateOrderStatus(order.getPlayerUUID(), status);
 
             if (status != PaymentStatus.PENDING) {
                 Bukkit.getScheduler().runTask(plugin, () ->

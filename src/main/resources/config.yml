@@ -1,29 +1,21 @@
 mercadopago:
   access-token: "TOKEN"
 
-  # Configuração do endpoint para notificações de pagamento.
-  endpoint:
-    enable: false  # Se "false", o plugin usará a verificação periódica por padrão.
-    port: 8080
+  # Configuração do webhook para notificações de pagamento.
+  webhook:
+    enabled: false  # Se "false", o plugin usará a verificação periódica.
+    port: 8080      # Porta onde o servidor HTTP interno será iniciado.
 
-storage:
-  type: "h2" # Pode ser "mysql" ou "h2"
-  mysql:
-    host: "localhost"
-    port: 3306
-    database: "pixcraft"
-    username: "root"
-    password: "senha"
-
-discord-notification:
-  enable: false
-  webhook-url: "webhook_url"
-  embed:
-    player-head-icon: true
-    color: "#1aff00"
-    title: "Nova venda efetuada!"
-    description: "Comprador: {player}"
-    field:
-      enable: true
-      title: "Produto: {product} Valor pago: R${price}"
-      description: "Data da compra: {date}"
+discord:
+  notifications:
+    enabled: false
+    webhook-url: "webhook_url"
+    embed:
+      player-head-icon: true  # Exibir o avatar do jogador no embed.
+      color: "#1aff00"        # Cor da borda do embed no Discord.
+      title: "Nova venda efetuada!"
+      description: "Comprador: {player}"
+      field:
+        enabled: true
+        title: "Produto: {product} | Valor pago: R${price}"
+        description: "Data da compra: {date}"

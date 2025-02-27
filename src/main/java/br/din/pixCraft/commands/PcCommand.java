@@ -10,17 +10,15 @@ import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PcCommand implements CommandExecutor, TabCompleter {
-    private static final PixCraft plugin = PixCraft.getInstance();
-    private static final Logger log = LoggerFactory.getLogger(PcCommand.class);
+    private final PixCraft plugin;
 
-    public PcCommand() {
+    public PcCommand(PixCraft plugin) {
+        this.plugin = plugin;
         plugin.getCommand("pixcraft").setExecutor(this);
         plugin.getCommand("pixcraft").setTabCompleter(this);
     }
@@ -34,17 +32,12 @@ public class PcCommand implements CommandExecutor, TabCompleter {
 
         switch (args[0].toLowerCase()) {
             case "buy":
-                return handleBuyCommand(sender, args);
-
-            case "pay":
-                subCommandPay();
-                return true;
-
+                return subCommandBuy(sender, args);
             case "reload":
                 subCommandReload(sender);
                 return true;
             default:
-                sender.sendMessage("§cComando inválido! Use: /pc <buy|pay|reload>");
+                sender.sendMessage("§cComando inválido! Use: /pc <buy|reload>");
                 return true;
         }
     }
@@ -63,44 +56,16 @@ public class PcCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
-            return List.of("buy", "pay", "reload");
+            return List.of("buy", "reload");
         }
 
         if (args.length == 2 && args[0].equals("buy")) {
             return ProductManager.getProducts().keySet().stream().toList();
         }
-
-//        if (args.length == 2 && args[0].equals("orders")) {
-//           List<String> players = new ArrayList<>();
-//           for (UUID playerUUID : OrderManager.getOrders().keySet()) {
-//               String playerName = Bukkit.getPlayer(playerUUID).getName();
-//               if (!players.contains(playerName)) {
-//                   players.add(playerName);
-//               }
-//           }
-//           return players;
-//        }
-//
-//        if (args.length == 3 && args[0].equals("orders") && OrderManager.getOrders().containsKey(Bukkit.getPlayerUniqueId(args[1]))) {
-//            List<String> paymentIdString = new ArrayList<>();
-//            for (Order order : OrderManager.getPlayerOrders(Bukkit.getPlayerUniqueId(args[1]))) {
-//                paymentIdString.add(order.getPaymentID().toString());
-//            }
-//            return paymentIdString;
-//        }
-//
-//        if (args.length == 4 &&
-//                args[0].equals("orders") &&
-//                OrderManager.getOrders().containsKey(Bukkit.getPlayerUniqueId(args[1])) &&
-//                OrderManager.getOrderById(Long.valueOf(args[2])) != null
-//        ) {
-//            return List.of("cancel");
-//        }
-
         return List.of();
     }
 
-    private boolean handleBuyCommand(@NotNull CommandSender sender, @NotNull String[] args) {
+    private boolean subCommandBuy(CommandSender sender, String args[]) {
         if (args.length < 2) {
             sender.sendMessage("§cUso: /pc buy {produto} [jogador]");
             return true;
@@ -112,40 +77,35 @@ public class PcCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage("§cEsse produto não existe.");
             return true;
         }
-
-        if (sender instanceof Player) {
-            // Comando digitado por um jogador
-            if (args.length == 2) {
-                subCommandBuy((Player) sender, produto);
-            } else {
-                sender.sendMessage("§cUso: /pc buy {produto}");
-            }
-        } else {
-            // Comando digitado pelo console
-            if (args.length == 3) {
-                Player target = Bukkit.getPlayerExact(args[2]);
-                if (target != null) {
-                    subCommandBuy(target, produto);
+        Player player = (Player) sender;
+        if (!OrderManager.getOrders().containsKey(player.getUniqueId())) {
+            if (sender instanceof Player) {
+                // Comando digitado por um jogador
+                if (args.length == 2) {
+                    OrderManager.processOrder((Player) sender, produto);
                 } else {
-                    sender.sendMessage("§cJogador não encontrado.");
+                    sender.sendMessage("§cUso: /pc buy {produto}");
                 }
             } else {
-                sender.sendMessage("§cUso: /pc buy {produto} {jogador}");
+                // Comando digitado pelo console
+                if (args.length == 3) {
+                    Player target = Bukkit.getPlayer(args[2]);
+                    if (target != null) {
+                        OrderManager.processOrder(target, produto);
+                    } else {
+                        sender.sendMessage("§cJogador não encontrado.");
+                    }
+                } else {
+                    sender.sendMessage("§cUso: /pc buy {produto} {jogador}");
+                }
             }
+        } else {
+            sender.sendMessage("§cVocê só pode fazer um pedido por vez.");
         }
-
         return true;
     }
 
-    private static void subCommandBuy(Player player, String productId) {
-        OrderManager.processOrder(player, productId);
-    }
-
-    private static void subCommandPay() {
-
-    }
-
-    private static void subCommandReload(CommandSender sender) {
+    private void subCommandReload(CommandSender sender) {
         plugin.reloadConfig();
         ProductManager.save();
         MercadoPagoAPI.setAccessToken(plugin.getConfig().getString("mercadopago.access-token"));

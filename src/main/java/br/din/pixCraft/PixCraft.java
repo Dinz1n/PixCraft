@@ -2,12 +2,21 @@ package br.din.pixCraft;
 
 import br.din.pixCraft.commands.PcCommand;
 import br.din.pixCraft.listeners.PaymentListener;
+import br.din.pixCraft.listeners.PlayerQuitListener;
 import br.din.pixCraft.listeners.QrCodeProtect;
+import br.din.pixCraft.order.Order;
+import br.din.pixCraft.order.OrderManager;
 import br.din.pixCraft.payment.PaymentStatusChecker;
 import br.din.pixCraft.payment.gateway.MercadoPagoAPI;
 import br.din.pixCraft.payment.webhook.WebhookServer;
 import br.din.pixCraft.product.ProductManager;
-import br.din.pixCraft.util.AsciiArt;
+import br.din.pixCraft.utils.AsciiArt;
+
+import br.din.pixCraft.utils.ItemStackUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PixCraft extends JavaPlugin {
@@ -17,7 +26,6 @@ public final class PixCraft extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         AsciiArt.printAsciiArt(getLogger());
         instance = this;
 
@@ -31,21 +39,30 @@ public final class PixCraft extends JavaPlugin {
         getLogger().info("Registrando ouvintes...");
         QrCodeProtect qrCodeProtect = new QrCodeProtect(this);
         PaymentListener paymentListener = new PaymentListener(this);
-        if (getConfig().getBoolean("mercadopago.endpoint.enable")) {
-            webhookServer = new WebhookServer(getConfig().getInt("mercadopago.endpoint.port"));
+        PlayerQuitListener playerQuitListener = new PlayerQuitListener(this);
+
+        if (getConfig().getBoolean("mercadopago.webhook.enabled")) {
+            webhookServer = new WebhookServer(getConfig().getInt("mercadopago.webhook.port"));
             webhookServer.start();
         } else {
             statusChecker.start(100L);
         }
         getLogger().info("Registrando comandos...");
-        PcCommand pcCommand = new PcCommand();
+        PcCommand pcCommand = new PcCommand(this);
 
         getLogger().info("Plugin habilitado com sucesso!");
     }
 
     @Override
     public void onDisable() {
-        if (getConfig().getBoolean("mercadopago.endpoint.enable")) {
+        getLogger().info("Cancelando pagamentos pendentes...");
+        for (Order order : OrderManager.getPendingPaymentIds()) {
+            Player player = Bukkit.getPlayer(order.getPlayerUUID());
+            ItemStackUtil.removeItemByData(player, new NamespacedKey(this, "paymentId"), PersistentDataType.LONG, order.getPaymentID());
+            MercadoPagoAPI.cancelPayment(order.getPaymentID());
+        }
+
+        if (getConfig().getBoolean("mercadopago.webhook.enabled")) {
             webhookServer.stop();
         }
     }

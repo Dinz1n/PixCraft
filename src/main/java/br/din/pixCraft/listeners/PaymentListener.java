@@ -4,19 +4,19 @@ import br.din.pixCraft.listeners.custom.PaymentStatusUpdateEvent;
 import br.din.pixCraft.order.Order;
 
 import br.din.pixCraft.order.OrderManager;
+import br.din.pixCraft.utils.DiscordWebhook;
+import br.din.pixCraft.utils.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Objects;
+import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class PaymentListener implements Listener {
     private final JavaPlugin plugin;
@@ -32,8 +32,8 @@ public class PaymentListener implements Listener {
     public void onPaymentUpdate(PaymentStatusUpdateEvent event) {
         Order order = event.getOrder();
         Player player = Bukkit.getPlayer(order.getPlayerUUID());
-        removeItemByData(player, key, order.getPaymentID());
-        OrderManager.removeOrder(order.getPaymentID());
+        ItemStackUtil.removeItemByData(player, key, PersistentDataType.LONG, order.getPaymentID());
+        OrderManager.removeOrder(order.getPlayerUUID());
         switch (order.getStatus()) {
             case APPROVED:
                 player.sendMessage("§aPagamento aprovado! Obrigado pela compra!");
@@ -42,30 +42,21 @@ public class PaymentListener implements Listener {
                         command = command.replace("{player}", player.getName());
                     }
                     Bukkit.getServer().dispatchCommand(player, command);
+
+                    String productName = order.getProduct().getDisplayName();
+                    double productPrice = order.getProduct().getPrice();
+                    String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                    DiscordWebhook.sendEmbed(plugin.getConfig().getConfigurationSection("discord"), player, productName, productPrice, date);
                 }
                 break;
             case CANCELLED:
+                if (plugin.getConfig().getString("mercadopago.access-token").startsWith("TEST")) {
+                    double productPrice = order.getProduct().getPrice();
+                    String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                    DiscordWebhook.sendEmbed(plugin.getConfig().getConfigurationSection("discord"), player, "Pedido Teste cancelado.", productPrice, date);
+                }
                 player.sendMessage("§cPagamento cancelado.");
                 break;
-        }
-    }
-
-    public static void removeItemByData(Player player, NamespacedKey key, long paymentId) {
-        Inventory inventory = player.getInventory();
-
-        for (ItemStack item : inventory.getContents()) {
-            if (item != null && item.hasItemMeta()) {
-                ItemMeta meta = item.getItemMeta();
-                PersistentDataContainer container = meta.getPersistentDataContainer();
-
-                // Verifica se o item tem a chave e se o valor corresponde ao paymentId
-                if (container.has(key, PersistentDataType.LONG) &&
-                        Objects.equals(container.get(key, PersistentDataType.LONG), paymentId)) {
-
-                    inventory.remove(item);
-                    return;
-                }
-            }
         }
     }
 }
