@@ -1,4 +1,4 @@
-package br.din.pixCraft.util;
+package br.din.pixCraft.utils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
