@@ -6,12 +6,13 @@ import br.din.pixCraft.order.OrderManager;
 import br.din.pixCraft.payment.PaymentStatus;
 import br.din.pixCraft.payment.gateway.MercadoPagoAPI;
 
+import br.din.pixCraft.utils.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -35,11 +36,11 @@ public class QrCodeProtect implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         ItemStack item = event.getItem();
-        if (isQrMap(item)) {
+        if (isQrMap(item, event.getPlayer())) {
             if (event.getAction().isRightClick()) {
-                Order order = OrderManager.getOrderById(item.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.LONG));
-
+                Order order = OrderManager.getOrders().get(event.getPlayer().getUniqueId());
                 event.getPlayer().sendMessage("§cCancelando pagamento...");
+                ItemStackUtil.removeItemByData(event.getPlayer(), key, PersistentDataType.LONG, order.getPaymentID());
                 MercadoPagoAPI.cancelPayment(item.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.LONG));
             }
             event.setCancelled(true);
@@ -48,13 +49,15 @@ public class QrCodeProtect implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (isQrMap(event.getCurrentItem())) {
+        Player player = (Player) event.getWhoClicked();
+
+        if (isQrMap(event.getCurrentItem(), player)) {
             event.setCancelled(true);
         }
 
         if (event.getClick() == ClickType.NUMBER_KEY) {
             ItemStack hotbarItem = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
-            if (isQrMap(hotbarItem)) {
+            if (isQrMap(hotbarItem, player)) {
                 event.setCancelled(true);
             }
         }
@@ -62,51 +65,47 @@ public class QrCodeProtect implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        if (isQrMap(event.getOldCursor())) {
+        if (isQrMap(event.getOldCursor(), (Player) event.getWhoClicked())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onInventoryMoveItem(InventoryMoveItemEvent event) {
-        if (isQrMap(event.getItem())) {
-            event.setCancelled(true);
+        if (event.getSource().getHolder() instanceof Player) {
+            Player player = (Player) event.getSource().getHolder();
+            if (isQrMap(event.getItem(), player)) {
+                event.setCancelled(true);
+            }
         }
     }
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (isQrMap(event.getItemDrop().getItemStack())) {
+        if (isQrMap(event.getItemDrop().getItemStack(), event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
-        if (isQrMap(event.getMainHandItem()) || isQrMap(event.getOffHandItem())) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onItemSpawn(ItemSpawnEvent event) {
-        if (isQrMap(event.getEntity().getItemStack())) {
+        if (isQrMap(event.getMainHandItem(), event.getPlayer()) || isQrMap(event.getOffHandItem(), event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onInventoryCreative(InventoryCreativeEvent event) {
-        if (isQrMap(event.getCursor())) {
+        if (isQrMap(event.getCursor(), (Player) event.getWhoClicked())) {
             event.setCancelled(true);
         }
     }
 
-    private boolean isQrMap(ItemStack item) {
+    private boolean isQrMap(ItemStack item, Player player) {
         if (item == null || item.getType() != Material.FILLED_MAP) return false;
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
-        Order order = OrderManager.getOrderById(meta.getPersistentDataContainer().get(key, PersistentDataType.LONG));
+        Order order = OrderManager.getOrders().get(player.getUniqueId());
         if (order != null) {
             if (order.getStatus().equals(PaymentStatus.PENDING)) return true;
         }
