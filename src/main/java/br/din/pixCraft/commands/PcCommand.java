@@ -77,29 +77,33 @@ public class PcCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage("§cEsse produto não existe.");
             return true;
         }
-        Player player = (Player) sender;
-        if (!OrderManager.getOrders().containsKey(player.getUniqueId())) {
-            if (sender instanceof Player) {
-                if (args.length == 2) {
-                    OrderManager.processOrder((Player) sender, produto);
-                } else {
-                    sender.sendMessage("§cUso: /pc buy {produto}");
-                }
+
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+
+            if (OrderManager.getOrders().containsKey(player.getUniqueId())) {
+                sender.sendMessage("§cVocê só pode fazer um pedido por vez.");
+                return true;
+            }
+
+            if (args.length == 2) {
+                OrderManager.processOrder(player, produto);
             } else {
-                if (args.length == 3) {
-                    Player target = Bukkit.getPlayer(args[2]);
-                    if (target != null) {
-                        OrderManager.processOrder(target, produto);
-                    } else {
-                        sender.sendMessage("§cJogador não encontrado.");
-                    }
-                } else {
-                    sender.sendMessage("§cUso: /pc buy {produto} {jogador}");
-                }
+                sender.sendMessage("§cUso: /pc buy {produto}");
             }
         } else {
-            sender.sendMessage("§cVocê só pode fazer um pedido por vez.");
+            if (args.length == 3) {
+                Player target = Bukkit.getPlayer(args[2]);
+                if (target != null) {
+                    OrderManager.processOrder(target, produto);
+                } else {
+                    sender.sendMessage("§cJogador não encontrado.");
+                }
+            } else {
+                sender.sendMessage("§cUso: /pc buy {produto} {jogador}");
+            }
         }
+
         return true;
     }
 
