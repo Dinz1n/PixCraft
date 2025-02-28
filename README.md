@@ -1,4 +1,4 @@
-# PixCraft 🏧💰
+# PixCraft 💰
 🚀 **Automatize pagamentos via Pix no Minecraft usando o Mercado Pago!**
 
 ## 📌 Descrição
