@@ -50,7 +50,6 @@ public class WebhookServer {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-                // Lendo o corpo da requisição
                 InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
                 BufferedReader br = new BufferedReader(isr);
                 StringBuilder requestBody = new StringBuilder();
@@ -61,12 +60,11 @@ public class WebhookServer {
                 br.close();
                 isr.close();
 
-                // Log do JSON recebido
                 Bukkit.getLogger().info("[PixCraft] Webhook recebido: " + requestBody);
 
                 try {
                     JSONObject json = new JSONObject(requestBody.toString());
-                    long paymentId = json.getJSONObject("data").getLong("id"); // Pegando corretamente o ID
+                    long paymentId = json.getJSONObject("data").getLong("id");
 
                     Bukkit.getScheduler().runTask(PixCraft.getInstance(), () -> {
                         PaymentStatus status = MercadoPagoAPI.getPaymentStatus(paymentId);
@@ -82,7 +80,6 @@ public class WebhookServer {
                         }
                     });
 
-                    // Log de resposta bem-sucedida
                     Bukkit.getLogger().info("[PixCraft] Webhook processado com sucesso para Payment ID: " + paymentId);
                     exchange.sendResponseHeaders(200, 0);
                 } catch (Exception e) {

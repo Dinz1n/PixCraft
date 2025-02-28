@@ -20,23 +20,19 @@ public class MapHandler {
     public static ItemStack createQrMap(BufferedImage qrImage, World world, Long paymentID) {
         if (qrImage == null) return null;
 
-        // Criando um novo mapa no mundo especificado
         MapView mapView = Bukkit.createMap(world);
 
-        // Removendo renderizadores padrão
         for (MapRenderer renderer : mapView.getRenderers()) {
             mapView.removeRenderer(renderer);
         }
 
-        // Adicionando o renderizador de QR Code
         mapView.addRenderer(new Renderer(qrImage));
 
-        // Criando o ItemStack do mapa
         ItemStack mapItem = new ItemStack(Material.FILLED_MAP);
         MapMeta meta = (MapMeta) mapItem.getItemMeta();
         if (meta != null) {
             meta.setMapView(mapView);
-            meta.setDisplayName("§bCódigo QR §7§ox botão direito para cancelar");
+            meta.setDisplayName("§bCódigo QR");
 
             NamespacedKey key = new NamespacedKey(plugin, "paymentId");
             meta.getPersistentDataContainer().set(key, PersistentDataType.LONG, paymentID);

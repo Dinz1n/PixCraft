@@ -112,4 +112,3 @@ public class QrCodeProtect implements Listener {
         return false;
     }
 }
-

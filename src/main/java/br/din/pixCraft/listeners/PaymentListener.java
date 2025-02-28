@@ -14,7 +14,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -42,7 +41,6 @@ public class PaymentListener implements Listener {
                         command = command.replace("{player}", player.getName());
                     }
                     Bukkit.getServer().dispatchCommand(player, command);
-
                     String productName = order.getProduct().getDisplayName();
                     double productPrice = order.getProduct().getPrice();
                     String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
@@ -51,9 +49,10 @@ public class PaymentListener implements Listener {
                 break;
             case CANCELLED:
                 if (plugin.getConfig().getString("mercadopago.access-token").startsWith("TEST")) {
+                    String productName = "Isso é um pedido teste - " + order.getProduct().getDisplayName();
                     double productPrice = order.getProduct().getPrice();
                     String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-                    DiscordWebhook.sendEmbed(plugin.getConfig().getConfigurationSection("discord"), player, "Pedido Teste cancelado.", productPrice, date);
+                    DiscordWebhook.sendEmbed(plugin.getConfig().getConfigurationSection("discord"), player, productName, productPrice, date);
                 }
                 player.sendMessage("§cPagamento cancelado.");
                 break;

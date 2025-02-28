@@ -12,7 +12,7 @@ public class DiscordWebhook {
 
     public static void sendEmbed(ConfigurationSection discordConfig, Player player, String product, double price, String date) {
         if (!discordConfig.getBoolean("notifications.enabled")) {
-            return; // Notificações desativadas
+            return;
         }
 
         String url = discordConfig.getString("notifications.webhook-url");
@@ -21,23 +21,19 @@ public class DiscordWebhook {
             return;
         }
 
-        // Substituições dinâmicas no título e descrição
         String title = discordConfig.getString("notifications.embed.title", "Nova venda efetuada!")
                 .replace("{player}", player.getName());
         String description = discordConfig.getString("notifications.embed.description", "Comprador: {player}")
                 .replace("{player}", player.getName());
 
-        // Conversão de cor HEX para decimal
         String hexColor = discordConfig.getString("notifications.embed.color", "#1aff00");
-        int color = Color.decode(hexColor).getRGB() & 0xFFFFFF; // Remove transparência
+        int color = Color.decode(hexColor).getRGB() & 0xFFFFFF;
 
-        // Configuração do avatar do jogador como thumbnail
         boolean showPlayerHead = discordConfig.getBoolean("notifications.embed.player-head-icon", true);
         String playerHeadUrl = showPlayerHead
-                ? "https://mc-heads.net/avatar/" + player.getName() // Gera automaticamente um avatar do Minecraft
+                ? "https://mc-heads.net/avatar/" + player.getName()
                 : "";
 
-        // Configuração do campo opcional
         boolean fieldEnabled = discordConfig.getBoolean("notifications.embed.field.enabled", true);
         String fieldName = discordConfig.getString("notifications.embed.field.title", "Produto: {product} | Valor pago: R${price}")
                 .replace("{player}", player.getName())
@@ -47,7 +43,6 @@ public class DiscordWebhook {
                 .replace("{player}", player.getName())
                 .replace("{date}", date);
 
-        // Construção do JSON para o embed
         String jsonPayload = """
                 {
                     "embeds": [
@@ -74,7 +69,6 @@ public class DiscordWebhook {
                         """.formatted(fieldName, fieldValue) : ""
         );
 
-        // Envio da requisição para o Webhook do Discord
         RequestBody body = RequestBody.create(jsonPayload, MediaType.get("application/json"));
         Request request = new Request.Builder()
                 .url(url)

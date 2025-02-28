@@ -27,7 +27,7 @@ public class OrderManager {
         MercadoPagoAPI.createPayment(product.getDisplayName(), price, player.getName()).thenAccept(paymentId -> {
             if (paymentId == null) {
                 player.sendMessage("§cErro ao criar o pagamento.");
-                return; // Para a execução aqui
+                return;
             }
 
             Order order = new Order(player.getUniqueId(), paymentId, product);

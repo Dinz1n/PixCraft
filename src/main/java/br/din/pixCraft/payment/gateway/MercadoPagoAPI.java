@@ -12,7 +12,6 @@ import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class MercadoPagoAPI {
     private static PaymentClient client;

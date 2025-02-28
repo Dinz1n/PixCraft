@@ -80,14 +80,12 @@ public class PcCommand implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
         if (!OrderManager.getOrders().containsKey(player.getUniqueId())) {
             if (sender instanceof Player) {
-                // Comando digitado por um jogador
                 if (args.length == 2) {
                     OrderManager.processOrder((Player) sender, produto);
                 } else {
                     sender.sendMessage("§cUso: /pc buy {produto}");
                 }
             } else {
-                // Comando digitado pelo console
                 if (args.length == 3) {
                     Player target = Bukkit.getPlayer(args[2]);
                     if (target != null) {

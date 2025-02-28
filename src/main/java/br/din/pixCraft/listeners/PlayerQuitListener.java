@@ -26,17 +26,13 @@ public class PlayerQuitListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (OrderManager.getOrders().containsKey(player.getUniqueId())) {
-            if (!plugin.getConfig().getBoolean("mercadopago.cancel-order-on-quit")) {
-                // Salvar o pedido no banco de dados e pipipipopo
-            } else {
-                plugin.getLogger().info(player.getName() + " saiu. Cancelando seu pedido...");
-                Order order = OrderManager.getOrders().get(player.getUniqueId());
-                NamespacedKey key = new NamespacedKey(plugin, "paymentId");
+            plugin.getLogger().info(player.getName() + " saiu. Cancelando seu pedido...");
+            Order order = OrderManager.getOrders().get(player.getUniqueId());
+            NamespacedKey key = new NamespacedKey(plugin, "paymentId");
 
-                MercadoPagoAPI.cancelPayment(order.getPaymentID());
-                ItemStackUtil.removeItemByData(player, key, PersistentDataType.LONG, order.getPaymentID());
-                OrderManager.removeOrder(player.getUniqueId());
-            }
+            MercadoPagoAPI.cancelPayment(order.getPaymentID());
+            ItemStackUtil.removeItemByData(player, key, PersistentDataType.LONG, order.getPaymentID());
+            OrderManager.removeOrder(player.getUniqueId());
         }
     }
 }
