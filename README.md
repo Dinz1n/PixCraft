@@ -13,7 +13,7 @@ Ele permite que servidores automatizem transações, garantindo que os jogadores
 ✅ Configuração simples via `config.yml` e `products.yml`
 
 ## 📦 Instalação
-1. **Baixe o plugin** no [GitHub Releases](#).
+1. **Baixe o plugin** em [Releases](https://github.com/Dinz1n/PixCraft/releases).
 2. **Coloque o arquivo .jar na pasta `plugins/` do seu servidor**.
 3. **Reinicie o servidor** para gerar os arquivos de configuração.
 
