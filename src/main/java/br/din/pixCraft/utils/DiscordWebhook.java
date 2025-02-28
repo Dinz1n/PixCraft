@@ -23,9 +23,14 @@ public class DiscordWebhook {
 
         String title = discordConfig.getString("notifications.embed.title", "Nova venda efetuada!")
                 .replace("{player}", player.getName());
+                .replace("{product}", product)
+                .replace("{price}", String.format("%.2f", price));
+                .replace("{date}", date);
         String description = discordConfig.getString("notifications.embed.description", "Comprador: {player}")
                 .replace("{player}", player.getName());
-
+                .replace("{product}", product)
+                .replace("{price}", String.format("%.2f", price));
+                .replace("{date}", date);
         String hexColor = discordConfig.getString("notifications.embed.color", "#1aff00");
         int color = Color.decode(hexColor).getRGB() & 0xFFFFFF;
 
@@ -39,8 +44,11 @@ public class DiscordWebhook {
                 .replace("{player}", player.getName())
                 .replace("{product}", product)
                 .replace("{price}", String.format("%.2f", price));
+                .replace("{date}", date);
         String fieldValue = discordConfig.getString("notifications.embed.field.description", "Data da compra: {date}")
                 .replace("{player}", player.getName())
+                .replace("{product}", product)
+                .replace("{price}", String.format("%.2f", price));
                 .replace("{date}", date);
 
         String jsonPayload = "{\n" +
