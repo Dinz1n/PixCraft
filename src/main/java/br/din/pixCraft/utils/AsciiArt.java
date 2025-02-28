@@ -36,10 +36,10 @@ public class AsciiArt {
 
     private static String color(String mensagem) {
         return mensagem
-                .replace("§a", GREEN_BRIGHT)
-                .replace("§b", CYAN_BRIGHT)
-                .replace("§c", RED_BRIGHT)
-                .replace("§6", YELLOW)
-                .replace("§r", RESET);
+                .replace("&a", "\u001B[92m")  // Verde claro
+                .replace("&b", "\u001B[96m")  // Ciano claro
+                .replace("&c", "\u001B[91m")  // Vermelho claro
+                .replace("&6", "\u001B[33m")  // Amarelo
+                .replace("&r", "\u001B[0m");  // Reset (normal)
     }
 }

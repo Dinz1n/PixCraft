@@ -13,6 +13,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -37,7 +38,7 @@ public class QrCodeProtect implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         ItemStack item = event.getItem();
         if (isQrMap(item, event.getPlayer())) {
-            if (event.getAction().isRightClick()) {
+            if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                 Order order = OrderManager.getOrders().get(event.getPlayer().getUniqueId());
                 event.getPlayer().sendMessage("§cCancelando pagamento...");
                 ItemStackUtil.removeItemByData(event.getPlayer(), key, PersistentDataType.LONG, order.getPaymentID());

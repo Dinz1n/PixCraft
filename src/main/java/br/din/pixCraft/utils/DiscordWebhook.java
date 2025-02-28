@@ -43,31 +43,24 @@ public class DiscordWebhook {
                 .replace("{player}", player.getName())
                 .replace("{date}", date);
 
-        String jsonPayload = """
-                {
-                    "embeds": [
-                        {
-                            "title": "%s",
-                            "description": "%s",
-                            "color": %d,
-                            "thumbnail": { "url": "%s" }
-                            %s
-                        }
-                    ]
-                }
-                """.formatted(
-                title, description, color, playerHeadUrl,
-                fieldEnabled ? """
-                        ,
-                            "fields": [
-                                {
-                                    "name": "%s",
-                                    "value": "%s",
-                                    "inline": true
-                                }
-                            ]
-                        """.formatted(fieldName, fieldValue) : ""
-        );
+        String jsonPayload = "{\n" +
+                "    \"embeds\": [\n" +
+                "        {\n" +
+                "            \"title\": \"" + title + "\",\n" +
+                "            \"description\": \"" + description + "\",\n" +
+                "            \"color\": " + color + ",\n" +
+                "            \"thumbnail\": { \"url\": \"" + playerHeadUrl + "\" }\n" +
+                "            " + (fieldEnabled ? ",\n" +
+                "                \"fields\": [\n" +
+                "                    {\n" +
+                "                        \"name\": \"" + fieldName + "\",\n" +
+                "                        \"value\": \"" + fieldValue + "\",\n" +
+                "                        \"inline\": true\n" +
+                "                    }\n" +
+                "                ]\n" : "") +
+                "        }\n" +
+                "    ]\n" +
+                "}";
 
         RequestBody body = RequestBody.create(jsonPayload, MediaType.get("application/json"));
         Request request = new Request.Builder()
