@@ -8,4 +8,4 @@ commands:
     description: "Comando principal do plugin"
     usage: "/pixcraft"
     aliases: [pc]
-    permission: pixcraft.admin
+    permission: pixcraft.use
