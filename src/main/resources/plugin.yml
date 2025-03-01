@@ -1,5 +1,5 @@
 name: PixCraft
-version: '1.0-BETA'
+version: '0.1.0-BETA'
 main: br.din.pixCraft.PixCraft
 api-version: '1.16'
 authors: [ Din ]
