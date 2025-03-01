@@ -72,7 +72,7 @@ vip_01:
 | `/pc buy {produto}` | `pixcraft.use` | Gera um QR Code de pagamento para o produto |  
 
 ## 📝 To-Do (Futuras Atualizações)
-- [ ] Melhorias na cobertura de erros
+- [ ] Loja em interface baú
 - [ ] Logs detalhados de transações
 - [ ] Suporte a outras formas de pagamento
 
