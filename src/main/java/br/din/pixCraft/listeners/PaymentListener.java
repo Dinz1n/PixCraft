@@ -1,9 +1,9 @@
 package br.din.pixCraft.listeners;
 
 import br.din.pixCraft.listeners.custom.PaymentStatusUpdateEvent;
-import br.din.pixCraft.order.Order;
+import br.din.pixCraft.payment.order.Order;
 
-import br.din.pixCraft.order.OrderManager;
+import br.din.pixCraft.payment.order.OrderManager;
 import br.din.pixCraft.utils.DiscordWebhook;
 import br.din.pixCraft.utils.ItemStackUtil;
 import org.bukkit.Bukkit;

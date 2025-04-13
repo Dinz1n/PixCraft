@@ -2,8 +2,8 @@ package br.din.pixCraft.payment.webhook;
 
 import br.din.pixCraft.PixCraft;
 import br.din.pixCraft.listeners.custom.PaymentStatusUpdateEvent;
-import br.din.pixCraft.order.Order;
-import br.din.pixCraft.order.OrderManager;
+import br.din.pixCraft.payment.order.Order;
+import br.din.pixCraft.payment.order.OrderManager;
 import br.din.pixCraft.payment.PaymentStatus;
 
 import br.din.pixCraft.payment.gateway.MercadoPagoAPI;
@@ -60,8 +60,6 @@ public class WebhookServer {
                 br.close();
                 isr.close();
 
-                Bukkit.getLogger().info("[PixCraft] Webhook recebido: " + requestBody);
-
                 try {
                     JSONObject json = new JSONObject(requestBody.toString());
                     long paymentId = json.getJSONObject("data").getLong("id");
@@ -80,7 +78,6 @@ public class WebhookServer {
                         }
                     });
 
-                    Bukkit.getLogger().info("[PixCraft] Webhook processado com sucesso para Payment ID: " + paymentId);
                     exchange.sendResponseHeaders(200, 0);
                 } catch (Exception e) {
                     Bukkit.getLogger().severe("[PixCraft] Erro ao processar webhook: " + e.getMessage());

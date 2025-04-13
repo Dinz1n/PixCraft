@@ -1,6 +1,6 @@
 package br.din.pixCraft.listeners.custom;
 
-import br.din.pixCraft.order.Order;
+import br.din.pixCraft.payment.order.Order;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

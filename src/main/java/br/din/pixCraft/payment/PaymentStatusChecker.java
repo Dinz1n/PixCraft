@@ -1,8 +1,8 @@
 package br.din.pixCraft.payment;
 
 import br.din.pixCraft.listeners.custom.PaymentStatusUpdateEvent;
-import br.din.pixCraft.order.OrderManager;
-import br.din.pixCraft.order.Order;
+import br.din.pixCraft.payment.order.OrderManager;
+import br.din.pixCraft.payment.order.Order;
 import br.din.pixCraft.payment.gateway.MercadoPagoAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

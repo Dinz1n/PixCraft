@@ -1,8 +1,8 @@
 package br.din.pixCraft.listeners;
 
 import br.din.pixCraft.PixCraft;
-import br.din.pixCraft.order.Order;
-import br.din.pixCraft.order.OrderManager;
+import br.din.pixCraft.payment.order.Order;
+import br.din.pixCraft.payment.order.OrderManager;
 
 import br.din.pixCraft.payment.gateway.MercadoPagoAPI;
 import br.din.pixCraft.utils.ItemStackUtil;
