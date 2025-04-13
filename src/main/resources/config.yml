@@ -1,7 +1,7 @@
 mercadopago:
   access-token: "TOKEN"
 
-  # Configuração do webhook para notificações de pagamento.
+  #⚙️ Configuração do webhook para notificações de pagamento.
   webhook:
     enabled: false  # Se "false", o plugin usará a verificação periódica.
     port: 8080      # Porta onde o servidor HTTP interno será iniciado.
