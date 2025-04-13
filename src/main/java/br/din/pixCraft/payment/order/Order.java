@@ -1,4 +1,4 @@
-package br.din.pixCraft.order;
+package br.din.pixCraft.payment.order;
 
 import br.din.pixCraft.payment.PaymentStatus;
 import br.din.pixCraft.product.Product;
