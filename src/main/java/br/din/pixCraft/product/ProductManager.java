@@ -67,7 +67,7 @@ public class ProductManager {
             boolean tax = productsConfig.getBoolean(key + ".include-tax");
             List<String> reward = productsConfig.getStringList(key + ".reward");
 
-            products.put(key, new Product(displayName, price, tax, reward));
+            products.put(key, new Product(key, displayName, price, tax, reward));
         }
     }
 
