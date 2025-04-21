@@ -1,6 +1,7 @@
 package br.din.pixCraft;
 
 import br.din.pixCraft.commands.PcCommand;
+import br.din.pixCraft.gui.confirmcancel.CCGBuilder;
 import br.din.pixCraft.listeners.PaymentListener;
 import br.din.pixCraft.listeners.PlayerQuitListener;
 import br.din.pixCraft.listeners.QrCodeProtect;
@@ -48,7 +49,7 @@ public final class PixCraft extends JavaPlugin {
             statusChecker.start(100L);
         }
         getLogger().info("Registrando comandos...");
-        PcCommand pcCommand = new PcCommand(this);
+        PcCommand pcCommand = new PcCommand(this, productManager, new CCGBuilder(this));
 
         getLogger().info("Plugin habilitado com sucesso!");
     }
