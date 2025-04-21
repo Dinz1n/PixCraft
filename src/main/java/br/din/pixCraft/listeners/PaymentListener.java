@@ -41,7 +41,7 @@ public class PaymentListener implements Listener {
                         command = command.replace("{player}", player.getName());
                     }
                     Bukkit.getServer().dispatchCommand(player, command);
-                    String productName = order.getProduct().getDisplayName();
+                    String productName = order.getProduct().getName();
                     double productPrice = order.getProduct().getPrice();
                     String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
                     DiscordWebhook.sendEmbed(plugin.getConfig().getConfigurationSection("discord"), player, productName, productPrice, date);
@@ -49,7 +49,7 @@ public class PaymentListener implements Listener {
                 break;
             case CANCELLED:
                 if (plugin.getConfig().getString("mercadopago.access-token").startsWith("TEST")) {
-                    String productName = "Isso é um pedido teste - " + order.getProduct().getDisplayName();
+                    String productName = "Isso é um pedido teste - " + order.getProduct().getName();
                     double productPrice = order.getProduct().getPrice();
                     String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
                     DiscordWebhook.sendEmbed(plugin.getConfig().getConfigurationSection("discord"), player, productName, productPrice, date);

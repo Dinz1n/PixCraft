@@ -77,7 +77,7 @@ public class DiscordWebhook {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            System.out.println("Resposta do Discord: " + response.code());
+            response.code();
         } catch (IOException e) {
             e.printStackTrace();
         }
