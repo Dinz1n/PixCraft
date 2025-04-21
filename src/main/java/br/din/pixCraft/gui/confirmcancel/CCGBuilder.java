@@ -30,7 +30,7 @@ public class CCGBuilder extends YamlDataManager {
     }
 
     public Inventory build(ItemStack productIcon) {
-        Inventory newGui = Bukkit.createInventory(null, 3 * 9, guiSection.getString("title"));
+        Inventory newGui = Bukkit.createInventory(null, gui.getSize(), guiSection.getString("title"));
 
         for (int i = 0; i < gui.getSize(); i++) {
             newGui.setItem(i, gui.getItem(i));
@@ -46,7 +46,7 @@ public class CCGBuilder extends YamlDataManager {
         buttonsSection = getFileConfiguration().getConfigurationSection("buttons");
 
         String title = ChatColor.translateAlternateColorCodes('&', guiSection.getString("title"));
-        int size = guiSection.getInt("rows") * 3;
+        int size = guiSection.getInt("rows") * 9;
 
         gui = Bukkit.createInventory(null, size, title);
 
