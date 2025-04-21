@@ -7,7 +7,7 @@
 espada_de_diamante_01:
   # 🏷️ Nome do Produto:
   # Esse nome aparecerá no Discord e na sua conta do Mercado Pago quando alguém comprar este item.
-  displayname: "Espada de Diamante"
+  name: "Espada de Diamante"
 
   # 💰 Preço do Produto:
   # Defina o valor em reais (R$). Use PONTO ao invés de VÍRGULA para valores decimais.
@@ -26,10 +26,41 @@ espada_de_diamante_01:
   reward:
     - "give {player} diamond_sword"  # O jogador recebe uma espada de diamante.
 
+  # 💎 Ícone do produto:
+  # Esse ícone irá aparecer no GUI de confirmação do pedido.
+  icon:
+    # Define o Material do ítem.
+    # Se não souber o nome do material, você pode acessar o site:
+    # https://minecraft-ids.grahamedgecombe.com
+    # Alguns materiais não funcionarão, mas são apenas alguns bem específicos.
+    material: "DIAMOND_SWORD"
+
+    # Define o nome do ítem.
+    displayname: "&b&lEspada de Diamante"
+
+    # Define a lore do item.
+    lore:
+      - ""
+      - "&a&lR$2,99 no &b&lPIX"
+
+    # Define a quantidade do ítem.
+    amount: 1
+
+    # Define se o ítem terá o efeito visual de encatamento.
+    enchanted: false
+
 # Exemplo de produto: VIP
 vip_01:
-  displayname: "VIP"
+  name: "VIP"
   price: 10.00
   include-tax: false
   reward:
     - "lp user {player} parent set vip"  # O jogador recebe o grupo VIP no LuckPerms.
+  icon:
+    material: "EMERALD"
+    displayname: "&a&lVIP"
+    lore:
+      - ""
+      - "&a&lR$10,00 no &b&lPIX"
+    amount: 1
+    enchanted: true
