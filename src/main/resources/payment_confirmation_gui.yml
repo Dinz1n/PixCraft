@@ -1,0 +1,22 @@
+buttons:
+  confirm-button:
+    material: "LIME_WOOL"
+    displayname: "&aConfirmar"
+    lore:
+    amount: 1
+    enchanted: false
+
+  cancel-button:
+    material: "RED_WOOL"
+    displayname: "&cCancelar"
+    lore:
+    amount: 1
+    enchanted: false
+
+gui:
+  title: "Confirmar Pedido"
+  rows: 3
+  slots:
+    confirm-button: 11
+    product: 13
+    cancel-button: 15
