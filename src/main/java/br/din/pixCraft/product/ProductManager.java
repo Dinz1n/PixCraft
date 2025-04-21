@@ -2,72 +2,45 @@ package br.din.pixCraft.product;
 
 import br.din.pixCraft.PixCraft;
 
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import br.din.pixCraft.config.YamlDataManager;
+import br.din.pixCraft.utils.ItemStackUtil;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProductManager {
+public class ProductManager extends YamlDataManager<Product> {
     private static final Map<String, Product> products = new HashMap<>();
-    private final PixCraft plugin = PixCraft.getInstance();
-    private static File file;
-    private static FileConfiguration productsConfig;
-    private final String fileName = "products.yml";
 
     public ProductManager() {
-        this.file = new File(plugin.getDataFolder(), fileName);
-
-        if (!file.exists()) {
-            saveDefaultFile();
-        }
-
-        productsConfig = YamlConfiguration.loadConfiguration(file);
-        loadProducts();
+        super(PixCraft.getInstance(), "products.yml");
     }
 
-    private void saveDefaultFile() {
-        try (InputStream inputStream = plugin.getResource("products.yml")) {
-            if (inputStream != null) {
-                Files.copy(inputStream, file.toPath());
-            } else {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void save() {
-        try {
-            productsConfig.load(file);
-            loadProducts();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void loadProducts() {
+    @Override
+    protected void loadData() {
         products.clear();
-        for (String key : productsConfig.getKeys(false)) {
-            String displayName = productsConfig.getString(key + ".displayname");
-            Double price = productsConfig.getDouble(key + ".price");
-            boolean tax = productsConfig.getBoolean(key + ".include-tax");
-            List<String> reward = productsConfig.getStringList(key + ".reward");
 
-            products.put(key, new Product(key, displayName, price, tax, reward));
+        for (String key : getFileConfiguration().getKeys(false)) {
+            String displayName = getFileConfiguration().getString(key + ".name");
+            Double price = getFileConfiguration().getDouble(key + ".price");
+            boolean tax = getFileConfiguration().getBoolean(key + ".include-tax");
+            List<String> reward = getFileConfiguration().getStringList(key + ".reward");
+
+            Material iconMaterial = Material.getMaterial(getFileConfiguration().getString(key + ".icon.material"));
+            String iconDisplayName = ChatColor.translateAlternateColorCodes('&', getFileConfiguration().getString(key + ".icon.displayname"));
+            List<String> iconLore = new ArrayList<>();
+            for (String text : getFileConfiguration().getStringList(key + ".icon.lore")) {
+                iconLore.add(ChatColor.translateAlternateColorCodes('&', text));
+            }
+            int iconAmount = getFileConfiguration().getInt(key + ".icon.amount");
+            boolean iconEnchanted = getFileConfiguration().getBoolean(key + ".icon.enchanted");
+
+            ItemStack icon = ItemStackUtil.create(iconMaterial, iconDisplayName, iconLore, iconAmount, iconEnchanted);
+            products.put(key, new Product(key, displayName, price, tax, reward, icon));
         }
     }
 
