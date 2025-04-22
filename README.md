@@ -115,7 +115,7 @@ vip_01:
     amount: 1
     enchanted: true
 ```
-### `payment_confirmation_gui.yml``(configuração do GUI de confirmação do pedido)
+### `payment_confirmation_gui.yml` (configuração do GUI de confirmação do pedido)
 ```yaml
 buttons:
   confirm-button:
