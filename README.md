@@ -116,6 +116,8 @@ vip_01:
     enchanted: true
 ```
 ### `payment_confirmation_gui.yml` (configuração do GUI de confirmação do pedido)
+Neste arquivo você pode customizar várias características do GUI de confirmação.
+
 ```yaml
 buttons:
   confirm-button:
