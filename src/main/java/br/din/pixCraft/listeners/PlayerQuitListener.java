@@ -26,11 +26,11 @@ public class PlayerQuitListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (OrderManager.getOrders().containsKey(player.getUniqueId())) {
-            plugin.getLogger().info(player.getName() + " saiu. Cancelando seu pedido...");
+            plugin.getLogger().info(player.getName() + " saiu do jogo. Cancelando seu pedido...");
             Order order = OrderManager.getOrders().get(player.getUniqueId());
             NamespacedKey key = new NamespacedKey(plugin, "paymentId");
 
-            MercadoPagoAPI.cancelPayment(order.getPaymentID());
+            order.cancel();
             ItemStackUtil.removeItemByData(player, key, PersistentDataType.LONG, order.getPaymentID());
             OrderManager.removeOrder(player.getUniqueId());
         }

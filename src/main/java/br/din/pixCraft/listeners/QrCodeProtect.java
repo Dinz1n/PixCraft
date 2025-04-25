@@ -42,7 +42,7 @@ public class QrCodeProtect implements Listener {
                 Order order = OrderManager.getOrders().get(event.getPlayer().getUniqueId());
                 event.getPlayer().sendMessage("§cCancelando pagamento...");
                 ItemStackUtil.removeItemByData(event.getPlayer(), key, PersistentDataType.LONG, order.getPaymentID());
-                MercadoPagoAPI.cancelPayment(item.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.LONG));
+                order.cancel();
             }
             event.setCancelled(true);
         }

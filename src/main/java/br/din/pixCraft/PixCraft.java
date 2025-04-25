@@ -60,9 +60,10 @@ public final class PixCraft extends JavaPlugin {
         for (Order order : OrderManager.getPendingPaymentIds()) {
             Player player = Bukkit.getPlayer(order.getPlayerUUID());
             ItemStackUtil.removeItemByData(player, new NamespacedKey(this, "paymentId"), PersistentDataType.LONG, order.getPaymentID());
-            MercadoPagoAPI.cancelPayment(order.getPaymentID());
+            order.cancel();
         }
 
+        getLogger().info("Desligando Webhook Server...");
         if (getConfig().getBoolean("mercadopago.webhook.enabled")) {
             webhookServer.stop();
         }
