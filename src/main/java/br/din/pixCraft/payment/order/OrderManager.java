@@ -24,17 +24,16 @@ public class OrderManager {
             price += (0.99 / 100) * price;
         }
 
-        MercadoPagoAPI.createPayment(product.getName(), price, player.getName()).thenAccept(paymentId -> {
-            if (paymentId == null) {
+        MercadoPagoAPI.createNewOrder(product, price, player).thenAccept(order -> {
+            if (order == null) {
                 player.sendMessage("§cErro ao criar o pagamento.");
                 return;
             }
 
-            Order order = new Order(player.getUniqueId(), paymentId, product);
             orders.put(player.getUniqueId(), order);
 
-            BufferedImage qrCodeImage = QrCodeGenerator.generateQrImage(MercadoPagoAPI.getQrCode(paymentId), 128);
-            ItemStack qrCodeMap = MapHandler.createQrMap(qrCodeImage, player.getWorld(), paymentId);
+            BufferedImage qrCodeImage = QrCodeGenerator.generateQrImage(order.getQrCodeData(), 128);
+            ItemStack qrCodeMap = MapHandler.createQrMap(qrCodeImage, player.getWorld(), order.getPaymentID());
 
             player.getInventory().setItem(3, qrCodeMap);
             player.getInventory().setHeldItemSlot(3);
