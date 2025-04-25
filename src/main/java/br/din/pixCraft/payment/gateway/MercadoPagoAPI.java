@@ -1,6 +1,8 @@
 package br.din.pixCraft.payment.gateway;
 
 import br.din.pixCraft.payment.PaymentStatus;
+import br.din.pixCraft.payment.order.Order;
+import br.din.pixCraft.product.Product;
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.payment.PaymentCreateRequest;
@@ -9,8 +11,10 @@ import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.payment.Payment;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class MercadoPagoAPI {
@@ -20,31 +24,31 @@ public class MercadoPagoAPI {
     public static void setAccessToken(String newToken) {
         accessToken = newToken;
         MercadoPagoConfig.setAccessToken(newToken);
-        client = new PaymentClient(); // Recria o client com o novo token
+        client = new PaymentClient();
         Bukkit.getLogger().info("[PixCraft] Access Token atualizado.");
     }
 
-    public static CompletableFuture<Long> createPayment(String productName, double price, String playerName) {
+    public static CompletableFuture<Order> createNewOrder(Product product, double price, Player player) {
         PaymentCreateRequest paymentCreateRequest = PaymentCreateRequest.builder()
                 .transactionAmount(new BigDecimal(price))
-                .description(productName)
+                .description(product.getName())
                 .paymentMethodId("pix")
                 .payer(
                         PaymentPayerRequest.builder()
-                                .email(playerName + "@din.me")
-                                .firstName(playerName)
+                                .email(player.getName() + "@din.me")
+                                .firstName(player.getName())
                                 .lastName("")
                                 .build())
                 .build();
 
         return CompletableFuture.supplyAsync(() -> {
+            Payment payment;
             try {
-                Payment payment = client.create(paymentCreateRequest);
+                payment = client.create(paymentCreateRequest);
                 if (payment == null || payment.getId() == null) {
                     Bukkit.getLogger().severe("[PixCraft] Erro: criação do pagamento falhou e retornou null.");
                     return null;
                 }
-                return payment.getId();
             } catch (MPApiException e) {
                 Bukkit.getLogger().severe("[PixCraft] Erro ao criar pagamento: " + e.getMessage());
                 Bukkit.getLogger().severe("[PixCraft] Código do erro: " + e.getApiResponse().getStatusCode());
@@ -54,6 +58,16 @@ public class MercadoPagoAPI {
                 Bukkit.getLogger().severe("[PixCraft] Erro inesperado no Mercado Pago: " + e.getMessage());
                 return null;
             }
+
+            Order order = new Order(
+                    player.getUniqueId(),
+                    payment.getId(),
+                    payment.getPointOfInteraction().getTransactionData().getQrCode(),
+                    product,
+                    PaymentStatus.fromString(payment.getStatus())
+            );
+
+            return order;
         });
     }
 
@@ -69,34 +83,5 @@ public class MercadoPagoAPI {
             Bukkit.getLogger().severe("[PixCraft] Erro ao obter status do pagamento: " + e.getMessage());
             return null;
         }
-    }
-
-    public static void cancelPayment(Long paymentId) {
-        PaymentClient client = new PaymentClient();
-        try {
-            client.cancel(paymentId);
-        } catch (MPException e) {
-            throw new RuntimeException(e);
-        } catch (MPApiException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String getQrCode(Long paymentId) {
-        try {
-            Payment payment = client.get(paymentId);
-            if (payment == null) {
-                Bukkit.getLogger().severe("[PixCraft] Erro: pagamento retornado é nulo.");
-                return null;
-            }
-            if (payment.getPointOfInteraction() == null || payment.getPointOfInteraction().getTransactionData() == null) {
-                Bukkit.getLogger().severe("[PixCraft] Erro: informações de transação não disponíveis para pagamento ID: " + paymentId);
-                return null;
-            }
-            return payment.getPointOfInteraction().getTransactionData().getQrCode();
-        } catch (MPApiException | MPException e) {
-            Bukkit.getLogger().severe("[PixCraft] Erro ao obter QR Code Base64: " + e.getMessage());
-        }
-        return null;
     }
 }
