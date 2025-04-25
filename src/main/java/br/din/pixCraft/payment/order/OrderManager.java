@@ -33,7 +33,7 @@ public class OrderManager {
             Order order = new Order(player.getUniqueId(), paymentId, product);
             orders.put(player.getUniqueId(), order);
 
-            BufferedImage qrCodeImage = QrCodeGenerator.generateQrImage(MercadoPagoAPI.getQrCodeBase64(paymentId));
+            BufferedImage qrCodeImage = QrCodeGenerator.generateQrImage(MercadoPagoAPI.getQrCode(paymentId), 128);
             ItemStack qrCodeMap = MapHandler.createQrMap(qrCodeImage, player.getWorld(), paymentId);
 
             player.getInventory().setItem(3, qrCodeMap);

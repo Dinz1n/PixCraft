@@ -1,25 +1,22 @@
 package br.din.pixCraft.utils;
 
-import javax.imageio.ImageIO;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 public class QrCodeGenerator {
-
-    /**
-     * Converte uma string Base64 em uma imagem BufferedImage.
-     * @param base64String A string em Base64 do QR Code.
-     * @return A imagem BufferedImage gerada.
-     */
-    public static BufferedImage generateQrImage(String base64String) {
+    public static BufferedImage generateQrImage(String qrCodeData, int size) {
+        BitMatrix matrix = null;
         try {
-            byte[] decodedBytes = Base64.getDecoder().decode(base64String);
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(decodedBytes);
-            return ImageIO.read(inputStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            matrix = new MultiFormatWriter().encode(new String(qrCodeData.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8), BarcodeFormat.QR_CODE, size, size);
+        } catch (WriterException e) {
+            throw new RuntimeException(e);
         }
+        return MatrixToImageWriter.toBufferedImage(matrix);
     }
 }

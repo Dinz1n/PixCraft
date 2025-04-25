@@ -82,7 +82,7 @@ public class MercadoPagoAPI {
         }
     }
 
-    public static String getQrCodeBase64(Long paymentId) {
+    public static String getQrCode(Long paymentId) {
         try {
             Payment payment = client.get(paymentId);
             if (payment == null) {
@@ -93,7 +93,7 @@ public class MercadoPagoAPI {
                 Bukkit.getLogger().severe("[PixCraft] Erro: informações de transação não disponíveis para pagamento ID: " + paymentId);
                 return null;
             }
-            return payment.getPointOfInteraction().getTransactionData().getQrCodeBase64();
+            return payment.getPointOfInteraction().getTransactionData().getQrCode();
         } catch (MPApiException | MPException e) {
             Bukkit.getLogger().severe("[PixCraft] Erro ao obter QR Code Base64: " + e.getMessage());
         }
