@@ -13,7 +13,7 @@ public class Renderer extends MapRenderer {
     private boolean rendered = false;
 
     public Renderer(BufferedImage image) {
-        this.image = resizeImage(image, 128, 128);
+        this.image = image;
     }
 
     @Override
