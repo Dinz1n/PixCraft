@@ -1,0 +1,11 @@
+espada-de-diamante:
+  name: "Espada de Diamante Ultra Poderosa"
+  price: 10
+  reward:
+    - "give {player} diamond_sword 1"
+
+vip:
+  name: "VIP Bem Legal"
+  price: 20
+  reward:
+    - "lp user {player} parent add vip"
