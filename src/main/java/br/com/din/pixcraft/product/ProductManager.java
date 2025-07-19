@@ -1,7 +1,13 @@
 package br.com.din.pixcraft.product;
 
+import br.com.din.pixcraft.utils.minecraft_item_stack.ItemStackUtils;
+import br.com.din.pixcraft.utils.minecraft_item_stack.PDCKeys;
 import br.com.din.pixcraft.yaml.YamlDataManager;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -25,12 +31,29 @@ public class ProductManager extends YamlDataManager<Product> {
 
         products.clear();
         for (String key : productsFile.getKeys(false)) {
-            String id = key;
-            String name = productsFile.getString(key + ".name");
-            double price = productsFile.getDouble(key + ".price");
-            List<String> reward = productsFile.getStringList(key + ".reward");
+            ConfigurationSection productData = productsFile.getConfigurationSection(key);
 
-            Product product = new Product(id, name, price, reward);
+            String id = key;
+            String name = productData.getString("name");
+            double price = productData.getDouble("price");
+            List<String> reward = productData.getStringList("reward");
+
+            // Ícone do GUI
+            Material material = Material.valueOf(productData.getString("icon.material").toUpperCase());
+            String displayName = productData.getString("icon.displayname");
+            List<String> lore = productData.getStringList("icon.lore");
+            int amount = productData.getInt("icon.amount");
+
+            ItemStack itemStack = ItemStackUtils.builder()
+                    .setMaterial(material)
+                    .setDisplayName(displayName)
+                    .setLore(lore)
+                    .setAmount(amount)
+                    .build();
+
+            ItemStackUtils.setPDC(itemStack, PDCKeys.CONFIRM_CANCEL_GUI_BUTTON_TYPE, PersistentDataType.STRING, "product_icon");
+
+            Product product = new Product(id, name, price, reward, itemStack);
             products.put(id, product);
         }
     }
