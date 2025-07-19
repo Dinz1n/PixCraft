@@ -4,8 +4,24 @@ espada-de-diamante:
   reward:
     - "give {player} diamond_sword 1"
 
+  icon:
+    material: "DIAMOND_SWORD"
+    displayname: "Espada de Diamante"
+    lore:
+      - "R$10,00 à vista no PIX"
+    amount: 1
+    enchanted: false
+
 vip:
   name: "VIP Bem Legal"
   price: 20
   reward:
     - "lp user {player} parent add vip"
+
+  icon:
+    material: "EMERALD"
+    displayname: "Vip Cabuloso"
+    lore:
+      - "R$10,00 à vista no PIX"
+    amount: 1
+    enchanted: true
