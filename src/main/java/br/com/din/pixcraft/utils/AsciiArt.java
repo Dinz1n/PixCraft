@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
-public class AsciiArtUtils {
+public class AsciiArt {
     public static void printAsciiArt(Logger logger) {
         String caminhoArquivo = "pixcraft-ascii-art.txt";
 
