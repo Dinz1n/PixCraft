@@ -4,6 +4,7 @@ main: br.com.din.pixcraft.PixCraft
 api-version: '1.13'
 authors: [Dinz1n]
 description: Sistema de pagamentos via PIX no Minecraft
+softdepend: [NBTAPI]
 commands:
   pixcraft:
     description: Comando principal do plugin.

@@ -12,16 +12,4 @@ public class ItemStackUtils {
     public static ItemStackBuilder builder() {
         return new ItemStackBuilder();
     }
-
-    // Métodos que manipulam a classe PersistentDataConainer do ItemMeta
-
-    public static void setPDC(ItemStack itemStack, NamespacedKey key, PersistentDataType dataType, Object data) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.getPersistentDataContainer().set(key, dataType, data);
-        itemStack.setItemMeta(itemMeta);
-    }
-
-    public static Object getPDC(ItemMeta meta, NamespacedKey key, PersistentDataType dataType) {
-        return meta.getPersistentDataContainer().get(key, dataType);
-    }
 }

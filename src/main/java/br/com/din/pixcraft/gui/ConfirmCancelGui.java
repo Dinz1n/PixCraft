@@ -2,8 +2,8 @@ package br.com.din.pixcraft.gui;
 
 import br.com.din.pixcraft.PixCraft;
 import br.com.din.pixcraft.product.Product;
+import br.com.din.pixcraft.utils.NBTUtils;
 import br.com.din.pixcraft.utils.minecraft_item_stack.ItemStackUtils;
-import br.com.din.pixcraft.utils.minecraft_item_stack.PDCKeys;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,8 +15,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -45,13 +43,13 @@ public class ConfirmCancelGui implements Listener{
                 .setMaterial(Material.EMERALD_BLOCK)
                 .setDisplayName("§aConfirmar")
                 .build();
-        ItemStackUtils.setPDC(confirmButton, PDCKeys.CONFIRM_CANCEL_GUI_BUTTON_TYPE, PersistentDataType.STRING, "confirm_button");
+        confirmButton = NBTUtils.setTag(confirmButton, "cc_gui_item_type", "confirm_button");
 
         ItemStack cancelButton = ItemStackUtils.builder()
                 .setMaterial(Material.REDSTONE_BLOCK)
                 .setDisplayName("§cCancelar")
                 .build();
-        ItemStackUtils.setPDC(cancelButton, PDCKeys.CONFIRM_CANCEL_GUI_BUTTON_TYPE, PersistentDataType.STRING, "cancel_button");
+        cancelButton = NBTUtils.setTag(cancelButton, "cc_gui_item_type", "cancel_button");
 
         inventory.setItem(11, confirmButton);
         inventory.setItem(13, productIcon);
@@ -66,33 +64,32 @@ public class ConfirmCancelGui implements Listener{
 
         if (playersWithGuiOpened.containsKey(uuid)) event.setCancelled(true);
 
-        ItemStack button = event.getCurrentItem();
-        if (button == null) return;
+        ItemStack itemStack = event.getCurrentItem();
+        if (itemStack == null) return;
 
-        ItemMeta itemMeta = button.getItemMeta();
-        if (itemMeta != null) {
-            if (event.isLeftClick() || event.isRightClick() || event.isShiftClick()) {
-                Consumer<Boolean> callback;
-                switch ((String) ItemStackUtils.getPDC(itemMeta, PDCKeys.CONFIRM_CANCEL_GUI_BUTTON_TYPE, PersistentDataType.STRING)) {
-                    case "confirm_button":
-                        callback = playersWithGuiOpened.remove(uuid);
-                        if (callback != null) {
-                            callback.accept(true);
-                        }
-                        event.getWhoClicked().closeInventory();
-                        break;
+        if (event.isLeftClick() || event.isRightClick() || event.isShiftClick()) return;
 
-                    case "cancel_button":
-                        callback = playersWithGuiOpened.remove(uuid);
-                        if (callback != null) {
-                            callback.accept(false);
-                        }
-                        event.getWhoClicked().closeInventory();
-                        break;
+        if (NBTUtils.hasTag(itemStack, "cc_gui_item_type")) {
+            Consumer<Boolean> callback;
+            switch (NBTUtils.getString(itemStack, "cc_gui_item_type")) {
+                case "confirm_button":
+                    callback = playersWithGuiOpened.remove(uuid);
+                    if (callback != null) {
+                        callback.accept(true);
+                    }
+                    event.getWhoClicked().closeInventory();
+                    break;
 
-                    case "product_icon":
-                        break;
-                }
+                case "cancel_button":
+                    callback = playersWithGuiOpened.remove(uuid);
+                    if (callback != null) {
+                        callback.accept(false);
+                    }
+                    event.getWhoClicked().closeInventory();
+                    break;
+
+                case "product_icon":
+                    break;
             }
         }
     }

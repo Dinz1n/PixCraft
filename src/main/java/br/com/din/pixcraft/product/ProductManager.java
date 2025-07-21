@@ -1,15 +1,16 @@
 package br.com.din.pixcraft.product;
 
+import br.com.din.pixcraft.payment.PaymentStatus;
+import br.com.din.pixcraft.utils.NBTUtils;
 import br.com.din.pixcraft.utils.minecraft_item_stack.ItemStackUtils;
-import br.com.din.pixcraft.utils.minecraft_item_stack.PDCKeys;
 import br.com.din.pixcraft.yaml.YamlDataManager;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.management.MBeanAttributeInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,16 +45,15 @@ public class ProductManager extends YamlDataManager<Product> {
             List<String> lore = productData.getStringList("icon.lore");
             int amount = productData.getInt("icon.amount");
 
-            ItemStack itemStack = ItemStackUtils.builder()
+            ItemStack icon = ItemStackUtils.builder()
                     .setMaterial(material)
                     .setDisplayName(displayName)
                     .setLore(lore)
                     .setAmount(amount)
                     .build();
+            icon = NBTUtils.setTag(icon, "cc_gui_item_type", "product_icon");
 
-            ItemStackUtils.setPDC(itemStack, PDCKeys.CONFIRM_CANCEL_GUI_BUTTON_TYPE, PersistentDataType.STRING, "product_icon");
-
-            Product product = new Product(id, name, price, reward, itemStack);
+            Product product = new Product(id, name, price, reward, icon);
             products.put(id, product);
         }
     }

@@ -11,37 +11,48 @@
 
   <name>PixCraft</name>
 
-    <description>Sistema de pagamentos via PIX no Minecraft</description>
-    <properties>
+  <description>Sistema de pagamentos via PIX no Minecraft</description>
+
+  <properties>
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.4</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.13.0</version>
+            <configuration>
+                <source>1.8</source>
+                <target>1.8</target>
+            </configuration>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.5.0</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals><goal>shade</goal></goals>
+                    <configuration>
+                        <relocations>
+                            <relocation>
+                                <pattern>de.tr7zw.changeme.nbtapi</pattern>
+                                <shadedPattern>br.com.din.pixcraft.shaded.nbtapi</shadedPattern>
+                            </relocation>
+                        </relocations>
+                        <minimizeJar>true</minimizeJar>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
     </plugins>
+
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -59,6 +70,11 @@
           <id>sonatype</id>
           <url>https://oss.sonatype.org/content/groups/public/</url>
       </repository>
+      <repository>
+          <id>codemc-repo</id>
+          <url>https://repo.codemc.io/repository/maven-public/</url>
+          <layout>default</layout>
+      </repository>
   </repositories>
 
   <dependencies>
@@ -67,6 +83,12 @@
           <artifactId>paper-api</artifactId>
           <version>1.16.5-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>de.tr7zw</groupId>
+          <artifactId>item-nbt-api</artifactId>
+          <version>2.15.1</version>
       </dependency>
 
       <dependency>
