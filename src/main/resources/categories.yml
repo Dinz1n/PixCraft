@@ -1,0 +1,38 @@
+main:
+  title: "Loja"
+  rows: 3
+  icon:
+    material: "CHEST"
+    displayname: "Loja"
+    lore:
+    amount: 1
+    enchanted: false
+  slots:
+    12: "vips"
+    14: "espadas"
+
+espadas:
+  title: "Espadas"
+  rows: 3
+  icon:
+    material: "IRON_SWORD"
+    displayname: "Espadas"
+    lore:
+    amount: 1
+    enchanted: false
+  slots:
+    12: "espada-de-diamante"
+    14: "espada-de-ferro"
+
+vips:
+  title: "Vips"
+  rows: 3
+  icon:
+    material: "EMERALD"
+    displayname: "Vips"
+    lore:
+    amount: 1
+    enchanted: true
+  slots:
+    12: "vip1"
+    14: "vip2"
