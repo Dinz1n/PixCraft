@@ -61,7 +61,7 @@ public class CategoryManager extends YamlDataManager<Category> {
                     .setEnchanted(isEnchanted)
                     .build();
             icon = NBTUtils.setTag(icon, ShopNBTKeys.SHOP_ITEM_TYPE.name(), ShopItemType.CATEGORY.name());
-            icon = NBTUtils.setTag(icon, ShopNBTKeys.SHOP_ITEM_ID.name(), key);
+            icon = NBTUtils.setTag(icon, ShopNBTKeys.SHOP_ITEM_VALUE.name(), key);
 
             categories.put(key, new Category(key, title, inventory, icon));
         }

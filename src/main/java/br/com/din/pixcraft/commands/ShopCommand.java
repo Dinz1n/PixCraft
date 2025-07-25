@@ -1,5 +1,6 @@
 package br.com.din.pixcraft.commands;
 
+import br.com.din.pixcraft.category.CategoryManager;
 import br.com.din.pixcraft.gui.shop.ShopGui;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -8,14 +9,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShopCommand extends Command {
     private final JavaPlugin plugin;
     private final ShopGui shopGui;
+    private final CategoryManager categoryManager;
 
-    public ShopCommand(JavaPlugin plugin, List<String> commandAliases, ShopGui shopGui) {
+    public ShopCommand(JavaPlugin plugin, List<String> commandAliases, ShopGui shopGui, CategoryManager categoryManager) {
         super(commandAliases.get(0));
         this.plugin = plugin;
+        this.categoryManager = categoryManager;
 
         this.setDescription("Abre o menu da loja.");
         this.setUsage("/" + commandAliases.get(0));
@@ -42,7 +46,7 @@ public class ShopCommand extends Command {
             return true;
         }
 
-        shopGui.openGui((Player) sender, plugin.getConfig().getString("shop.category-main"));
+        shopGui.openGui((Player) sender, categoryManager.getCategories().values().stream().collect(Collectors.toList()).get(0));
         return true;
     }
 

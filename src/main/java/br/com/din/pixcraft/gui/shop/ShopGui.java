@@ -6,6 +6,7 @@ import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.product.ProductManager;
 import br.com.din.pixcraft.utils.NBTUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,12 +18,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class ShopGui implements Listener {
-    private final Set<UUID> playersWithGuiOpened = new HashSet<>();
+    private final Map<UUID, List<Category>> playersWithGuiOpened = new HashMap<>();
     private final JavaPlugin plugin;
     private final OrderManager orderManager;
     private final ProductManager productManager;
@@ -39,21 +38,19 @@ public class ShopGui implements Listener {
         this.confirmCancelGui = confirmCancelGui;
     }
 
-    public void openGui(Player player, String categoryId) {
-        Category category = categoryManager.getCategory(categoryId);
-
+    public void openGui(Player player, Category category) {
         Inventory inventory = Bukkit.createInventory(null, category.getInventory().getSize(), category.getTitle());
         inventory.setContents(category.getInventory().getContents().clone());
 
         player.openInventory(inventory);
-        playersWithGuiOpened.add(player.getUniqueId());
+        playersWithGuiOpened.put(player.getUniqueId(), Arrays.asList(category));
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
-        if (!playersWithGuiOpened.contains(player.getUniqueId())) return;
+        if (!playersWithGuiOpened.containsKey(player.getUniqueId())) return;
         event.setCancelled(true);
 
         if (!(event.isLeftClick() || event.isRightClick() || event.isShiftClick())) return;
@@ -65,11 +62,11 @@ public class ShopGui implements Listener {
         if (NBTUtils.hasTag(itemStack, ShopNBTKeys.SHOP_ITEM_TYPE.name())) {
             switch (ShopItemType.valueOf(NBTUtils.getString(itemStack, ShopNBTKeys.SHOP_ITEM_TYPE.name()))) {
                 case CATEGORY:
-                    openGui(player, NBTUtils.getString(itemStack, ShopNBTKeys.SHOP_ITEM_ID.name()));
+                    openGui(player, categoryManager.getCategory(NBTUtils.getString(itemStack, ShopNBTKeys.SHOP_ITEM_VALUE.name())));
                     break;
 
                 case PRODUCT:
-                    Product product = productManager.getProduct(NBTUtils.getString(itemStack, ShopNBTKeys.SHOP_ITEM_ID.name()));
+                    Product product = productManager.getProduct(NBTUtils.getString(itemStack, ShopNBTKeys.SHOP_ITEM_VALUE.name()));
                     confirmCancelGui.openGui(player, product,confirmOrder -> {
                         if (confirmOrder)
                             Bukkit.getScheduler().runTask(plugin, () -> {
@@ -77,12 +74,21 @@ public class ShopGui implements Listener {
                             });
                     });
                     break;
+
+                case RETURN:
+                    List<String> categories = Arrays.asList(NBTUtils.getString(itemStack, ShopNBTKeys.SHOP_ITEM_VALUE.name()).split(";"));
+                    if (categories.isEmpty()) {
+                        player.closeInventory();
+                        return;
+                    }
+
+                    openGui(player, categoryManager.getCategory(categories.get(categories.size()-1)));
             }
         }
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        if (playersWithGuiOpened.contains(event.getPlayer().getUniqueId())) playersWithGuiOpened.remove(event.getPlayer().getUniqueId());
+        if (playersWithGuiOpened.containsKey(event.getPlayer().getUniqueId())) playersWithGuiOpened.remove(event.getPlayer().getUniqueId());
     }
 }

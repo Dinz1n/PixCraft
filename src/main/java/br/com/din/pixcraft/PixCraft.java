@@ -1,17 +1,17 @@
 package br.com.din.pixcraft;
 
+import br.com.din.pixcraft.category.CategoryManager;
 import br.com.din.pixcraft.commands.PCCommand;
-import br.com.din.pixcraft.gui.ConfirmCancelGui;
+import br.com.din.pixcraft.commands.ShopCommand;
+import br.com.din.pixcraft.gui.shop.ConfirmCancelGui;
+import br.com.din.pixcraft.gui.shop.ShopGui;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.product.ProductManager;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -20,15 +20,17 @@ public final class PixCraft extends JavaPlugin {
     private static JavaPlugin instance;
     private Logger logger;
     private ProductManager productManager;
-    private ConfirmCancelGui confirmCancelGui;
+    private CategoryManager categoryManager;
     private OrderManager orderManager;
+    private ConfirmCancelGui confirmCancelGui;
+    private ShopGui shopGui;
 
     @Override
     public void onEnable() {
+        printAsciiArt();
+
         instance = this;
         logger = getLogger();
-
-        printAsciiArt();
 
         logger.info("Inicializando NBT-API...");
         if (!NBT.preloadApi()) {
@@ -40,18 +42,19 @@ public final class PixCraft extends JavaPlugin {
         logger.info("Carregando arquivos de configuração...");
         saveDefaultConfig();
         productManager = new ProductManager(this, "products.yml");
-
-        confirmCancelGui = new ConfirmCancelGui();
+        categoryManager = new CategoryManager(this, "categories.yml", productManager);
         orderManager = new OrderManager(this);
 
+        logger.info("Registrando listeners...");
+        confirmCancelGui = new ConfirmCancelGui(this);
+        shopGui = new ShopGui(this, orderManager, productManager, categoryManager, confirmCancelGui);
+
+
         logger.info("Registrando comandos...");
-        new PCCommand(this, productManager, confirmCancelGui, orderManager);
+        new PCCommand(this, productManager, categoryManager, confirmCancelGui, orderManager);
+        new ShopCommand(this, getConfig().getStringList("shop-command-aliases"), shopGui, categoryManager);
 
         logger.info("Plugin inicializado com sucesso!");
-
-        ItemStack itemStack = new ItemStack(Material.CHEST);
-        NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setString("dwa", "dawd");
     }
 
     @Override

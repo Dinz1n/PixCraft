@@ -1,6 +1,7 @@
 package br.com.din.pixcraft.commands;
 
-import br.com.din.pixcraft.gui.ConfirmCancelGui;
+import br.com.din.pixcraft.category.CategoryManager;
+import br.com.din.pixcraft.gui.shop.ConfirmCancelGui;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.product.ProductManager;
@@ -20,10 +21,11 @@ import java.util.stream.Collectors;
 public class PCCommand implements CommandExecutor, TabCompleter {
     private final JavaPlugin plugin;
     private final ProductManager productManager;
+    private final CategoryManager categoryManager;
     private final ConfirmCancelGui confirmCancelGui;
     private final OrderManager orderManager;
 
-    public PCCommand(JavaPlugin plugin, ProductManager productManager, ConfirmCancelGui confirmCancelGui, OrderManager orderManager) {
+    public PCCommand(JavaPlugin plugin, ProductManager productManager, CategoryManager categoryManager, ConfirmCancelGui confirmCancelGui, OrderManager orderManager) {
         plugin.getCommand("pixcraft").setExecutor(this);
         plugin.getCommand("pixcraft").setTabCompleter(this);
 
@@ -31,6 +33,7 @@ public class PCCommand implements CommandExecutor, TabCompleter {
         this.orderManager = orderManager;
         this.confirmCancelGui = confirmCancelGui;
         this.productManager = productManager;
+        this.categoryManager = categoryManager;
     }
 
     @Override
@@ -42,6 +45,7 @@ public class PCCommand implements CommandExecutor, TabCompleter {
                 if (sender.hasPermission("pixcraft.command.reload")) {
                     plugin.reloadConfig();
                     productManager.reload();
+                    categoryManager.reload();
                     sender.sendMessage("§aPlugin recarregada com sucesso!");
                 } else {
                     sender.sendMessage("§cVocê não tem permissão para executar este comando.");

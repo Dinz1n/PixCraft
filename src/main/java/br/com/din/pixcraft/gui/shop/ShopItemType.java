@@ -4,5 +4,6 @@ public enum ShopItemType {
     PRODUCT,
     CATEGORY,
     CCG_CONFIRM,
-    CCG_CANCEL
+    CCG_CANCEL,
+    RETURN
 }

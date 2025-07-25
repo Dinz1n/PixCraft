@@ -55,7 +55,7 @@ public class ProductManager extends YamlDataManager<Product> {
                     .setEnchanted(isEnchanted)
                     .build();
             icon = NBTUtils.setTag(icon, ShopNBTKeys.SHOP_ITEM_TYPE.name(), ShopItemType.PRODUCT.name());
-            icon = NBTUtils.setTag(icon, ShopNBTKeys.SHOP_ITEM_ID.name(), key);
+            icon = NBTUtils.setTag(icon, ShopNBTKeys.SHOP_ITEM_VALUE.name(), key);
 
             Product product = new Product(id, name, price, reward, icon);
             products.put(id, product);

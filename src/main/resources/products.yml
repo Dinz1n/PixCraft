@@ -1,25 +1,51 @@
 espada-de-diamante:
-  name: "Espada de Diamante Ultra Poderosa"
-  price: 10
+  name: "Espada de diamante ultra poderosa"
+  price: 5
   reward:
     - "give {player} diamond_sword 1"
   icon:
     material: "DIAMOND_SWORD"
     displayname: "Espada de Diamante"
     lore:
-      - "R$10,00 à vista no PIX"
+      - "R$5,00 à vista no PIX"
     amount: 1
     enchanted: false
 
-vip:
-  name: "VIP Bem Legal"
+espada-de-ferro:
+  name: "Espada de ferro cabulosa"
+  price: 2
+  reward:
+    - "give {player} diamond_sword 1"
+  icon:
+    material: "IRON_SWORD"
+    displayname: "Espada de ferro"
+    lore:
+      - "R$2,00 à vista no PIX"
+    amount: 1
+    enchanted: false
+
+vip1:
+  name: "VIP bem legal"
   price: 20
   reward:
     - "lp user {player} parent add vip"
   icon:
     material: "EMERALD"
-    displayname: "Vip Cabuloso"
+    displayname: "VIP Cabuloso"
     lore:
-      - "R$10,00 à vista no PIX"
+      - "R$20,00 à vista no PIX"
+    amount: 1
+    enchanted: true
+
+vip2:
+  name: "Outro VIP bem legal"
+  price: 14.99
+  reward:
+    - "lp user {player} parent add outrovip"
+  icon:
+    material: "DIAMOND"
+    displayname: "Outro VIP Cabuloso"
+    lore:
+      - "R$14,99 à vista no PIX"
     amount: 1
     enchanted: true
