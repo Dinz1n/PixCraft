@@ -2,6 +2,7 @@ package br.com.din.pixcraft.utils;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 public class NBTUtils {

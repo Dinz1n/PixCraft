@@ -1,16 +1,17 @@
 package br.com.din.pixcraft.product;
 
-import br.com.din.pixcraft.payment.PaymentStatus;
+import br.com.din.pixcraft.gui.shop.ShopItemType;
+import br.com.din.pixcraft.gui.shop.ShopNBTKeys;
+import br.com.din.pixcraft.utils.ItemStackBuilder;
 import br.com.din.pixcraft.utils.NBTUtils;
-import br.com.din.pixcraft.utils.minecraft_item_stack.ItemStackUtils;
 import br.com.din.pixcraft.yaml.YamlDataManager;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.management.MBeanAttributeInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,31 +28,34 @@ public class ProductManager extends YamlDataManager<Product> {
 
     @Override
     protected void loadData() {
-        FileConfiguration productsFile = getFileConfiguration();
-        if (productsFile == null) return;
+        FileConfiguration productsConfig = getFileConfiguration();
+        if (productsConfig == null) return;
 
         products.clear();
-        for (String key : productsFile.getKeys(false)) {
-            ConfigurationSection productData = productsFile.getConfigurationSection(key);
+        for (String key : productsConfig.getKeys(false)) {
+            ConfigurationSection productData = productsConfig.getConfigurationSection(key);
 
             String id = key;
             String name = productData.getString("name");
             double price = productData.getDouble("price");
             List<String> reward = productData.getStringList("reward");
 
-            // Ícone do GUI
+            // Ícone
             Material material = Material.valueOf(productData.getString("icon.material").toUpperCase());
             String displayName = productData.getString("icon.displayname");
             List<String> lore = productData.getStringList("icon.lore");
             int amount = productData.getInt("icon.amount");
+            boolean isEnchanted = productData.getBoolean("icon.enchanted");
 
-            ItemStack icon = ItemStackUtils.builder()
+            ItemStack icon = new ItemStackBuilder()
                     .setMaterial(material)
                     .setDisplayName(displayName)
                     .setLore(lore)
-                    .setAmount(amount)
+                    .setAmount(amount > 0? amount : 1)
+                    .setEnchanted(isEnchanted)
                     .build();
-            icon = NBTUtils.setTag(icon, "cc_gui_item_type", "product_icon");
+            icon = NBTUtils.setTag(icon, ShopNBTKeys.SHOP_ITEM_TYPE.name(), ShopItemType.PRODUCT.name());
+            icon = NBTUtils.setTag(icon, ShopNBTKeys.SHOP_ITEM_ID.name(), key);
 
             Product product = new Product(id, name, price, reward, icon);
             products.put(id, product);
