@@ -1,12 +1,10 @@
 package br.com.din.pixcraft.utils;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
-
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-public class NBTUtils {
-    private NBTUtils() {}
+public class NBTItemUtils {
+    private NBTItemUtils() {}
 
     public static ItemStack setTag(ItemStack item, String key, String value) {
         NBTItem nbtItem = new NBTItem(item);
@@ -38,6 +36,12 @@ public class NBTUtils {
         return nbtItem.getItem();
     }
 
+    public static ItemStack setTag(ItemStack item, String key, Object value) {
+        NBTItem nbtItem = new NBTItem(item);
+        nbtItem.setObject(key, value);
+        return nbtItem.getItem();
+    }
+
     public static String getString(ItemStack item, String key) {
         return new NBTItem(item).getString(key);
     }
@@ -56,6 +60,10 @@ public class NBTUtils {
 
     public static byte getByte(ItemStack item, String key) {
         return new NBTItem(item).getByte(key);
+    }
+
+    public static Object getObjetc(ItemStack itemStack, String key, Class type) {
+        return new NBTItem(itemStack).getObject(key, type);
     }
 
     public static boolean hasTag(ItemStack item, String key) {

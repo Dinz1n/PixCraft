@@ -1,0 +1,44 @@
+title: "Confirmar pedido"
+rows: 4
+buttons:
+  11:
+    type: CONFIRM
+    target:
+    item:
+      material: EMERALD_BLOCK
+      displayname: "&a&lConfirmar"
+      lore:
+      amount: 1
+      enchanted: false
+
+  13:
+    type: PRODUCT_PREVIEW
+    target:
+    item:
+      material: BEDROCK
+      displayname: "Produto"
+      lore:
+        - "Descrição do produto"
+        - "Isso será substituído pelo produto real"
+      amount: 1
+      enchanted: false
+
+  15:
+    type: CANCEL
+    target:
+    item:
+      material: REDSTONE_BLOCK
+      displayname: "&c&lCancelar"
+      lore:
+      amount: 1
+      enchanted: false
+
+  22:
+    type: GO_BACK
+    target:
+    item:
+      material: ARROW
+      displayname: "&c&lVoltar"
+      lore:
+      amount: 1
+      enchanted: true

@@ -1,3 +1,15 @@
-shop-command-aliases:
-  - "shop"
-  - "loja"
+shop:
+  command-name: "loja"
+  default-category: "main"
+  confirmation-gui: "confirm_cancel_gui"
+
+payment:
+  provider:
+    access-token: "SEU_TOKEN_DE_ACESSO"
+  expiration-time: "30m" # Você usar o formato 3d5h7m59s
+  cancel-on-leave: false
+
+qr-code-map:
+  displayname: "&b&lCódigo QR"
+  lore:
+  slot: 3

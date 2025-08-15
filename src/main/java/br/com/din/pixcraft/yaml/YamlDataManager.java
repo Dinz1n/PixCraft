@@ -41,10 +41,8 @@ public abstract class YamlDataManager<T> {
 
     private void save() {
         try {
-            fileConfiguration.load(file);
+            fileConfiguration.save(file);
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
     }

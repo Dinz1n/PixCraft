@@ -1,13 +1,19 @@
 package br.com.din.pixcraft;
 
-import br.com.din.pixcraft.category.CategoryManager;
 import br.com.din.pixcraft.commands.PCCommand;
 import br.com.din.pixcraft.commands.ShopCommand;
-import br.com.din.pixcraft.gui.shop.ConfirmCancelGui;
-import br.com.din.pixcraft.gui.shop.ShopGui;
+import br.com.din.pixcraft.listeners.PaymentUpdate;
+import br.com.din.pixcraft.listeners.QrCodeProtect;
+import br.com.din.pixcraft.map.CustomMapCreator;
+import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
-import br.com.din.pixcraft.product.ProductManager;
+import br.com.din.pixcraft.payment.gateway.MercadoPagoService;
+import br.com.din.pixcraft.payment.gateway.PaymentProvider;
+import br.com.din.pixcraft.payment.verification.PaymentChecker;
+import br.com.din.pixcraft.payment.verification.Polling;
+import br.com.din.pixcraft.shop.ShopManager;
 
+import br.com.din.pixcraft.product.ProductManager;
 import de.tr7zw.changeme.nbtapi.NBT;
 
 import org.bukkit.Bukkit;
@@ -19,11 +25,11 @@ import java.util.logging.Logger;
 public final class PixCraft extends JavaPlugin {
     private static JavaPlugin instance;
     private Logger logger;
-    private ProductManager productManager;
-    private CategoryManager categoryManager;
+    private ShopManager shopManager;
     private OrderManager orderManager;
-    private ConfirmCancelGui confirmCancelGui;
-    private ShopGui shopGui;
+    private ProductManager productManager;
+    private PaymentProvider paymentProvider;
+    private PaymentChecker paymentChecker;
 
     @Override
     public void onEnable() {
@@ -39,26 +45,42 @@ public final class PixCraft extends JavaPlugin {
             return;
         }
 
+        logger.info("Carregando provedor de pagamento (MercadoPago)...");
+        paymentProvider = new MercadoPagoService();
+        paymentProvider.setAccessToken(getConfig().getString("payment.provider.access-token"));
+
         logger.info("Carregando arquivos de configuração...");
         saveDefaultConfig();
         productManager = new ProductManager(this, "products.yml");
-        categoryManager = new CategoryManager(this, "categories.yml", productManager);
-        orderManager = new OrderManager(this);
+        orderManager = new OrderManager(this, paymentProvider, new CustomMapCreator(), productManager);
+        shopManager = new ShopManager(this, orderManager, productManager);
+
+        logger.info("Carregando método de verificação de pagamento (polling)...");
+        paymentChecker = new Polling(this, paymentProvider, orderManager);
+        paymentChecker.start();
 
         logger.info("Registrando listeners...");
-        confirmCancelGui = new ConfirmCancelGui(this);
-        shopGui = new ShopGui(this, orderManager, productManager, categoryManager, confirmCancelGui);
-
+        new QrCodeProtect(this, orderManager);
+        new PaymentUpdate(this, orderManager);
 
         logger.info("Registrando comandos...");
-        new PCCommand(this, productManager, categoryManager, confirmCancelGui, orderManager);
-        new ShopCommand(this, getConfig().getStringList("shop-command-aliases"), shopGui, categoryManager);
+        new PCCommand(this, shopManager.getProductManager(), shopManager.getCategoryManager(), paymentProvider);
+        new ShopCommand(this, getConfig().getString("shop.command-name"), shopManager.getShopGui());
 
         logger.info("Plugin inicializado com sucesso!");
     }
 
     @Override
     public void onDisable() {
+        logger.info("Encerrando verificador de pagamento...");
+        paymentChecker.stop();
+        if (getConfig().getBoolean("payment.cancel-on-leave")) {
+            logger.info("Cancelando pagamentos pendentes...");
+            for (Order order : orderManager.getOrders().values()) {
+                order.cancel();
+                orderManager.removeOrder(order.getId());
+            }
+        }
     }
 
     private void printAsciiArt() {
