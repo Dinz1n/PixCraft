@@ -6,7 +6,7 @@ shop:
 payment:
   provider:
     access-token: "SEU_TOKEN_DE_ACESSO"
-  expiration-time: "30m" # Você usar o formato 3d5h7m59s
+  expiration-time: "30m"
   cancel-on-leave: false
 
 qr-code-map:
