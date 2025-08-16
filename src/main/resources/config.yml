@@ -6,10 +6,34 @@ shop:
 payment:
   provider:
     access-token: "SEU_TOKEN_DE_ACESSO"
-  expiration-time: "30m"
   cancel-on-leave: false
 
 qr-code-map:
   displayname: "&b&lCódigo QR"
   lore:
   slot: 3
+
+discord:
+  notification:
+    enable: false
+    webhook-url: "URL_DO_SEU_WEBHOOK"
+    message:
+      content:
+      username: "PixCraft"
+      avatar_url:
+      embeds:
+        - title: "Novo pagamento!"
+          description: "O jogador **{player_name}** comprou um pacote!"
+          color: 3066993
+          thumbnail:
+            url: "player:{player_name}"
+          footer:
+            text: "PixCraft"
+            icon_url: "https://i.imgur.com/wSTFkRM.png"
+          fields:
+            - name: "Produto"
+              value: "{product}"
+              inline: true
+            - name: "Valor"
+              value: "R${amount}"
+              inline: false

@@ -24,7 +24,7 @@ public class MercadoPagoService implements PaymentProvider {
     }
 
     @Override
-    public void createPayment(String payerName, Product product, String dateOfExpiration, Consumer<Payment> callback) {
+    public void createPayment(String payerName, Product product, Consumer<Payment> callback) {
         JsonObject payer = new JsonObject();
         payer.addProperty("first_name", payerName);
         payer.addProperty("email", payerName + "@pixcraft.com");
@@ -35,7 +35,6 @@ public class MercadoPagoService implements PaymentProvider {
         body.addProperty("description", product.getName());
         body.addProperty("transaction_amount", product.getPrice());
         body.addProperty("installments", 1);
-        body.addProperty("date_of_expiration", dateOfExpiration);
 
         RequestBody requestBody = RequestBody.create(JSON, body.toString());
         Request request = new Request.Builder()

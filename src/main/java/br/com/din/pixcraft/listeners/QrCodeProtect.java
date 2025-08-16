@@ -72,7 +72,7 @@ public class QrCodeProtect implements Listener {
 
         Order order = orderManager.getOrder(player.getUniqueId());
 
-        if (!order.getPaymentData().getStatus().equals(PaymentStatus.PENDING)) {
+        if (!order.getPayment().getStatus().equals(PaymentStatus.PENDING)) {
             removeQrMap(player);
         }
     }

@@ -32,12 +32,12 @@ public class ShopCommand extends Command {
         if (args.length != 0) return false;
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§cEste comando só pode ser executado por jogadores.");
+            sender.sendMessage("§c[PixCraft] Este comando só pode ser executado por jogadores.");
             return true;
         }
 
         if (!sender.hasPermission("pixcraft.shop")) {
-            sender.sendMessage("§cVocê não tem permissão para executar este comando.");
+            sender.sendMessage("§c[PixCraft] Você não tem permissão para executar este comando.");
             return true;
         }
 

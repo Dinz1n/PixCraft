@@ -1,15 +1,21 @@
 package br.com.din.pixcraft.listeners;
 
+import br.com.din.pixcraft.discord.DiscordWebhook;
+import br.com.din.pixcraft.discord.WebhookConfigLoader;
 import br.com.din.pixcraft.listeners.custom.PaymentUpdateEvent;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PaymentUpdate implements Listener {
     private final JavaPlugin plugin;
@@ -24,37 +30,66 @@ public class PaymentUpdate implements Listener {
     @EventHandler
     public void onPaymentUpdate(PaymentUpdateEvent event) {
         Order order = event.getOrder();
-
-        Player player = Bukkit.getPlayer(order.getId());
-        if (player != null && player.isOnline()) {
-            action(player, order);
-            orderManager.getOrder(player.getUniqueId());
-        }
+        handleOrder(order);
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (!orderManager.getOrders().containsKey(event.getPlayer().getUniqueId())) return;
-        action(event.getPlayer(), orderManager.getOrder(event.getPlayer().getUniqueId()));
+        handleOrder(orderManager.getOrder(event.getPlayer().getUniqueId()));
     }
 
-    private void action(Player player, Order order) {
-        switch (order.getPaymentData().getStatus()) {
+    private void handleOrder(Order order) {
+        Player player = Bukkit.getPlayer(order.getId()); // pode ser null
+
+        switch (order.getPayment().getStatus()) {
             case APPROVED:
-                player.sendMessage("§aPagamento aprovado!");
-                orderManager.removeOrder(player.getUniqueId());
-                for (String command : order.getProduct().getReward()) {
-                    Bukkit.dispatchCommand(player, command.replace("{player}", player.getName()));
+                if (player != null && player.isOnline()) {
+                    player.sendMessage("§a[PixCraft] Pagamento aprovado!");
+                    for (String command : order.getProduct().getReward()) {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName()));
+                    }
                 }
+
+                orderManager.removeOrder(order.getId());
+                sendDiscordNotification(order, player);
                 break;
 
             case CANCELLED:
-                orderManager.removeOrder(player.getUniqueId());
-                player.sendMessage("§cPagamento cancelado.");
+                if (player != null && player.isOnline()) {
+                    player.sendMessage("§c[PixCraft] Pagamento cancelado.");
+                }
+                orderManager.removeOrder(order.getId());
                 break;
 
             case PENDING:
                 break;
+        }
+    }
+
+    private void sendDiscordNotification(Order order, Player player) {
+        ConfigurationSection discordSection = plugin.getConfig().getConfigurationSection("discord.notification");
+        if (discordSection == null) return;
+
+        boolean enabled = discordSection.getBoolean("enable", false);
+        if (!enabled) return;
+
+        String webhookUrl = discordSection.getString("webhook-url");
+        if (webhookUrl == null || webhookUrl.isEmpty()) return;
+
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("player_name", player != null ? player.getName() : order.getPayerName());
+        placeholders.put("product", order.getProduct().getName());
+        placeholders.put("amount", String.valueOf(order.getProduct().getPrice()));
+
+        ConfigurationSection messageSection = discordSection.getConfigurationSection("message");
+        if (messageSection == null) return;
+
+        try {
+            DiscordWebhook webhook = WebhookConfigLoader.fromConfig(webhookUrl, messageSection, placeholders);
+            webhook.send();
+        } catch (Exception e) {
+            plugin.getLogger().warning("Falha ao enviar webhook do Discord: " + e.getMessage());
         }
     }
 }

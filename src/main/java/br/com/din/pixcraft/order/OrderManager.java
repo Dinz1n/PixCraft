@@ -6,10 +6,8 @@ import br.com.din.pixcraft.payment.gateway.PaymentProvider;
 import br.com.din.pixcraft.map.CustomMapCreator;
 import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.product.ProductManager;
-import br.com.din.pixcraft.utils.DateUtils;
 import br.com.din.pixcraft.utils.QrCodeGenerator;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -17,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.awt.image.BufferedImage;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -38,9 +35,9 @@ public class OrderManager {
 
         if (!storage.getOrders().isEmpty()) {
             for (Order order : storage.getOrders().values()) {
-                if (order.getPaymentData().getStatus() == PaymentStatus.PENDING) {
-                    paymentProvider.getStatus(order.getPaymentData().getId(), paymentStatus -> {
-                        order.getPaymentData().setStatus(paymentStatus);
+                if (order.getPayment().getStatus() == PaymentStatus.PENDING) {
+                    paymentProvider.getStatus(order.getPayment().getId(), paymentStatus -> {
+                        order.getPayment().setStatus(paymentStatus);
                         storage.addOrder(order);
                     });
                 }
@@ -50,28 +47,23 @@ public class OrderManager {
 
     public void processOrder(Player player, Product product) {
         if (storage.getOrders().containsKey(player.getUniqueId())) {
-            player.sendMessage("§cVocê só pode fazer um pedido por vez.");
+            player.sendMessage("§c[PixCraft] Você só pode fazer um pedido por vez.");
             return;
         }
 
         if (product == null) {
-            player.sendMessage("§cErro! Produto não encontrado.");
+            player.sendMessage("§c[PixCraft] Erro! Produto não encontrado.");
             return;
         }
 
-        String dateOfExpiration = DateUtils.toMpExpirationOrDefault(
-                plugin.getConfig().getString("payment.expiration-time"),
-                Duration.ofMinutes(30)
-        );
-
-        paymentProvider.createPayment(player.getName(), product, dateOfExpiration, paymentData -> {
+        paymentProvider.createPayment(player.getName(), product, paymentData -> {
             if (paymentData == null) {
-                player.sendMessage("§cErro! Não foi possível criar o pagamento.");
+                player.sendMessage("§c[PixCraft] Erro! Não foi possível criar o pagamento.");
                 return;
             }
 
             Bukkit.getScheduler().runTask(plugin, () -> {
-                Order order = new Order(player.getUniqueId(), product, paymentData, paymentProvider);
+                Order order = new Order(player.getUniqueId(), player.getName(), product, paymentData, paymentProvider);
                 storage.addOrder(order);
 
                 if (!player.isOnline() && plugin.getConfig().getBoolean("payment.cancel-on-leave")) {
@@ -91,7 +83,7 @@ public class OrderManager {
                 player.getInventory().setHeldItemSlot(slotMap);
                 player.getInventory().setItem(slotMap, qrMap);
 
-                player.sendMessage("§aPagamento criado!");
+                player.sendMessage("§a[PixCraft] Pagamento criado!");
             });
         });
     }

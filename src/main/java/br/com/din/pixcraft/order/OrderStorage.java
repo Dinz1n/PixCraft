@@ -6,6 +6,7 @@ import br.com.din.pixcraft.payment.gateway.PaymentProvider;
 import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.product.ProductManager;
 import br.com.din.pixcraft.yaml.YamlDataManager;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -45,7 +46,7 @@ class OrderStorage extends YamlDataManager<Order> {
                 Payment payment = new Payment(paymentId, qrData);
                 payment.setStatus(status);
 
-                Order order = new Order(orderId, product, payment, paymentProvider);
+                Order order = new Order(orderId, Bukkit.getPlayer(orderId).getName(), product, payment, paymentProvider);
                 orders.put(orderId, order);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -59,9 +60,9 @@ class OrderStorage extends YamlDataManager<Order> {
         for (Order order : orders.values()) {
             ConfigurationSection section = getFileConfiguration().createSection(order.getId().toString());
             section.set("product", order.getProduct().getId());
-            section.set("payment.id", order.getPaymentData().getId());
-            section.set("payment.qrData", order.getPaymentData().getQrData());
-            section.set("payment.status", order.getPaymentData().getStatus().name());
+            section.set("payment.id", order.getPayment().getId());
+            section.set("payment.qrData", order.getPayment().getQrData());
+            section.set("payment.status", order.getPayment().getStatus().name());
         }
         super.reload();
     }

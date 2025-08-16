@@ -8,12 +8,14 @@ import java.util.UUID;
 
 public class Order {
     private final UUID id;
+    private final String payerName;
     private final Product product;
     private final Payment payment;
     private final PaymentProvider paymentProvider;
 
-    public Order(UUID id, Product product, Payment payment, PaymentProvider paymentProvider) {
+    public Order(UUID id, String payerName, Product product, Payment payment, PaymentProvider paymentProvider) {
         this.id = id;
+        this.payerName = payerName;
         this.product = product;
         this.payment = payment;
         this.paymentProvider = paymentProvider;
@@ -23,11 +25,15 @@ public class Order {
         return id;
     }
 
+    public String getPayerName() {
+        return payerName;
+    }
+
     public Product getProduct() {
         return product;
     }
 
-    public Payment getPaymentData() {
+    public Payment getPayment() {
         return payment;
     }
 

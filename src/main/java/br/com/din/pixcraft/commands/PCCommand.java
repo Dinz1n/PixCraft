@@ -39,9 +39,9 @@ public class PCCommand implements CommandExecutor, TabCompleter {
                     paymentProvider.setAccessToken(plugin.getConfig().getString("payment.provider.access-token"));
                     productManager.reload();
                     categoryManager.reload();
-                    sender.sendMessage("§aPlugin recarregado com sucesso!");
+                    sender.sendMessage("§a[PixCraft] Plugin recarregado com sucesso!");
                 } else {
-                    sender.sendMessage("§cVocê não tem permissão para executar este comando.");
+                    sender.sendMessage("§[PixCraft] cVocê não tem permissão para executar este comando.");
                 }
                 return true;
             default: return false;
