@@ -10,9 +10,9 @@
 # | Arquivo gerado para a versão 0.1 do plugin PixCraft.                                      |
 # |===========================================================================================|
 #
-# ==============================
+#===============================
 # EXEMPLO DE PRODUCTS.YML      |
-# ==============================
+#===============================
 # Cada produto possui:
 #   id-do-produto: identificador único (usado no target dos botões)
 #   name: Nome do produto que aparecerá no banco e nas notificações
@@ -20,9 +20,9 @@
 #   reward: Lista de comandos que serão executados quando a compra for aprovada
 #           Use {player} para referenciar o nome do jogador.
 
-# ==============================
+#===============================
 # Vips                         |
-# ==============================
+#===============================
 
 vip-mensal:
   name: "Vip Mensal"
@@ -42,9 +42,9 @@ vip-anual:
   reward:
     - "lp user {player} parent add vip"
 
-# ==============================
+#===============================
 # Kits                         |
-# ==============================
+#===============================
 
 kit-iniciante:
   name: "Kit Iniciante"
@@ -82,9 +82,9 @@ kit-lendario:
     - "give {player} minecraft:netherite_pickaxe 1"
     - "give {player} minecraft:netherite_ingot 2"
 
-# ==============================
+#===============================
 # Espadas                      |
-# ==============================
+#===============================
 
 espada-de-madeira:
   name: "Espada de Madeira"
