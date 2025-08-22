@@ -39,10 +39,20 @@ public abstract class YamlDataManager<T> {
         }
     }
 
-    private void save() {
+    protected void save() {
         try {
             fileConfiguration.save(file);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void load() {
+        try {
+            fileConfiguration.load(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
     }
@@ -54,7 +64,11 @@ public abstract class YamlDataManager<T> {
     }
 
     public void reload() {
-        save();
+        if (file.exists()) {
+            load();
+        } else {
+            saveDefaultFile();
+        }
         loadData();
     }
 }
