@@ -7,7 +7,7 @@
 # |  \______| \______/  |__| \__| |__|     |__|  \______|  |
 # |                                                        |
 # |========================================================|
-# | Arquivo gerado para a versão 0.1 do plugin PixCraft    |
+# | Arquivo gerado para a versão 0.1.0 do plugin PixCraft    |
 # |========================================================|
 
 #===============================
@@ -29,7 +29,7 @@ shop:
 #===============================
 payment:
   provider:
-    # Nome do provedor. Só tem MERCADOPAGO mesmo.
+    # Nome do provedor de pagamento. Só tem MERCADOPAGO mesmo.
     name: MERCADOPAGO
 
     # Token de acesso do provedor de pagamento (ex: Pix ou API externa)
