@@ -43,7 +43,7 @@ payment:
 # Configuração do QR Code      |
 #===============================
 qr-code-map:
-  # Nome que será exibido no item do inventário
+  # Nome que será exibido no mapa
   displayname: "&b&lCódigo QR"
 
   # Texto de descrição (lore) do item
@@ -51,7 +51,7 @@ qr-code-map:
     - "&7Escaneie este código"
     - "&7para realizar o pagamento."
 
-  # Slot onde o item do QR Code aparecerá na GUI
+  # Slot onde o item do QR Code aparecerá na sua hotbar
   # Aceita valores de 0 a 8; se for inválido, retorna 3 por padrão
   slot: 3
 
