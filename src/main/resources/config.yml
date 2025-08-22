@@ -23,7 +23,6 @@ shop:
   # Arquivo da GUI de confirmação de compra
   confirmation-gui: "confirmation_gui"
 
-
 #===============================
 # Configuração de Pagamento    |
 #===============================
@@ -37,7 +36,6 @@ payment:
 
   # Se true, o pagamento será cancelado caso o jogador saia do jogo ou o servidor desligue
   cancel-on-leave: false
-
 
 #===============================
 # Configuração do QR Code      |
@@ -54,7 +52,6 @@ qr-code-map:
   # Slot onde o item do QR Code aparecerá na sua hotbar
   # Aceita valores de 0 a 8; se for inválido, retorna 3 por padrão
   slot: 3
-
 
 #===============================
 # Notificações via Discord     |
