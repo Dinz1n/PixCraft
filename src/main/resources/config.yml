@@ -1,18 +1,64 @@
-shop:
-  command-name: "loja"
-  default-category: "main"
-  confirmation-gui: "confirm_cancel_gui"
+# |========================================================|
+# |   ______   ______   .__   __.  _______  __    _______  |
+# |  /      | /  __  \  |  \ |  | |   ____||  |  /  _____| |
+# | |  ,----'|  |  |  | |   \|  | |  |__   |  | |  |  __   |
+# | |  |     |  |  |  | |  . `  | |   __|  |  | |  | |_ |  |
+# | |  `----.|  `--'  | |  |\   | |  |     |  | |  |__| |  |
+# |  \______| \______/  |__| \__| |__|     |__|  \______|  |
+# |                                                        |
+# |========================================================|
+# | Arquivo gerado para a versão 0.1 do plugin PixCraft    |
+# |========================================================|
 
+#===============================
+# Configuração da Loja         |
+#===============================
+shop:
+  # Comando que o jogador usa para abrir a loja
+  command-name: "loja"
+
+  # Categoria padrão que será aberta ao executar o comando
+  default-category: "shop"
+
+  # Arquivo da GUI de confirmação de compra
+  confirmation-gui: "confirmation_gui"
+
+
+#===============================
+# Configuração de Pagamento    |
+#===============================
 payment:
   provider:
+    # Nome do provedor. Só tem MERCADOPAGO mesmo.
+    name: MERCADOPAGO
+
+    # Token de acesso do provedor de pagamento (ex: Pix ou API externa)
     access-token: "SEU_TOKEN_DE_ACESSO"
+
+  # Se true, o pagamento será cancelado caso o jogador saia do jogo ou o servidor desligue
   cancel-on-leave: false
 
+
+#===============================
+# Configuração do QR Code      |
+#===============================
 qr-code-map:
+  # Nome que será exibido no item do inventário
   displayname: "&b&lCódigo QR"
+
+  # Texto de descrição (lore) do item
   lore:
+    - "&7Escaneie este código"
+    - "&7para realizar o pagamento."
+
+  # Slot onde o item do QR Code aparecerá na GUI
+  # Aceita valores de 0 a 8; se for inválido, retorna 3 por padrão
   slot: 3
 
+
+#===============================
+# Notificações via Discord     |
+#===============================
 discord:
   notification:
     enable: false

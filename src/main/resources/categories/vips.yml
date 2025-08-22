@@ -1,0 +1,52 @@
+# Esta é a categoria "Vips".
+# Aqui você pode vender planos de acesso VIP.
+
+title: "Vips"
+rows: 3
+
+buttons:
+  11:
+    type: PRODUCT
+    target: "vip-mensal"
+    item:
+      material: GOLDEN_HELMET
+      displayname: "&6Vip Mensal"
+      lore:
+        - "&7Acesso VIP por 30 dias."
+        - "&a&lR$10,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  13:
+    type: PRODUCT
+    target: "vip-semestral"
+    item:
+      material: DIAMOND_HELMET
+      displayname: "&bVip Semestral"
+      lore:
+        - "&7Acesso VIP por 6 meses."
+        - "&a&lR$50,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  15:
+    type: PRODUCT
+    target: "vip-anual"
+    item:
+      material: NETHERITE_HELMET
+      displayname: "&cVip Anual"
+      lore:
+        - "&7Acesso VIP por 12 meses."
+        - "&a&lR$90,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  18:
+    type: GO_BACK
+    item:
+      material: ARROW
+      displayname: "&e&lVoltar"
+      lore:
+        - "&7Volte para a loja."
+      amount: 1
+      enchanted: false

@@ -1,0 +1,76 @@
+# Esta é a categoria "Kits".
+# Kits são pacotes de itens que o jogador pode comprar.
+
+title: "Kits"
+rows: 3
+
+buttons:
+  11:
+    type: PRODUCT
+    target: "kit-iniciante"
+    item:
+      material: WOODEN_PICKAXE
+      displayname: "&7Kit Iniciante"
+      lore:
+        - "&7Ferramentas básicas para começar."
+        - "&a&lR$5,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  12:
+    type: PRODUCT
+    target: "kit-avancado"
+    item:
+      material: STONE_PICKAXE
+      displayname: "&8Kit Avançado"
+      lore:
+        - "&7Ferramentas de pedra para evoluir."
+        - "&a&lR$15,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  13:
+    type: PRODUCT
+    target: "kit-profissional"
+    item:
+      material: IRON_PICKAXE
+      displayname: "&fKit Profissional"
+      lore:
+        - "&7Ferramentas de ferro robustas."
+        - "&a&lR$25,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  14:
+    type: PRODUCT
+    target: "kit-elite"
+    item:
+      material: DIAMOND_PICKAXE
+      displayname: "&bKit Elite"
+      lore:
+        - "&7Ferramentas de diamante poderosas."
+        - "&a&lR$40,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  15:
+    type: PRODUCT
+    target: "kit-lendario"
+    item:
+      material: NETHERITE_PICKAXE
+      displayname: "&cKit Lendário"
+      lore:
+        - "&7Ferramentas supremas de netherite."
+        - "&a&lR$60,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  18:
+    type: GO_BACK
+    item:
+      material: ARROW
+      displayname: "&e&lVoltar"
+      lore:
+        - "&7Volte para a loja."
+      amount: 1
+      enchanted: false

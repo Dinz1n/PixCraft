@@ -1,0 +1,50 @@
+# Este arquivo define o menu de CONFIRMAÇÃO DE COMPRA.
+# Ele é aberto sempre que o jogador clica em um produto (PRODUCT).
+
+title: "Confirmar Pedido"
+rows: 3
+
+buttons:
+  11:
+    type: CONFIRM # Confirma a compra e gera o pedido.
+    item:
+      material: EMERALD_BLOCK
+      displayname: "&a&lConfirmar Compra"
+      lore:
+        - "&7Clique para confirmar."
+        - "&7Um pedido será gerado."
+      amount: 1
+      enchanted: false
+  
+  13:
+    type: PRODUCT_PREVIEW # Mostra o item que o jogador escolheu.
+    # O item exibido será substituído pelo PRODUCT clicado na categoria.
+    item:
+      material: BEDROCK # Apenas placeholder, será trocado automaticamente.
+      displayname: "&bProduto Selecionado"
+      lore:
+        - "&7Este espaço será substituído"
+        - "&7pelo produto real."
+      amount: 1
+      enchanted: false
+
+  15:
+    type: CANCEL # Cancela a compra e fecha o menu.
+    # Pode ser GO_BACK se quiser que volte à categoria.
+    item:
+      material: REDSTONE_BLOCK
+      displayname: "&c&lCancelar"
+      lore:
+        - "&7Clique para cancelar sua compra."
+      amount: 1
+      enchanted: false
+
+  18:
+    type: GO_BACK # Volta para a categoria anterior sem gerar compra.
+    item:
+      material: ARROW
+      displayname: "&e&lVoltar"
+      lore:
+        - "&7Retorne ao menu anterior."
+      amount: 1
+      enchanted: false

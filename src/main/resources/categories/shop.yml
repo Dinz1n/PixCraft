@@ -1,0 +1,67 @@
+# Este é o arquivo da CATEGORIA PRINCIPAL da loja.
+# Aqui você organiza o menu inicial, que leva o jogador para outras categorias.
+
+title: "Loja" # Nome do inventário. Será exibido no topo da GUI.
+rows: 3       # Número de linhas (vai de 1 até 6). Cada linha tem 9 slots.
+
+buttons:
+  11: # Posição do botão no inventário (0 até rows*9 - 1).
+    type: CATEGORY # Tipo CATEGORY abre outra categoria da pasta /categories.
+    target: "vips" # Nome da categoria alvo (arquivo vips.yml). Não precisa da extensão .yml.
+
+    item: # Configuração do item que representa o botão.
+      material: EMERALD         # Material do item. Pode ser qualquer ID válido do Minecraft.
+      displayname: "&a&lVips"   # Nome que será exibido no item.
+      lore:                     # Texto de descrição. Aceita múltiplas linhas.
+        - "&7Compre planos VIP"
+        - "&7e ganhe vantagens exclusivas!"
+      amount: 1                 # Quantidade do item.
+      enchanted: true           # Adiciona brilho de encantamento (apenas visual).
+
+  13:
+    type: CATEGORY
+    target: "kits"
+    item:
+      material: CHEST
+      displayname: "&6&lKits"
+      lore:
+        - "&7Pacotes de itens prontos"
+        - "&7para acelerar sua jornada!"
+      amount: 1
+      enchanted: true
+
+  15:
+    type: CATEGORY
+    target: "swords"
+    item:
+      material: DIAMOND_SWORD
+      displayname: "&b&lEspadas"
+      lore:
+        - "&7Armas poderosas"
+        - "&7para suas batalhas!"
+      amount: 1
+      enchanted: true
+
+  18:
+    type: GO_BACK # Tipo GO_BACK leva o jogador de volta para o menu anterior.
+    # Se não houver menu anterior, fecha a loja.
+    target: "" # Pode ser deixado vazio ou removido.
+    item:
+      material: ARROW
+      displayname: "&e&lVoltar"
+      lore:
+        - "&7Feche o menu."
+      amount: 1
+      enchanted: false
+
+  # Botões decorativos: servem apenas para enfeitar ou preencher espaços.
+  # Você pode definir os slots de forma dinâmica, como "0", "0, 4, 10, 27", "0-8" (do slot 0 ao 8) e "0-8, 9-10, 12, 14, 16-17, 19-26".
+  0-8, 9-10, 12, 14, 16-17, 19-26:
+    type: DECORATIVE
+    target: # Não é necessário definir target para DECORATIVE.
+    item:
+      material: GRAY_STAINED_GLASS_PANE
+      displayname: " " # Espaço em branco para não poluir visualmente.
+      lore: []         # Sem lore.
+      amount: 1
+      enchanted: false

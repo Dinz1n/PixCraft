@@ -1,0 +1,77 @@
+# Esta é a categoria "Espadas".
+# Aqui você lista os produtos do tipo PRODUCT (que podem ser comprados).
+# Cada botão leva a um menu de confirmação antes da compra.
+
+title: "Espadas" # Nome que aparece no topo da GUI.
+rows: 3          # Linhas do inventário (9 slots cada linha).
+
+buttons:
+  11:
+    type: PRODUCT # Tipo PRODUCT abre o menu de confirmação de compra.
+    target: "espada-de-madeira" # O "target" deve ter o MESMO nome definido em products.yml.
+    item:
+      material: WOODEN_SWORD
+      displayname: "&7Espada de Madeira"
+      lore:
+        - "&7Arma básica para começar."
+        - "&a&lR$1,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  12:
+    type: PRODUCT
+    target: "espada-de-pedra"
+    item:
+      material: STONE_SWORD
+      displayname: "&8Espada de Pedra"
+      lore:
+        - "&7Um pouco mais resistente."
+        - "&a&lR$2,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  13:
+    type: PRODUCT
+    target: "espada-de-ouro"
+    item:
+      material: GOLDEN_SWORD
+      displayname: "&6Espada de Ouro"
+      lore:
+        - "&7Rápida mas frágil."
+        - "&a&lR$2,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  14:
+    type: PRODUCT
+    target: "espada-de-ferro"
+    item:
+      material: IRON_SWORD
+      displayname: "&fEspada de Ferro"
+      lore:
+        - "&7Bom equilíbrio de dano e durabilidade."
+        - "&a&lR$3,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  15:
+    type: PRODUCT
+    target: "espada-de-diamante"
+    item:
+      material: DIAMOND_SWORD
+      displayname: "&bEspada de Diamante"
+      lore:
+        - "&7Muito dano e alta durabilidade."
+        - "&a&lR$5,00 &7no &b&lPIX"
+      amount: 1
+      enchanted: false
+
+  18:
+    type: GO_BACK # Volta para o menu principal (loja.yml).
+    item:
+      material: ARROW
+      displayname: "&e&lVoltar"
+      lore:
+        - "&7Voltar para o menu principal."
+      amount: 1
+      enchanted: false

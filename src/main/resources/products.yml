@@ -1,51 +1,108 @@
-# Produtos da loja
-espada-de-diamante:
-  name: "Espada de Diamante"
-  price: 0.10
-  reward:
-    - "give {player} diamond_sword 1"
+# |===========================================================================================|
+# | .______   .______       ______    _______   __    __    ______ .___________.     _______. |
+# | |   _  \  |   _  \     /  __  \  |       \ |  |  |  |  /      ||           |    /       | |
+# | |  |_)  | |  |_)  |   |  |  |  | |  .--.  ||  |  |  | |  ,----'`---|  |----`   |   (----` |
+# | |   ___/  |      /    |  |  |  | |  |  |  ||  |  |  | |  |         |  |         \   \     |
+# | |  |      |  |\  \--. |  `--'  | |  '--'  ||  `--'  | |  `----.    |  |    .----)   |     |
+# | | _|      | _| `.___|  \______/  |_______/  \______/   \______|    |__|    |_______/      |
+# |                                                                                           |
+# |===========================================================================================|
+# | Arquivo gerado para a versão 0.1 do plugin PixCraft.                                      |
+# |===========================================================================================|
+#
+# ==============================
+# EXEMPLO DE PRODUCTS.YML      |
+# ==============================
+# Cada produto possui:
+#   id-do-produto: identificador único (usado no target dos botões)
+#   name: Nome do produto que aparecerá no banco e nas notificações
+#   price: Preço do produto em reais (ou moeda que você definiu)
+#   reward: Lista de comandos que serão executados quando a compra for aprovada
+#           Use {player} para referenciar o nome do jogador.
 
-espada-de-ferro:
-  name: "Espada de Ferro Cabulosa"
-  price: 2.00
-  reward:
-    - "give {player} iron_sword 1"
+# ==============================
+# Vips                         |
+# ==============================
 
-armadura-de-diamante:
-  name: "Conjunto de Armadura de Diamante"
-  price: 15.00
+vip-mensal:
+  name: "Vip Mensal"
+  price: 10.0
   reward:
-    - "give {player} diamond_helmet 1"
-    - "give {player} diamond_chestplate 1"
-    - "give {player} diamond_leggings 1"
-    - "give {player} diamond_boots 1"
+    - "lp user {player} parent add vip"
+
+vip-semestral:
+  name: "Vip Semestral"
+  price: 50.0
+  reward:
+    - "lp user {player} parent add vip"
+
+vip-anual:
+  name: "Vip Anual"
+  price: 90.0
+  reward:
+    - "lp user {player} parent add vip"
+
+# ==============================
+# Kits                         |
+# ==============================
 
 kit-iniciante:
   name: "Kit Iniciante"
-  price: 5.00
+  price: 5.0
   reward:
-    - "give {player} wooden_sword 1"
-    - "give {player} stone_pickaxe 1"
-    - "give {player} bread 16"
-    - "give {player} torch 32"
+    - "give {player} minecraft:wooden_pickaxe 1"
+    - "give {player} minecraft:apple 5"
 
-vip1:
-  name: "VIP Bem Legal"
-  price: 20.00
+kit-avancado:
+  name: "Kit Avançado"
+  price: 15.0
   reward:
-    - "lp user {player} parent add vip"
+    - "give {player} minecraft:stone_pickaxe 1"
+    - "give {player} minecraft:cooked_beef 10"
+    - "msg {player} &aVocê recebeu o Kit Avançado!"
 
-vip2:
-  name: "VIP Plus"
-  price: 14.99
+kit-profissional:
+  name: "Kit Profissional"
+  price: 25.0
   reward:
-    - "lp user {player} parent add outrovip"
+    - "give {player} minecraft:iron_pickaxe 1"
+    - "give {player} minecraft:cooked_beef 15"
 
-bundle-avancado:
-  name: "Bundle Avançado"
-  price: 30.00
+kit-elite:
+  name: "Kit Elite"
+  price: 40.0
   reward:
-    - "give {player} diamond_sword 1"
-    - "give {player} diamond_chestplate 1"
-    - "give {player} golden_apple 5"
-    - "lp user {player} parent add vip"
+    - "give {player} minecraft:diamond_pickaxe 1"
+    - "give {player} minecraft:diamond 3"
+
+kit-lendario:
+  name: "Kit Lendário"
+  price: 60.0
+  reward:
+    - "give {player} minecraft:netherite_pickaxe 1"
+    - "give {player} minecraft:netherite_ingot 2"
+
+# ==============================
+# Espadas                      |
+# ==============================
+
+espada-de-madeira:
+  name: "Espada de Madeira"
+  price: 1.0
+  reward:
+    - "give {player} minecraft:wooden_sword 1"
+
+espada-de-pedra:
+  name: "Espada de Pedra"
+  price: 2.0
+  reward:
+    - "give {player} minecraft:stone_sword 1"
+
+espada-de-ouro:
+  name: "Espada de Ouro"
+  price: 2.0
+  reward:
+    - "give {player} minecraft:golden_sword 1"
+
+espada-de-ferro:
+  name: "Espada de Ferro"

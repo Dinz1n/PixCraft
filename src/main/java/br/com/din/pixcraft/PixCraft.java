@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.security.auth.login.Configuration;
 import java.util.logging.Logger;
 
 public final class PixCraft extends JavaPlugin {
@@ -50,6 +51,7 @@ public final class PixCraft extends JavaPlugin {
         paymentProvider.setAccessToken(getConfig().getString("payment.provider.access-token"));
 
         logger.info("Carregando arquivos de configuração...");
+        getConfig();
         saveDefaultConfig();
         productManager = new ProductManager(this, "products.yml");
         orderManager = new OrderManager(this, paymentProvider, new CustomMapCreator(), productManager);

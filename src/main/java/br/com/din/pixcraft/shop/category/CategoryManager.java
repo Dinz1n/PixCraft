@@ -3,6 +3,7 @@ package br.com.din.pixcraft.shop.category;
 import br.com.din.pixcraft.shop.Button;
 import br.com.din.pixcraft.shop.ButtonType;
 import br.com.din.pixcraft.utils.ItemStackBuilder;
+import br.com.din.pixcraft.utils.SlotParser;
 import br.com.din.pixcraft.yaml.MultiYamlDataManager;
 
 import org.bukkit.Material;
@@ -19,7 +20,13 @@ public class CategoryManager extends MultiYamlDataManager<Category> {
     private final JavaPlugin plugin;
 
     public CategoryManager(JavaPlugin plugin, String folderName) {
-        super(plugin, folderName, "categories/confirmation_gui_example.yml");
+        super(plugin, folderName,
+                "categories/shop.yml",
+                "categories/confirmation_gui.yml",
+                "categories/swords.yml",
+                "categories/vips.yml",
+                "categories/kits.yml"
+        );
         this.plugin = plugin;
         loadAll();
     }
@@ -38,7 +45,7 @@ public class CategoryManager extends MultiYamlDataManager<Category> {
             ButtonType buttonType = ButtonType.valueOf(buttonData.get("type").toString());
             String target = buttonType.equals(ButtonType.DECORATIVE)? null : buttonType.equals(ButtonType.GO_BACK)? null : buttonData.getString("target");
 
-            // ItemStack
+            // Configuração do item
             Material material = Material.valueOf(buttonData.get("item.material").toString());
             String displayname = buttonData.getString("item.displayname");
             List<String> lore = buttonData.getStringList("item.lore");
@@ -55,7 +62,14 @@ public class CategoryManager extends MultiYamlDataManager<Category> {
 
             Button button = new Button(buttonType, target, itemStack);
 
-            buttons.put(Integer.valueOf(sectionKey), button);
+            if (buttonType == ButtonType.DECORATIVE) {
+                List<Integer> slots = SlotParser.parseSlots(sectionKey);
+                for (int slot : slots) {
+                    buttons.put(slot, button);
+                }
+            } else {
+                buttons.put(Integer.parseInt(sectionKey), button);
+            }
         }
         return new Category(fileName, title, size, buttons);
     }
