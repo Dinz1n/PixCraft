@@ -19,13 +19,15 @@ public class CategoryManager extends MultiYamlDataManager<Category> {
     private final JavaPlugin plugin;
 
     public CategoryManager(JavaPlugin plugin, String folderName) {
-        super(plugin, folderName, "categories/confirm_cancel_gui.yml");
+        super(plugin, folderName, "categories/confirmation_gui_example.yml");
         this.plugin = plugin;
         loadAll();
     }
 
     @Override
     protected Category loadSingleData(FileConfiguration config, String fileName) {
+        if (config == null) return null;
+
         String title = config.getString("title").replace("&", "§");
         int size = config.getInt("rows")*9;
         Map<Integer, Button> buttons = new HashMap<>();
