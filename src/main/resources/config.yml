@@ -28,10 +28,14 @@ shop:
 #===============================
 payment:
   provider:
-    # Nome do provedor de pagamento. Só tem MERCADOPAGO mesmo.
+    # Nome do provedor de pagamento. No momento, só existe suporte ao Mercadopago.
     name: MERCADOPAGO
 
     # Token de acesso do provedor de pagamento (ex: Pix ou API externa)
+    # IMPORTANTE:
+    # Esta integração requer CHECKOUT TRANSPARENTE do Mercado Pago.
+    # Configure corretamente seu token de acesso.
+    # Tutorial de integração: https://www.youtube.com/watch?v=T39m3F71po8&t=556s
     access-token: "SEU_TOKEN_DE_ACESSO"
 
   # Se true, o pagamento será cancelado caso o jogador saia do jogo ou o servidor desligue
