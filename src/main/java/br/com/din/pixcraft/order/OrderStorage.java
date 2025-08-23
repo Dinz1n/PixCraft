@@ -54,22 +54,13 @@ class OrderStorage extends YamlDataManager<Order> {
         }
     }
 
-    public void saveOrders() {
-        getFileConfiguration().getKeys(false).forEach(k -> getFileConfiguration().set(k, null));
-
-        for (Order order : orders.values()) {
-            ConfigurationSection section = getFileConfiguration().createSection(order.getId().toString());
-            section.set("product", order.getProduct().getId());
-            section.set("payment.id", order.getPayment().getId());
-            section.set("payment.qrData", order.getPayment().getQrData());
-            section.set("payment.status", order.getPayment().getStatus().name());
-        }
-        super.reload();
-    }
-
     public void addOrder(Order order) {
-        orders.put(order.getId(), order);
-        saveOrders();
+        ConfigurationSection section = getFileConfiguration().createSection(order.getId().toString());
+        section.set("product", order.getProduct().getId());
+        section.set("payment.id", order.getPayment().getId());
+        section.set("payment.qrData", order.getPayment().getQrData());
+        section.set("payment.status", order.getPayment().getStatus().name());
+        super.save();
     }
 
     public Order getOrder(UUID id) {
@@ -78,7 +69,10 @@ class OrderStorage extends YamlDataManager<Order> {
 
     public Order removeOrder(UUID id) {
         Order removed = orders.remove(id);
-        saveOrders();
+        if (removed != null) {
+            getFileConfiguration().set(id.toString(), null);
+            super.save();
+        }
         return removed;
     }
 
