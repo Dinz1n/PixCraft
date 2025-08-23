@@ -1,6 +1,6 @@
 # 💰 PixCraft  
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  [![Minecraft](https://img.shields.io/badge/Minecraft-Plugin-blue.svg)]()  [![MercadoPago](https://img.shields.io/badge/Payments-MercadoPago-lightblue.svg)]()  
+[![License: AGPL-3.0](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  [![Minecraft](https://img.shields.io/badge/Minecraft-Plugin-blue.svg)]()  [![MercadoPago](https://img.shields.io/badge/Payments-MercadoPago-lightblue.svg)]()  
 
 PixCraft é um plugin para **Minecraft** que implementa um sistema de pagamentos via **QR Code** integrado ao **MercadoPago**, permitindo que jogadores realizem compras dentro do jogo de forma simples e segura.  
 
