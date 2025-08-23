@@ -47,11 +47,10 @@ PixCraft é um plugin para **Minecraft** que implementa um sistema de pagamentos
 
 ## ⚙️ Instalação  
 
-1. Baixe a última versão do plugin (link em breve).  
+1. Baixe a última versão do plugin em [realeses](https://github.com/Dinz1n/PixCraft/releases).  
 2. Coloque o arquivo `.jar` na pasta `plugins` do seu servidor.  
 3. Reinicie o servidor.  
 4. Configure as credenciais do **MercadoPago** no arquivo `config.yml`.  
-5. Aproveite as funcionalidades do PixCraft!  
 
 ---
 
