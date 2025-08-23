@@ -46,7 +46,7 @@ class OrderStorage extends YamlDataManager<Order> {
                 Payment payment = new Payment(paymentId, qrData);
                 payment.setStatus(status);
 
-                Order order = new Order(orderId, Bukkit.getPlayer(orderId).getName(), product, payment, paymentProvider);
+                Order order = new Order(orderId, Bukkit.getOfflinePlayer(orderId).getName(), product, payment, paymentProvider);
                 orders.put(orderId, order);
             } catch (Exception e) {
                 e.printStackTrace();
