@@ -32,19 +32,6 @@ PixCraft é um plugin para **Minecraft** que implementa um sistema de pagamentos
 
 ---
 
-## 🔮 Funcionalidades planejadas  
-
-- 💬 Mensagens personalizáveis  
-- 🔗 Suporte ao **PlaceHolderAPI** e **Vault**  
-- 🏦 Integração com outras instituições financeiras  
-- 💳 Novas formas de pagamento  
-- 🗄 Banco de dados para registrar vendas e pagamentos pendentes  
-- 🖼 Marca do servidor no centro do QR Code  
-- ⚙️ Menu interativo para configuração do plugin  
-- 🔌 API para extensões do plugin  
-
----
-
 ## ⚙️ Instalação  
 
 1. Baixe a última versão do plugin em [realeses](https://github.com/Dinz1n/PixCraft/releases).  
