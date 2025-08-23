@@ -61,6 +61,7 @@ class OrderStorage extends YamlDataManager<Order> {
         section.set("payment.qrData", order.getPayment().getQrData());
         section.set("payment.status", order.getPayment().getStatus().name());
         super.save();
+        loadData();
     }
 
     public Order getOrder(UUID id) {
@@ -72,6 +73,7 @@ class OrderStorage extends YamlDataManager<Order> {
         if (removed != null) {
             getFileConfiguration().set(id.toString(), null);
             super.save();
+            loadData();
         }
         return removed;
     }

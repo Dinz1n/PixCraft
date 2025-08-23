@@ -40,7 +40,7 @@ public class PaymentUpdate implements Listener {
     }
 
     private void handleOrder(Order order) {
-        Player player = Bukkit.getPlayer(order.getId()); // pode ser null
+        Player player = Bukkit.getPlayer(order.getId());
 
         switch (order.getPayment().getStatus()) {
             case APPROVED:
