@@ -4,7 +4,6 @@ import br.com.din.pixcraft.commands.PCCommand;
 import br.com.din.pixcraft.commands.ShopCommand;
 import br.com.din.pixcraft.listeners.PaymentUpdate;
 import br.com.din.pixcraft.listeners.QrCodeProtect;
-import br.com.din.pixcraft.map.CustomMapCreator;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.payment.gateway.MercadoPagoService;
