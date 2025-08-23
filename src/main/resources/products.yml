@@ -94,3 +94,12 @@ espada-de-ouro:
 
 espada-de-ferro:
   name: "Espada de Ferro"
+  price: 3.0
+  reward:
+    - "give {player} minecraft:iron_sword"
+
+espada-de-diamante:
+  name: "Espada de diamante"
+  price: 5.0
+  reward:
+    - "give {player} minecraft:diamond_sword"

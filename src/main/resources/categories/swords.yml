@@ -72,6 +72,6 @@ buttons:
       material: ARROW
       displayname: "&e&lVoltar"
       lore:
-        - "&7Voltar para o menu principal."
+        - "&7Volte para a loja."
       amount: 1
       enchanted: false
