@@ -49,17 +49,17 @@ public class PaymentUpdate implements Listener {
                     for (String command : order.getProduct().getReward()) {
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName()));
                     }
+                    orderManager.removeOrder(order.getId());
                 }
 
-                orderManager.removeOrder(order.getId());
                 sendDiscordNotification(order, player);
                 break;
 
             case CANCELLED:
                 if (player != null && player.isOnline()) {
                     player.sendMessage("§c[PixCraft] Pagamento cancelado.");
+                    orderManager.removeOrder(order.getId());
                 }
-                orderManager.removeOrder(order.getId());
                 break;
 
             case PENDING:
