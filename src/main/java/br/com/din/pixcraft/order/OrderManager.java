@@ -24,14 +24,12 @@ public class OrderManager {
     private final OrderStorage storage;
     private final ProductManager productManager;
     private final PaymentProvider paymentProvider;
-    private final CustomMapCreator customMapCreator;
 
-    public OrderManager(JavaPlugin plugin, PaymentProvider paymentProvider, CustomMapCreator customMapCreator, ProductManager productManager) {
+    public OrderManager(JavaPlugin plugin, PaymentProvider paymentProvider, ProductManager productManager) {
         this.plugin = plugin;
         this.productManager = productManager;
         this.storage = new OrderStorage(plugin, paymentProvider, productManager);
         this.paymentProvider = paymentProvider;
-        this.customMapCreator = customMapCreator;
 
         if (!storage.getOrders().isEmpty()) {
             for (Order order : storage.getOrders().values()) {
@@ -73,7 +71,8 @@ public class OrderManager {
 
                 BufferedImage qrImage = QrCodeGenerator.generate(paymentData.getQrData(), 128, 128);
                 ConfigurationSection qrCodeMapSection = plugin.getConfig().getConfigurationSection("qr-code-map");
-                ItemStack qrMap = customMapCreator.create(qrImage, player.getWorld(),
+                ItemStack qrMap = CustomMapCreator.create(
+                        qrImage, player.getWorld(),
                         qrCodeMapSection.getString("displayname"),
                         qrCodeMapSection.getStringList("lore"));
                 qrMap = NBTItemUtils.setTag(qrMap, "pixcraft_order_id", order.getId());

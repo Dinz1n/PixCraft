@@ -1,13 +1,17 @@
 package br.com.din.pixcraft.listeners;
 
 import br.com.din.pixcraft.listeners.custom.PaymentUpdateEvent;
+import br.com.din.pixcraft.map.CustomMapCreator;
 import br.com.din.pixcraft.utils.NBTItemUtils;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.payment.PaymentStatus;
 
+import br.com.din.pixcraft.utils.QrCodeGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,7 +22,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.awt.image.BufferedImage;
 
 
 public class QrCodeProtect implements Listener {
@@ -74,6 +81,26 @@ public class QrCodeProtect implements Listener {
 
         if (!order.getPayment().getStatus().equals(PaymentStatus.PENDING)) {
             removeQrMap(player);
+        } else {
+
+            for (ItemStack itemStack : player.getInventory().getContents()) {
+                if (isQrMap(itemStack)) {
+                    if (isQrMap(itemStack)) player.getInventory().remove(itemStack);
+                }
+            }
+
+            BufferedImage qrImage = QrCodeGenerator.generate(order.getPayment().getQrData(), 128, 128);
+            ConfigurationSection qrCodeMapSection = plugin.getConfig().getConfigurationSection("qr-code-map");
+            ItemStack qrMap = CustomMapCreator.create(
+                    qrImage, player.getWorld(),
+                    qrCodeMapSection.getString("displayname"),
+                    qrCodeMapSection.getStringList("lore"));
+            qrMap = NBTItemUtils.setTag(qrMap, "pixcraft_order_id", order.getId());
+
+            int slotMap = qrCodeMapSection.getInt("slot");
+            if (slotMap < 0 || slotMap > 8) slotMap = 3;
+            player.getInventory().setHeldItemSlot(slotMap);
+            player.getInventory().setItem(slotMap, qrMap);
         }
     }
 

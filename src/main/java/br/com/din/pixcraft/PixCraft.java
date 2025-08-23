@@ -20,7 +20,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.security.auth.login.Configuration;
 import java.util.logging.Logger;
 
 public final class PixCraft extends JavaPlugin {
@@ -54,7 +53,7 @@ public final class PixCraft extends JavaPlugin {
         getConfig();
         saveDefaultConfig();
         productManager = new ProductManager(this, "products.yml");
-        orderManager = new OrderManager(this, paymentProvider, new CustomMapCreator(), productManager);
+        orderManager = new OrderManager(this, paymentProvider, productManager);
         shopManager = new ShopManager(this, orderManager, productManager);
 
         logger.info("Carregando método de verificação de pagamento (polling)...");

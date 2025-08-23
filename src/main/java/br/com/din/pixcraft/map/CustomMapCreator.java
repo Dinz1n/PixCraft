@@ -16,7 +16,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class CustomMapCreator {
-    public ItemStack create(BufferedImage image, World world, String displayname, List<String> lore) {
+    public static ItemStack create(BufferedImage image, World world, String displayname, List<String> lore) {
         MapView mapView = Bukkit.createMap(world);
         mapView.getRenderers().clear();
         mapView.addRenderer(new MapRenderer() {
