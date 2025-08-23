@@ -72,7 +72,7 @@ discord:
             url: "player:{player_name}"
           footer:
             text: "PixCraft"
-            icon_url: "https://i.imgur.com/wSTFkRM.png"
+            icon_url: "https://i.imgur.com/EnPoCGU.png"
           fields:
             - name: "Produto"
               value: "{product}"
