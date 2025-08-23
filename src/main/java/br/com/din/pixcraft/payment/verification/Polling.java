@@ -25,18 +25,20 @@ public class Polling implements PaymentChecker {
     @Override
     public void start() {
         task = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-            if (!orderManager.getOrders().isEmpty()) {
-                for (Order order : orderManager.getOrders().values()) {
-                    paymentProvider.getStatus(order.getPayment().getId(), paymentStatus -> {
-                        if (!paymentStatus.equals(PaymentStatus.PENDING)) {
-                            order.getPayment().setStatus(paymentStatus);
-                            orderManager.addOrder(order);
-                            Bukkit.getScheduler().runTask(plugin, () -> {
-                                Bukkit.getPluginManager().callEvent(new PaymentUpdateEvent(order));
-                            });
-                        }
+            if (orderManager.getOrders().isEmpty()) return;
+
+            for (Order order : orderManager.getOrders().values()) {
+                if (!order.getPayment().getStatus().equals(PaymentStatus.PENDING)) return;
+
+                paymentProvider.getStatus(order.getPayment().getId(), paymentStatus -> {
+                    if (paymentStatus.equals(PaymentStatus.PENDING)) return;
+
+                    order.getPayment().setStatus(paymentStatus);
+                    orderManager.addOrder(order);
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        Bukkit.getPluginManager().callEvent(new PaymentUpdateEvent(order));
                     });
-                }
+                });
             }
         }, 100L, 100L);
     }
