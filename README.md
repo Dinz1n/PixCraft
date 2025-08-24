@@ -42,8 +42,12 @@ PixCraft é um plugin para **Minecraft** que implementa um sistema de pagamentos
 ---
 
 ## 📷 Demonstração  
-
-*(adicione prints ou gifs mostrando o plugin em funcionamento)*  
+### Pagamento de um produto de teste.
+![Demonstração do PixCraft](docs/demo.gif)
+### A atualização no mercadopago é quase imediata.
+![Mensagem do mercadopago](docs/demo-mercadopago.png)
+### Mas a notificação no discord pode levar alguns segundos.
+![Notificação do Discord](docs/demo-notificacao-discord.png)
 
 ---
 
