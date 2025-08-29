@@ -47,6 +47,8 @@ public class CategoryManager extends MultiYamlDataManager<Category> {
 
             // Configuração do item
             Material material = Material.valueOf(buttonData.get("item.material").toString());
+            if (material == null) material = Material.BEDROCK;
+
             String displayname = buttonData.getString("item.displayname");
             List<String> lore = buttonData.getStringList("item.lore");
             int amount = buttonData.getInt("item.amount");
