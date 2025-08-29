@@ -46,7 +46,7 @@ public class CategoryManager extends MultiYamlDataManager<Category> {
             String target = buttonType.equals(ButtonType.DECORATIVE)? null : buttonType.equals(ButtonType.GO_BACK)? null : buttonData.getString("target");
 
             // Configuração do item
-            Material material = Material.valueOf(buttonData.get("item.material").toString());
+            Material material = Material.getMaterial(buttonData.get("item.material").toString());
             if (material == null) material = Material.BEDROCK;
 
             String displayname = buttonData.getString("item.displayname");
