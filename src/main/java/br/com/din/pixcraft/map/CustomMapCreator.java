@@ -10,7 +10,6 @@ import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -21,21 +20,54 @@ public class CustomMapCreator {
         mapView.getRenderers().clear();
         mapView.addRenderer(new MapRenderer() {
             @Override
-            public void render(@NotNull MapView map, @NotNull MapCanvas canvas, @NotNull Player player) {
+            public void render(MapView map, MapCanvas canvas, Player player) {
                 canvas.drawImage(0, 0, image);
             }
         });
 
-        ItemStack itemStack = new ItemStackBuilder()
-                .setMaterial(Material.FILLED_MAP)
+        try {
+            ItemStack mapItem = new ItemStackBuilder()
+                    .setMaterial(Material.FILLED_MAP)
+                    .setDisplayName(displayname)
+                    .setLore(lore)
+                    .setAmount(1)
+                    .setEnchanted(false)
+                    .build();
+            MapMeta mapMeta = (MapMeta) mapItem.getItemMeta();
+            mapMeta.setMapView(mapView);
+            mapItem.setItemMeta(mapMeta);
+            return mapItem;
+        } catch (Throwable throwable) {}
+
+        ItemStack mapItem = new ItemStackBuilder()
+                .setMaterial(Material.MAP)
                 .setDisplayName(displayname)
                 .setLore(lore)
                 .setAmount(1)
                 .setEnchanted(false)
                 .build();
-        MapMeta mapMeta = (MapMeta) itemStack.getItemMeta();
-        mapMeta.setMapView(mapView);
-        itemStack.setItemMeta(mapMeta);
-        return itemStack;
+        short mapId = getMapId(mapView);
+        if (mapId >= 0) {
+            mapItem.setDurability(mapId);
+            return mapItem;
+        }
+
+        return null;
+    }
+
+    private static short getMapId(MapView mapView) {
+        try {
+            return (short) MapView.class.getMethod("getId").invoke(mapView);
+        } catch (Throwable ignored) { }
+
+        try {
+            String packageName = Bukkit.getServer().getClass().getPackage().getName();
+            Class<?> craftMapViewClass = Class.forName(packageName + ".map.CraftMapView");
+            Object craftMap = craftMapViewClass.cast(mapView);
+            return (short) craftMapViewClass.getMethod("getId").invoke(craftMap);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return -1;
+        }
     }
 }
