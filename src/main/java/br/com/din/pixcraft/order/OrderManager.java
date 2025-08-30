@@ -1,9 +1,9 @@
 package br.com.din.pixcraft.order;
 
+import br.com.din.pixcraft.map.CustomMapCreator;
 import br.com.din.pixcraft.payment.PaymentStatus;
 import br.com.din.pixcraft.utils.NBTItemUtils;
 import br.com.din.pixcraft.payment.gateway.PaymentProvider;
-import br.com.din.pixcraft.map.CustomMapCreator;
 import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.product.ProductManager;
 import br.com.din.pixcraft.utils.QrCodeGenerator;
@@ -75,6 +75,14 @@ public class OrderManager {
                         qrImage, player.getWorld(),
                         qrCodeMapSection.getString("displayname"),
                         qrCodeMapSection.getStringList("lore"));
+
+                if (qrMap == null) {
+                    order.cancel();
+                    removeOrder(player.getUniqueId());
+                    player.sendMessage("§c[PixCraft] Aconteceu algo inesperado. Pagamento cancelado");
+                    return;
+                }
+
                 qrMap = NBTItemUtils.setTag(qrMap, "pixcraft_order_id", order.getId());
 
                 int slotMap = qrCodeMapSection.getInt("slot");
