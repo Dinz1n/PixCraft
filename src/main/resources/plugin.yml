@@ -1,7 +1,7 @@
 name: PixCraft
 version: '${project.version}'
 main: br.com.din.pixcraft.PixCraft
-api-version: '1.16'
+api-version: '1.14'
 authors: [Dinz1n]
 description: Sistema de pagamentos via PIX no Minecraft
 softdepend: [NBTAPI]
