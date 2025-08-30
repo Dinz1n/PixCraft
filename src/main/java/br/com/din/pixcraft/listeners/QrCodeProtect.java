@@ -11,7 +11,6 @@ import br.com.din.pixcraft.utils.QrCodeGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,9 +19,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.awt.image.BufferedImage;
@@ -35,7 +32,16 @@ public class QrCodeProtect implements Listener {
     public QrCodeProtect(JavaPlugin plugin, OrderManager orderManager) {
         this.plugin = plugin;
         this.orderManager = orderManager;
+
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        if (classExists("org.bukkit.event.player.PlayerSwapHandItemsEvent")) {
+            Bukkit.getPluginManager().registerEvents(new Listener() {
+                @EventHandler
+                public void onPlayerSwapHandItems(org.bukkit.event.player.PlayerSwapHandItemsEvent event) {
+                    event.setCancelled(isQrMap(event.getOffHandItem()));
+                }
+            }, plugin);
+        }
     }
 
     @EventHandler
@@ -61,11 +67,6 @@ public class QrCodeProtect implements Listener {
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         event.setCancelled(isQrMap(event.getItemDrop().getItemStack()));
-    }
-
-    @EventHandler
-    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
-        event.setCancelled(isQrMap(event.getOffHandItem()));
     }
 
     @EventHandler
@@ -141,5 +142,14 @@ public class QrCodeProtect implements Listener {
         if (itemStack == null || itemStack.getType().equals(Material.AIR)) return false;
         if (NBTItemUtils.hasTag(itemStack, "pixcraft_order_id")) return true;
         return false;
+    }
+
+    private static boolean classExists(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 }
