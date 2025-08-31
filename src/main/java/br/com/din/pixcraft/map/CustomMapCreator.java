@@ -1,6 +1,7 @@
 package br.com.din.pixcraft.map;
 
 import br.com.din.pixcraft.utils.ItemStackBuilder;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -25,27 +26,20 @@ public class CustomMapCreator {
             }
         });
 
+        ItemStack mapItem = new ItemStackBuilder(XMaterial.FILLED_MAP)
+                .setDisplayName(displayname)
+                .setLore(lore)
+                .build();
+
+        // Método moderno
         try {
-            ItemStack mapItem = new ItemStackBuilder()
-                    .setMaterial(Material.FILLED_MAP)
-                    .setDisplayName(displayname)
-                    .setLore(lore)
-                    .setAmount(1)
-                    .setEnchanted(false)
-                    .build();
             MapMeta mapMeta = (MapMeta) mapItem.getItemMeta();
             mapMeta.setMapView(mapView);
             mapItem.setItemMeta(mapMeta);
             return mapItem;
         } catch (Throwable throwable) {}
 
-        ItemStack mapItem = new ItemStackBuilder()
-                .setMaterial(Material.MAP)
-                .setDisplayName(displayname)
-                .setLore(lore)
-                .setAmount(1)
-                .setEnchanted(false)
-                .build();
+        // Método legado
         short mapId = getMapId(mapView);
         if (mapId >= 0) {
             mapItem.setDurability(mapId);

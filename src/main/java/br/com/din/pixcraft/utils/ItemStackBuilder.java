@@ -1,5 +1,6 @@
 package br.com.din.pixcraft.utils;
 
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -10,48 +11,76 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ItemStackBuilder {
-    private Material material = Material.BEDROCK;
-    private String displayName;
-    private List<String> lore;
-    private int amount = 1;
-    private boolean isEnchanted = false;
+    private ItemStack itemStack;
 
-    public ItemStackBuilder setMaterial(Material material) {
-        this.material = material;
+    public ItemStackBuilder() {
+
+    }
+
+    public ItemStackBuilder(ItemStack itemBase) {
+        itemStack = itemBase.clone();
+    }
+
+    public ItemStackBuilder(Material material){
+        this.itemStack = new ItemStack(material);
+    }
+
+    public ItemStackBuilder(XMaterial xMaterial) {
+        this.itemStack = xMaterial.parseItem();
+        if (this.itemStack == null) {
+            this.itemStack = new ItemStack(Material.BEDROCK);
+        }
+    }
+
+    public ItemStackBuilder setMaterial(String materialName) {
+        XMaterial xMat = XMaterial.matchXMaterial(materialName).orElse(null);
+
+        if (xMat != null) {
+            ItemStack parsed = xMat.parseItem();
+            if (parsed != null) {
+                this.itemStack = parsed;
+                return this;
+            }
+        }
+
+        this.itemStack = new ItemStack(Material.BEDROCK);
         return this;
     }
 
     public ItemStackBuilder setDisplayName(String displayName) {
-        this.displayName = displayName;
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(displayName.replace("&", "§"));
+            itemStack.setItemMeta(meta);
+        }
         return this;
     }
 
     public ItemStackBuilder setLore(List<String> lore) {
-        this.lore = lore;
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.setLore(lore.stream().map(string -> string.replace("&", "§")).collect(Collectors.toList()));
+            itemStack.setItemMeta(meta);
+        }
         return this;
     }
 
     public ItemStackBuilder setAmount(int amount) {
-        this.amount = amount;
+        this.itemStack.setAmount(amount > 0? amount : 1);
         return this;
     }
 
-    public ItemStackBuilder setEnchanted(boolean isEnchanted) {
-        this.isEnchanted = isEnchanted;
+    public ItemStackBuilder setEnchanted(boolean enchanted) {
+        if (enchanted) {
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.addEnchant(Enchantment.DURABILITY, 1, false);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);
+            itemStack.setItemMeta(itemMeta);
+        }
         return this;
     }
 
     public ItemStack build() {
-        ItemStack itemStack = new ItemStack(material, amount);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-
-        if (itemMeta != null) {
-            if (displayName != null) itemMeta.setDisplayName(displayName.replace("&", "§"));
-            if (lore != null) itemMeta.setLore(lore.stream().map(s -> s.replace("&", "§")).collect(Collectors.toList()));
-            if (isEnchanted) itemMeta.addEnchant(Enchantment.DURABILITY, 1, false);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);
-            itemStack.setItemMeta(itemMeta);
-        }
         return itemStack;
     }
 }

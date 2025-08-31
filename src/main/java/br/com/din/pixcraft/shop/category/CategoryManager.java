@@ -6,9 +6,12 @@ import br.com.din.pixcraft.utils.ItemStackBuilder;
 import br.com.din.pixcraft.utils.SlotParser;
 import br.com.din.pixcraft.yaml.MultiYamlDataManager;
 
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,16 +49,14 @@ public class CategoryManager extends MultiYamlDataManager<Category> {
             String target = buttonType.equals(ButtonType.DECORATIVE)? null : buttonType.equals(ButtonType.GO_BACK)? null : buttonData.getString("target");
 
             // Configuração do item
-            Material material = Material.getMaterial(buttonData.get("item.material").toString());
-            if (material == null) material = Material.BEDROCK;
-
+            String materialName = buttonData.getString("item.material");
             String displayname = buttonData.getString("item.displayname");
             List<String> lore = buttonData.getStringList("item.lore");
             int amount = buttonData.getInt("item.amount");
             boolean enchanted = buttonData.getBoolean("item.enchanted");
 
             ItemStack itemStack = new ItemStackBuilder()
-                    .setMaterial(material)
+                    .setMaterial(materialName)
                     .setDisplayName(displayname)
                     .setLore(lore)
                     .setAmount(amount)
