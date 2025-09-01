@@ -30,16 +30,16 @@ public class PaymentUpdate implements Listener {
     @EventHandler
     public void onPaymentUpdate(PaymentUpdateEvent event) {
         Order order = event.getOrder();
-        handleOrder(order);
+        handleOrder(order, true);
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (!orderManager.getOrders().containsKey(event.getPlayer().getUniqueId())) return;
-        handleOrder(orderManager.getOrder(event.getPlayer().getUniqueId()));
+        handleOrder(orderManager.getOrder(event.getPlayer().getUniqueId()), false);
     }
 
-    private void handleOrder(Order order) {
+    private void handleOrder(Order order, boolean notifyDiscord) {
         Player player = Bukkit.getPlayer(order.getId());
 
         switch (order.getPayment().getStatus()) {
@@ -52,7 +52,7 @@ public class PaymentUpdate implements Listener {
                     orderManager.removeOrder(order.getId());
                 }
 
-                sendDiscordNotification(order, player);
+                if (notifyDiscord) sendDiscordNotification(order, player);
                 break;
 
             case CANCELLED:
