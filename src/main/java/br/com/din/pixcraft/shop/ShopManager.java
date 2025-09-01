@@ -19,7 +19,7 @@ public class ShopManager {
         this.productManager = productManager;
 
         this.orderManager = orderManager;
-        this.categoryManager = new CategoryManager(plugin, "categories");
+        this.categoryManager = new CategoryManager(plugin, "categories", productManager);
         this.shopGui = new ShopGui(plugin, orderManager, categoryManager, productManager);
     }
 

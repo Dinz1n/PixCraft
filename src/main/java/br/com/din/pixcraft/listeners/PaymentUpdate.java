@@ -80,7 +80,7 @@ public class PaymentUpdate implements Listener {
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("player_name", player != null ? player.getName() : order.getPayerName());
         placeholders.put("product", order.getProduct().getName());
-        placeholders.put("amount", String.valueOf(order.getProduct().getPrice()));
+        placeholders.put("amount", String.valueOf(order.getProduct().getPrice())).replace(".", ",");
 
         ConfigurationSection messageSection = discordSection.getConfigurationSection("message");
         if (messageSection == null) return;
