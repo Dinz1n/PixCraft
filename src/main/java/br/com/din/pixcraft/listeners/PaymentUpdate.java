@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +53,6 @@ public class PaymentUpdate implements Listener {
                     }
                     orderManager.removeOrder(order.getId());
                 }
-
                 if (notifyDiscord) sendDiscordNotification(order, player);
                 break;
 
@@ -80,7 +81,8 @@ public class PaymentUpdate implements Listener {
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("player_name", player != null ? player.getName() : order.getPayerName());
         placeholders.put("product", order.getProduct().getName());
-        placeholders.put("price", String.valueOf(order.getProduct().getPrice())).replace(".", ",");
+        placeholders.put("price", String.valueOf(order.getProduct().getPrice()).replace(".", ","));
+        placeholders.put("date", new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
 
         ConfigurationSection messageSection = discordSection.getConfigurationSection("message");
         if (messageSection == null) return;

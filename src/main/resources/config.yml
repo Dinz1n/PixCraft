@@ -84,3 +84,6 @@ discord:
             - name: "Valor"
               value: "R${price}"
               inline: false
+            - name: "Data do pagamento"
+              value: "{date}"
+              inline: false
