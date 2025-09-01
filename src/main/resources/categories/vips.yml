@@ -13,7 +13,7 @@ buttons:
       displayname: "&6Vip Mensal"
       lore:
         - "&7Acesso VIP por 30 dias."
-        - "&a&lR$10,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
@@ -25,7 +25,7 @@ buttons:
       displayname: "&bVip Semestral"
       lore:
         - "&7Acesso VIP por 6 meses."
-        - "&a&lR$50,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
@@ -37,7 +37,7 @@ buttons:
       displayname: "&cVip Anual"
       lore:
         - "&7Acesso VIP por 12 meses."
-        - "&a&lR$90,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 

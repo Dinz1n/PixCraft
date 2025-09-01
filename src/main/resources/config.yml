@@ -82,5 +82,5 @@ discord:
               value: "{product}"
               inline: true
             - name: "Valor"
-              value: "R${amount}"
+              value: "R${price}"
               inline: false

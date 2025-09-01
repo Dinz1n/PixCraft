@@ -14,7 +14,7 @@ buttons:
       displayname: "&7Espada de Madeira"
       lore:
         - "&7Arma básica para começar."
-        - "&a&lR$1,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
@@ -26,7 +26,7 @@ buttons:
       displayname: "&8Espada de Pedra"
       lore:
         - "&7Um pouco mais resistente."
-        - "&a&lR$2,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
@@ -38,7 +38,7 @@ buttons:
       displayname: "&6Espada de Ouro"
       lore:
         - "&7Rápida mas frágil."
-        - "&a&lR$2,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
@@ -50,7 +50,7 @@ buttons:
       displayname: "&fEspada de Ferro"
       lore:
         - "&7Bom equilíbrio de dano e durabilidade."
-        - "&a&lR$3,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
@@ -62,7 +62,7 @@ buttons:
       displayname: "&bEspada de Diamante"
       lore:
         - "&7Muito dano e alta durabilidade."
-        - "&a&lR$5,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 

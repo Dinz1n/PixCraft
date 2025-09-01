@@ -13,7 +13,7 @@ buttons:
       displayname: "&7Kit Iniciante"
       lore:
         - "&7Ferramentas básicas para começar."
-        - "&a&lR$5,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
@@ -25,7 +25,7 @@ buttons:
       displayname: "&8Kit Avançado"
       lore:
         - "&7Ferramentas de pedra para evoluir."
-        - "&a&lR$15,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
@@ -37,7 +37,7 @@ buttons:
       displayname: "&fKit Profissional"
       lore:
         - "&7Ferramentas de ferro robustas."
-        - "&a&lR$25,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
@@ -49,7 +49,7 @@ buttons:
       displayname: "&bKit Elite"
       lore:
         - "&7Ferramentas de diamante poderosas."
-        - "&a&lR$40,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
@@ -61,7 +61,7 @@ buttons:
       displayname: "&cKit Lendário"
       lore:
         - "&7Ferramentas supremas de netherite."
-        - "&a&lR$60,00 &7no &b&lPIX"
+        - "&a&lR${price} &7no &b&lPIX"
       amount: 1
       enchanted: false
 
