@@ -5,6 +5,7 @@ import br.com.din.pixcraft.shop.category.CategoryManager;
 import br.com.din.pixcraft.shop.gui.ShopGui;
 import br.com.din.pixcraft.product.ProductManager;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ShopManager {
@@ -21,6 +22,18 @@ public class ShopManager {
         this.orderManager = orderManager;
         this.categoryManager = new CategoryManager(plugin, "categories", productManager);
         this.shopGui = new ShopGui(plugin, orderManager, categoryManager, productManager);
+    }
+
+    public void open(Player player) {
+        shopGui.openCategory(player, plugin.getConfig().getString("shop.default-category"));
+    }
+
+    public void open(Player player, String categoryId) {
+        shopGui.openCategory(player, categoryId);
+    }
+
+    public void buy(Player player, Button button) {
+        shopGui.openConfirmationMenu(player, button);
     }
 
     public CategoryManager getCategoryManager() {

@@ -96,9 +96,4 @@ public class CategoryManager extends MultiYamlDataManager<Category> {
 
         return new Category(fileName, title, size, buttons);
     }
-
-    @Override
-    protected String getIdFromFileName(String fileName) {
-        return fileName.replace(".yml", "");
-    }
 }

@@ -1,6 +1,6 @@
 package br.com.din.pixcraft.commands;
 
-import br.com.din.pixcraft.shop.gui.ShopGui;
+import br.com.din.pixcraft.shop.ShopManager;
 
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -10,9 +10,9 @@ import java.lang.reflect.Field;
 
 public class ShopCommand extends Command {
     private final JavaPlugin plugin;
-    private final ShopGui shopGui;
+    private final ShopManager shopManager;
 
-    public ShopCommand(JavaPlugin plugin, String commandName, ShopGui shopGui) {
+    public ShopCommand(JavaPlugin plugin, String commandName, ShopManager shopManager) {
         super(commandName);
         this.plugin = plugin;
 
@@ -21,7 +21,7 @@ public class ShopCommand extends Command {
         this.setPermission("pixcraft.shop");
         this.setPermissionMessage("Permite abrir a loja");
 
-        this.shopGui = shopGui;
+        this.shopManager = shopManager;
 
         registerCommand(this);
     }
@@ -40,7 +40,7 @@ public class ShopCommand extends Command {
             return true;
         }
 
-        shopGui.openCategory((Player) sender, plugin.getConfig().getString("shop.default-category"));
+        shopManager.open((Player) sender);
         return true;
     }
 
@@ -56,5 +56,4 @@ public class ShopCommand extends Command {
             e.printStackTrace();
         }
     }
-
 }

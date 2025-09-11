@@ -103,6 +103,10 @@ public class OrderManager {
         return storage.getOrder(uuid);
     }
 
+    public Order getOrderByPaymentId(long paymentId) {
+        return storage.getOrders().values().stream().filter(order -> order.getPayment().getId() == paymentId).findFirst().get();
+    }
+
     public Map<UUID, Order> getOrders() {
         return new HashMap<>(storage.getOrders());
     }

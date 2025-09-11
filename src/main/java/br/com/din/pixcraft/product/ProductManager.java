@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class ProductManager extends YamlDataManager<Product> {
         return products.get(productId);
     }
 
-    public Map<String, Product> getProducts() {
-        return new HashMap<>(products);
+    public Collection<Product> getProducts() {
+        return products.values();
     }
 }

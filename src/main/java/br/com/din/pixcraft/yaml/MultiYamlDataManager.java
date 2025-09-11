@@ -50,9 +50,9 @@ public abstract class MultiYamlDataManager<T> {
 
         for (File file : files) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            T data = loadSingleData(config, file.getName());
+            T data = loadSingleData(config, file.getName().replace(".yml", ""));
             if (data != null) {
-                loadedData.put(getIdFromFileName(file.getName()), data);
+                loadedData.put(file.getName().replace(".yml", ""), data);
             }
         }
     }
@@ -62,8 +62,6 @@ public abstract class MultiYamlDataManager<T> {
     }
 
     protected abstract T loadSingleData(FileConfiguration config, String fileName);
-
-    protected abstract String getIdFromFileName(String fileName);
 
     public T get(String id) {
         return loadedData.get(id);

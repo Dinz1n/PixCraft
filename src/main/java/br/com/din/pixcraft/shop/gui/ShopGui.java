@@ -23,6 +23,7 @@ public class ShopGui implements Listener {
     private final OrderManager orderManager;
     private final CategoryManager categoryManager;
     private final ProductManager productManager;
+
     private final Map<UUID, Deque<Category>> openInventories = new HashMap<>();
     private final Set<UUID> navigatingPlayers = new HashSet<>();
     private final Map<UUID, Button> pendingPurchases = new HashMap<>();
@@ -45,6 +46,11 @@ public class ShopGui implements Listener {
         openInventories.put(player.getUniqueId(), stack);
 
         openInventory(player, category);
+    }
+
+    public void openConfirmationMenu(Player player, Button button) {
+        pendingPurchases.put(player.getUniqueId(), button);
+        openCategory(player, plugin.getConfig().getString("shop.confirmation-gui"));
     }
 
     private void navigate(Player player, Category category) {

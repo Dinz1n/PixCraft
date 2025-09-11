@@ -7,7 +7,7 @@
 # |  \______| \______/  |__| \__| |__|     |__|  \______|  |
 # |                                                        |
 # |========================================================|
-# | Arquivo gerado para a versão 0.1 do plugin PixCraft    |
+# | Arquivo gerado para a versão 0.3 do plugin PixCraft    |
 # |========================================================|
 
 #===============================
@@ -40,6 +40,24 @@ payment:
 
   # Se true, o pagamento será cancelado caso o jogador saia do jogo ou o servidor desligue
   cancel-on-leave: false
+
+  # Habilita o webhook para receber notificações de pagamento em tempo real.
+  # Se estiver "false", o plugin usará polling automaticamente.
+  #
+  # COMO CONFIGURAR:
+  # 1. Deixe "enabled: true" e escolha uma porta (ex: 8080).
+  # 2. Se for testar localmente, use ngrok:
+  #       ngrok http 8080
+  #    Copie a URL gerada (ex: https://abcd1234.ngrok-free.app).
+  # 3. No painel do Mercado Pago, vá em "Notificações Webhook"
+  #    e cadastre a URL pública + "/payment":
+  #       https://abcd1234.ngrok-free.app/payment
+  # 4. Marque apenas os eventos de pagamento.
+  # 5. Salve e teste um pagamento — o plugin deve reconhecer instantaneamente.
+  #
+  webhook:
+    enabled: false
+    port: 8080
 
 #===============================
 # Configuração do QR Code      |

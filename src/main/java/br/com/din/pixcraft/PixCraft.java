@@ -10,6 +10,7 @@ import br.com.din.pixcraft.payment.gateway.MercadoPagoService;
 import br.com.din.pixcraft.payment.gateway.PaymentProvider;
 import br.com.din.pixcraft.payment.verification.PaymentChecker;
 import br.com.din.pixcraft.payment.verification.Polling;
+import br.com.din.pixcraft.payment.verification.Webhook;
 import br.com.din.pixcraft.shop.ShopManager;
 
 import br.com.din.pixcraft.product.ProductManager;
@@ -55,17 +56,23 @@ public final class PixCraft extends JavaPlugin {
         orderManager = new OrderManager(this, paymentProvider, productManager);
         shopManager = new ShopManager(this, orderManager, productManager);
 
-        logger.info("Carregando método de verificação de pagamento (polling)...");
-        paymentChecker = new Polling(this, paymentProvider, orderManager);
-        paymentChecker.start();
+        if (getConfig().getBoolean("payment.webhook.enabled")) {
+            logger.info("Carregando método de verificação de pagamento (webhook)...");
+            paymentChecker = new Webhook(this, paymentProvider, getConfig().getInt("payment.webhook.port"), orderManager);
+            paymentChecker.start();
+        } else {
+            logger.info("Carregando método de verificação de pagamento (polling)...");
+            paymentChecker = new Polling(this, paymentProvider, orderManager);
+            paymentChecker.start();
+        }
 
         logger.info("Registrando listeners...");
         new QrCodeProtect(this, orderManager);
         new PaymentUpdate(this, orderManager);
 
         logger.info("Registrando comandos...");
-        new PCCommand(this, shopManager.getProductManager(), shopManager.getCategoryManager(), paymentProvider);
-        new ShopCommand(this, getConfig().getString("shop.command-name"), shopManager.getShopGui());
+        new PCCommand(this, productManager, shopManager, paymentProvider);
+        new ShopCommand(this, getConfig().getString("shop.command-name"), shopManager);
 
         logger.info("Plugin inicializado com sucesso!");
     }

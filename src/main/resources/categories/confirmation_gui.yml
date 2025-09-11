@@ -48,3 +48,13 @@ buttons:
         - "&7Retorne ao menu anterior."
       amount: 1
       enchanted: false
+
+  0-8, 9-10, 12, 14, 16-17, 19-26:
+    type: DECORATIVE
+    target:
+    item:
+      material: GRAY_STAINED_GLASS_PANE
+      displayname: " "
+      lore: [ ]
+      amount: 1
+      enchanted: false
