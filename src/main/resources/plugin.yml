@@ -12,11 +12,14 @@ commands:
     aliases: [pc]
     permissions:
         pixcraft.command:
-            description: Permite o uso do comando principal do plugin.
-            default: true
+          description: Permite o uso do comando principal do plugin.
+          default: true
         pixcraft.command.reload:
-            description: Permite recarregar o plugin.
-            default: op
+          description: Permite recarregar o plugin.
+          default: op
         pixcraft.command.product:
-            description: Permite solicitar produtos.
-            default: op
+          description: Permite solicitar produtos.
+          default: op
+        pixcraft.command.menu:
+          description: Permite abrir um menu específico diretamente.
+          default: op
