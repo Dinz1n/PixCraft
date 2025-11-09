@@ -13,15 +13,13 @@ import java.util.stream.Collectors;
 public class ItemStackBuilder {
     private ItemStack itemStack;
 
-    public ItemStackBuilder() {
-
-    }
+    public ItemStackBuilder() {}
 
     public ItemStackBuilder(ItemStack itemBase) {
-        itemStack = itemBase.clone();
+        this.itemStack = itemBase.clone();
     }
 
-    public ItemStackBuilder(Material material){
+    public ItemStackBuilder(Material material) {
         this.itemStack = new ItemStack(material);
     }
 
@@ -33,14 +31,28 @@ public class ItemStackBuilder {
     }
 
     public ItemStackBuilder setMaterial(String materialName) {
-        XMaterial xMat = XMaterial.matchXMaterial(materialName).orElse(null);
+        if (materialName == null || materialName.isEmpty()) {
+            this.itemStack = new ItemStack(Material.BEDROCK);
+            return this;
+        }
 
-        if (xMat != null) {
-            ItemStack parsed = xMat.parseItem();
-            if (parsed != null) {
-                this.itemStack = parsed;
+        try {
+            if (materialName.startsWith("head:")) {
+                String texture = materialName.substring(5);
+                this.itemStack = HeadUtils.getCustomHead(texture);
                 return this;
             }
+
+            XMaterial xMat = XMaterial.matchXMaterial(materialName).orElse(null);
+            if (xMat != null) {
+                ItemStack parsed = xMat.parseItem();
+                if (parsed != null) {
+                    this.itemStack = parsed;
+                    return this;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         this.itemStack = new ItemStack(Material.BEDROCK);
@@ -59,23 +71,25 @@ public class ItemStackBuilder {
     public ItemStackBuilder setLore(List<String> lore) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
-            meta.setLore(lore.stream().map(string -> string.replace("&", "§")).collect(Collectors.toList()));
+            meta.setLore(lore.stream().map(s -> s.replace("&", "§")).collect(Collectors.toList()));
             itemStack.setItemMeta(meta);
         }
         return this;
     }
 
     public ItemStackBuilder setAmount(int amount) {
-        this.itemStack.setAmount(amount > 0? amount : 1);
+        this.itemStack.setAmount(amount > 0 ? amount : 1);
         return this;
     }
 
     public ItemStackBuilder setEnchanted(boolean enchanted) {
         if (enchanted) {
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.addEnchant(Enchantment.DURABILITY, 1, false);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);
-            itemStack.setItemMeta(itemMeta);
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta != null) {
+                meta.addEnchant(Enchantment.DURABILITY, 1, false);
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);
+                itemStack.setItemMeta(meta);
+            }
         }
         return this;
     }
