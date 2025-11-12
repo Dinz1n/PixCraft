@@ -1,0 +1,13 @@
+name: "Kit Profissional"
+price: 25.0
+reward:
+  - "give {player} minecraft:diamond_pickaxe 1"
+  - "give {player} minecraft:cooked_beef 15"
+icon:
+  material: DIAMOND_PICKAXE
+  displayname: "&fKit Profissional"
+  lore:
+    - "&7Ferramentas de diamante robustas."
+    - "&a&lR${price} &7no &b&lPIX"
+  amount: 1
+  enchanted: false

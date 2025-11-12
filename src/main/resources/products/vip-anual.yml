@@ -1,0 +1,12 @@
+name: "Vip Anual"
+price: 90.0
+reward:
+  - "lp user {player} parent add vip"
+icon:
+  material: DIAMOND_HELMET
+  displayname: "&cVip Anual"
+  lore:
+    - "&7Acesso VIP por 12 meses."
+    - "&a&lR${price} &7no &b&lPIX"
+  amount: 1
+  enchanted: false

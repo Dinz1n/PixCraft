@@ -1,0 +1,38 @@
+# Esta é a categoria "Espadas".
+# Aqui você lista os produtos do tipo PRODUCT (que podem ser comprados).
+# Cada botão leva a um menu de confirmação antes da compra.
+
+title: "Espadas" # Nome que aparece no topo da GUI.
+rows: 3          # Linhas do inventário (9 slots cada linha).
+
+buttons:
+  11:
+    type: PRODUCT # Tipo PRODUCT abre o menu de confirmação de compra.
+    id: "espada-de-pedra" # O "id" deve ter o MESMO nome definido em products.yml.
+
+  13:
+    type: PRODUCT
+    id: "espada-de-ferro"
+
+  15:
+    type: PRODUCT
+    id: "espada-de-diamante"
+
+  18:
+    type: BACK # Volta para o menu principal (shop.yml).
+    icon:
+      material: head:http://textures.minecraft.net/texture/e35e42fc7060c223acc965f7c5996f272644af40a4723a372f5903f8e9f188e7
+      displayname: "&e&lVoltar"
+      lore:
+        - "&7Volte para a loja."
+      amount: 1
+      enchanted: false
+
+  0-8, 9-10, 12, 14, 16-17, 19-26:
+    type: DECORATIVE
+    icon:
+      material: GRAY_STAINED_GLASS_PANE
+      displayname: " "
+      lore: [ ]
+      amount: 1
+      enchanted: false

@@ -1,0 +1,12 @@
+name: "Espada de Pedra"
+price: 2.0
+reward:
+  - "give {player} minecraft:stone_sword 1"
+icon:
+  material: STONE_SWORD
+  displayname: "&8Espada de Pedra"
+  lore:
+    - "&7Boa pra um começo."
+    - "&a&lR${price} &7no &b&lPIX"
+  amount: 1
+  enchanted: false

@@ -1,10 +1,10 @@
-package br.com.din.pixcraft.shop;
+package br.com.din.pixcraft.shop.button;
 
 public enum ButtonType {
     CATEGORY,
     PRODUCT,
     DECORATIVE,
-    GO_BACK,
+    BACK,
     CONFIRM,
     CANCEL,
     PRODUCT_PREVIEW

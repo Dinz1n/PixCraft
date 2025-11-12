@@ -1,8 +1,10 @@
 package br.com.din.pixcraft.product;
 
-import br.com.din.pixcraft.yaml.YamlDataManager;
-import org.bukkit.configuration.ConfigurationSection;
+import br.com.din.pixcraft.yaml.MultiYamlDataManager;
+import br.com.din.pixcraft.yaml.YamlConfigReader;
+
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
@@ -10,39 +12,45 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProductManager extends YamlDataManager<Product> {
-    private final Map<String, Product> products = new HashMap<>();
+public class ProductManager extends MultiYamlDataManager<Product> {
     private final JavaPlugin plugin;
 
-    public ProductManager(JavaPlugin plugin, String fileName) {
-        super(plugin, fileName);
+    public ProductManager(JavaPlugin plugin) {
+        super(plugin, "products",
+                "products/vip-anual.yml",
+                "products/vip-mensal.yml",
+                "products/vip-semestral.yml",
+                "products/kit-avancado.yml",
+                "products/kit-iniciante.yml",
+                "products/kit-profissional.yml",
+                "products/espada-de-pedra.yml",
+                "products/espada-de-diamante.yml",
+                "products/espada-de-ferro.yml"
+        );
         this.plugin = plugin;
-        loadData();
+        loadAll();
     }
 
     @Override
-    protected void loadData() {
-        FileConfiguration productsConfig = getFileConfiguration();
-        if (productsConfig == null) return;
+    protected Product loadSingleData(FileConfiguration productData, String fileName) {
+        if (productData == null) return null;
 
-        products.clear();
-        for (String key : productsConfig.getKeys(false)) {
-            ConfigurationSection productData = productsConfig.getConfigurationSection(key);
+        String name = productData.getString("name");
+        double price = productData.getDouble("price");
+        List<String> reward = productData.getStringList("reward");
 
-            String name = productData.getString("name");
-            double price = productData.getDouble("price");
-            List<String> reward = productData.getStringList("reward");
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("{price}", String.valueOf(price).replace(".", ","));
+        ItemStack icon = YamlConfigReader.buildItem(productData.getConfigurationSection("icon"), placeholders);
 
-            Product product = new Product(key, name, price, reward);
-            products.put(key, product);
-        }
+        return new Product(fileName, name, price, reward, icon);
     }
 
     public Product getProduct(String productId) {
-        return products.get(productId);
+        return get(productId);
     }
 
     public Collection<Product> getProducts() {
-        return products.values();
+        return getAll();
     }
 }

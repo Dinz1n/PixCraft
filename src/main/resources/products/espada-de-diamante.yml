@@ -1,0 +1,12 @@
+name: "Espada de diamante"
+price: 5.0
+reward:
+  - "give {player} minecraft:diamond_sword"
+icon:
+  material: DIAMOND_SWORD
+  displayname: "&6Espada de Diamante"
+  lore:
+    - "&7Poderosa e durável."
+    - "&a&lR${price} &7no &b&lPIX"
+  amount: 1
+  enchanted: false

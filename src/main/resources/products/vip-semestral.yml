@@ -1,0 +1,12 @@
+name: "Vip Semestral"
+price: 50.0
+reward:
+  - "lp user {player} parent add vip"
+icon:
+  material: IRON_HELMET
+  displayname: "&bVip Semestral"
+  lore:
+    - "&7Acesso VIP por 6 meses."
+    - "&a&lR${price} &7no &b&lPIX"
+  amount: 1
+  enchanted: false

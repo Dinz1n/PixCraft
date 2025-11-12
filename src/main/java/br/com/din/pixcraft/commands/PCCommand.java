@@ -4,10 +4,9 @@ import br.com.din.pixcraft.payment.gateway.PaymentProvider;
 
 import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.product.ProductManager;
-import br.com.din.pixcraft.shop.Button;
-import br.com.din.pixcraft.shop.ButtonType;
+import br.com.din.pixcraft.shop.button.Button;
 import br.com.din.pixcraft.shop.ShopManager;
-import br.com.din.pixcraft.shop.category.Category;
+import br.com.din.pixcraft.shop.menu.Menu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -55,16 +54,11 @@ public class PCCommand implements CommandExecutor, TabCompleter {
             case 1: return Arrays.asList("menu", "reload", "product");
             case 2:
                 if (args[0].equals("menu")) {
-                    return shop.getCategoryManager().getAll().stream().map(Category::getId).collect(Collectors.toList());
+                    return shop.getMenuManager().getAll().stream().map(Menu::getId).collect(Collectors.toList());
                 }
 
                 if (args[0].equals("product")) {
-                    return shop.getCategoryManager().getAll().stream()
-                            .flatMap(category -> category.getButtons().values().stream())
-                            .filter(button -> ButtonType.PRODUCT.equals(button.getType()))
-                            .map(Button::getTarget)
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toList());
+                    return productManager.getProducts().stream().map(Product::getId).collect(Collectors.toList());
                 }
 
             default: return Collections.emptyList();
@@ -79,7 +73,7 @@ public class PCCommand implements CommandExecutor, TabCompleter {
         plugin.reloadConfig();
         paymentProvider.setAccessToken(plugin.getConfig().getString("payment.provider.access-token"));
         productManager.reload();
-        shop.getCategoryManager().reload();
+        shop.getMenuManager().reload();
         sender.sendMessage("§a[PixCraft] Plugin recarregado com sucesso!");
         return true;
     }
@@ -95,7 +89,7 @@ public class PCCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || shop.getCategoryManager().get(args[1]) == null) {
+        if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || shop.getMenuManager().get(args[1]) == null) {
             sender.sendMessage("§c[PixCraft] Erro! Menu não encontrado.");
             return true;
         }
@@ -119,7 +113,7 @@ public class PCCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        Button productButton = shop.getCategoryManager().getAll().stream()
+        Button productButton = shop.getMenuManager().getAll().stream()
                 .flatMap(category -> category.getButtons().values().stream())
                 .filter(button -> args[1].equals(button.getTarget()))
                 .findFirst().get();

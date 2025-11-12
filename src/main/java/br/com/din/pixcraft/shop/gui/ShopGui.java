@@ -1,18 +1,17 @@
 package br.com.din.pixcraft.shop.gui;
 
 import br.com.din.pixcraft.order.OrderManager;
-import br.com.din.pixcraft.shop.Button;
-import br.com.din.pixcraft.shop.ButtonType;
-import br.com.din.pixcraft.shop.category.Category;
-import br.com.din.pixcraft.shop.category.CategoryManager;
+import br.com.din.pixcraft.shop.button.Button;
+import br.com.din.pixcraft.shop.button.ButtonType;
+import br.com.din.pixcraft.shop.menu.Menu;
+import br.com.din.pixcraft.shop.menu.MenuManager;
 import br.com.din.pixcraft.product.ProductManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,14 +20,14 @@ import java.util.*;
 public class ShopGui implements Listener {
     private final JavaPlugin plugin;
     private final OrderManager orderManager;
-    private final CategoryManager categoryManager;
+    private final MenuManager categoryManager;
     private final ProductManager productManager;
 
-    private final Map<UUID, Deque<Category>> openInventories = new HashMap<>();
+    private final Map<UUID, Deque<Menu>> openInventories = new HashMap<>();
     private final Set<UUID> navigatingPlayers = new HashSet<>();
     private final Map<UUID, Button> pendingPurchases = new HashMap<>();
 
-    public ShopGui(JavaPlugin plugin, OrderManager orderManager, CategoryManager categoryManager, ProductManager productManager) {
+    public ShopGui(JavaPlugin plugin, OrderManager orderManager, MenuManager categoryManager, ProductManager productManager) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
         this.plugin = plugin;
@@ -38,10 +37,10 @@ public class ShopGui implements Listener {
     }
 
     public void openCategory(Player player, String categoryId) {
-        Category category = categoryManager.get(categoryId);
+        Menu category = categoryManager.get(categoryId);
         if (category == null) return;
 
-        Deque<Category> stack = new ArrayDeque<>();
+        Deque<Menu> stack = new ArrayDeque<>();
         stack.push(category);
         openInventories.put(player.getUniqueId(), stack);
 
@@ -53,13 +52,13 @@ public class ShopGui implements Listener {
         openCategory(player, plugin.getConfig().getString("shop.confirmation-gui"));
     }
 
-    private void navigate(Player player, Category category) {
+    private void navigate(Player player, Menu category) {
         openInventories.get(player.getUniqueId()).push(category);
         openInventory(player, category);
     }
 
     private void goBack(Player player) {
-        Deque<Category> stack = openInventories.get(player.getUniqueId());
+        Deque<Menu> stack = openInventories.get(player.getUniqueId());
         if (stack.size() <= 1) {
             player.closeInventory();
             return;
@@ -68,7 +67,7 @@ public class ShopGui implements Listener {
         openInventory(player, stack.peek());
     }
 
-    private void openInventory(Player player, Category category) {
+    private void openInventory(Player player, Menu category) {
         navigatingPlayers.add(player.getUniqueId());
 
         Inventory inv = Bukkit.createInventory(null, category.getSize(), category.getTitle());
@@ -96,13 +95,16 @@ public class ShopGui implements Listener {
                 break;
 
             case PRODUCT:
+                if (pendingPurchases.containsKey(player.getUniqueId())) {
+                    break;
+                }
                 pendingPurchases.put(player.getUniqueId(), button);
                 navigate(player, categoryManager.get(plugin.getConfig().getString("shop.confirmation-gui")));
                 break;
 
             case DECORATIVE: break; // Não faz nada
 
-            case GO_BACK:
+            case BACK:
                 if (openInventories.get(player.getUniqueId()).peek().getId().equals(plugin.getConfig().getString("shop.confirmation-gui"))) {
                     pendingPurchases.remove(player.getUniqueId());
                 }
@@ -119,8 +121,6 @@ public class ShopGui implements Listener {
                 pendingPurchases.remove(player.getUniqueId());
                 player.closeInventory();
                 break;
-
-            case PRODUCT_PREVIEW: break; // Não faz nada
             default:
         }
     }
@@ -136,7 +136,7 @@ public class ShopGui implements Listener {
         if (!(event.isLeftClick() || event.isRightClick() || event.isShiftClick())) return;
         if (event.getClickedInventory() == null || !event.getClickedInventory().getType().equals(InventoryType.CHEST)) return;
 
-        Category category = openInventories.get(player.getUniqueId()).peek();
+        Menu category = openInventories.get(player.getUniqueId()).peek();
         if (category == null) return;
 
         Button button = category.getButtons().get(event.getSlot());

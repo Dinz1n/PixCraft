@@ -7,9 +7,9 @@ rows: 3
 buttons:
   11:
     type: CONFIRM # Confirma a compra e gera o pedido.
-    item:
+    icon:
       material: EMERALD_BLOCK
-      displayname: "&a&lConfirmar Compra"
+      displayname: "&a&lConfirmar"
       lore:
         - "&7Clique para confirmar."
         - "&7Um pedido será gerado."
@@ -18,31 +18,23 @@ buttons:
   
   13:
     type: PRODUCT_PREVIEW # Mostra o item que o jogador escolheu.
-    # O item exibido será substituído pelo PRODUCT clicado na categoria.
-    item:
-      material: BEDROCK # Apenas placeholder, será trocado automaticamente.
-      displayname: "&bProduto Selecionado"
-      lore:
-        - "&7Este espaço será substituído"
-        - "&7pelo produto real."
-      amount: 1
-      enchanted: false
+    # O item exibido será substituído pelo PRODUCT clicado no menu.
 
   15:
     type: CANCEL # Cancela a compra e fecha o menu.
-    # Pode ser GO_BACK se quiser que volte à categoria.
-    item:
+    # Pode ser BACK se quiser que volte à categoria.
+    icon:
       material: REDSTONE_BLOCK
       displayname: "&c&lCancelar"
       lore:
-        - "&7Clique para cancelar sua compra."
+        - "&7Clique para cancelar seu pedido"
       amount: 1
       enchanted: false
 
   18:
-    type: GO_BACK # Volta para a categoria anterior sem gerar compra.
-    item:
-      material: ARROW
+    type: BACK # Volta para a categoria anterior sem gerar compra.
+    icon:
+      material: head:http://textures.minecraft.net/texture/e35e42fc7060c223acc965f7c5996f272644af40a4723a372f5903f8e9f188e7
       displayname: "&e&lVoltar"
       lore:
         - "&7Retorne ao menu anterior."
@@ -51,8 +43,7 @@ buttons:
 
   0-8, 9-10, 12, 14, 16-17, 19-26:
     type: DECORATIVE
-    target:
-    item:
+    icon:
       material: GRAY_STAINED_GLASS_PANE
       displayname: " "
       lore: [ ]

@@ -29,6 +29,7 @@ public class CustomMapCreator {
         ItemStack mapItem = new ItemStackBuilder(XMaterial.FILLED_MAP)
                 .setDisplayName(displayname)
                 .setLore(lore)
+                .hideFlags()
                 .build();
 
         // Método moderno

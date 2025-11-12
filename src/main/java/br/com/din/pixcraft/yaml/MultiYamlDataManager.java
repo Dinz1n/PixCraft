@@ -5,21 +5,24 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class MultiYamlDataManager<T> {
     private final JavaPlugin plugin;
     private final File folder;
     private final Map<String, T> loadedData = new HashMap<>();
+    private final String[] defaultResources;
 
     public MultiYamlDataManager(JavaPlugin plugin, String folderName, String... defaultResources) {
         this.plugin = plugin;
+        this.defaultResources = defaultResources;
         this.folder = new File(plugin.getDataFolder(), folderName);
 
         if (!folder.exists()) {
@@ -37,7 +40,6 @@ public abstract class MultiYamlDataManager<T> {
                 return;
             }
             Files.copy(in, outputFile.toPath());
-            plugin.getLogger().info("Arquivo padrão copiado: " + outputFile.getName());
         } catch (IOException e) {
             plugin.getLogger().severe("Falha ao copiar arquivo padrão " + outputFile.getName() + ": " + e.getMessage());
         }
@@ -45,10 +47,10 @@ public abstract class MultiYamlDataManager<T> {
 
     protected void loadAll() {
         loadedData.clear();
-        File[] files = folder.listFiles((dir, name) -> name.endsWith(".yml"));
-        if (files == null) return;
+        List<File> yamlFiles = new ArrayList<>();
+        findYamlFiles(folder, yamlFiles);
 
-        for (File file : files) {
+        for (File file : yamlFiles) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             T data = loadSingleData(config, file.getName().replace(".yml", ""));
             if (data != null) {
@@ -57,7 +59,32 @@ public abstract class MultiYamlDataManager<T> {
         }
     }
 
+    private void findYamlFiles(File dir, List<File> yamlFiles) {
+        if (!dir.exists() || !dir.isDirectory()) {
+            return;
+        }
+
+        File[] files = dir.listFiles();
+        if (files == null) {
+            return;
+        }
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                findYamlFiles(file, yamlFiles);
+            } else if (file.getName().endsWith(".yml")) {
+                yamlFiles.add(file);
+            }
+        }
+    }
+
     public void reload() {
+        if (!folder.exists()) {
+            folder.mkdirs();
+            for (String resourcePath : defaultResources) {
+                copyDefaultFile(resourcePath, new File(folder, new File(resourcePath).getName()));
+            }
+        }
         loadAll();
     }
 

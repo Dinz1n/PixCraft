@@ -1,0 +1,38 @@
+# Esta é a categoria "Vips".
+# Aqui você pode vender planos de acesso VIP.
+
+title: "Vips"
+rows: 3
+
+buttons:
+  11:
+    type: PRODUCT
+    id: "vip-mensal"
+
+  13:
+    type: PRODUCT
+    id: "vip-semestral"
+
+  15:
+    type: PRODUCT
+    id: "vip-anual"
+
+  18:
+    type: BACK
+    icon:
+      material: head:http://textures.minecraft.net/texture/e35e42fc7060c223acc965f7c5996f272644af40a4723a372f5903f8e9f188e7
+      displayname: "&e&lVoltar"
+      lore:
+        - "&7Volte para a loja."
+      amount: 1
+      enchanted: false
+
+
+  0-8, 9-10, 12, 14, 16-17, 19-26:
+    type: DECORATIVE
+    icon:
+      material: GRAY_STAINED_GLASS_PANE
+      displayname: " "
+      lore: [ ]
+      amount: 1
+      enchanted: false

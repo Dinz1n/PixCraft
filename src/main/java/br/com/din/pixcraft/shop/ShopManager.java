@@ -1,7 +1,8 @@
 package br.com.din.pixcraft.shop;
 
 import br.com.din.pixcraft.order.OrderManager;
-import br.com.din.pixcraft.shop.category.CategoryManager;
+import br.com.din.pixcraft.shop.button.Button;
+import br.com.din.pixcraft.shop.menu.MenuManager;
 import br.com.din.pixcraft.shop.gui.ShopGui;
 import br.com.din.pixcraft.product.ProductManager;
 
@@ -10,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ShopManager {
     private final JavaPlugin plugin;
-    private final CategoryManager categoryManager;
+    private final MenuManager menuManager;
     private final ProductManager productManager;
     private final OrderManager orderManager;
     private final ShopGui shopGui;
@@ -20,8 +21,8 @@ public class ShopManager {
         this.productManager = productManager;
 
         this.orderManager = orderManager;
-        this.categoryManager = new CategoryManager(plugin, "categories", productManager);
-        this.shopGui = new ShopGui(plugin, orderManager, categoryManager, productManager);
+        this.menuManager = new MenuManager(plugin, productManager);
+        this.shopGui = new ShopGui(plugin, orderManager, menuManager, productManager);
     }
 
     public void open(Player player) {
@@ -36,8 +37,8 @@ public class ShopManager {
         shopGui.openConfirmationMenu(player, button);
     }
 
-    public CategoryManager getCategoryManager() {
-        return categoryManager;
+    public MenuManager getMenuManager() {
+        return menuManager;
     }
 
     public ProductManager getProductManager() {

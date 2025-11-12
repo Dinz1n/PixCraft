@@ -1,0 +1,12 @@
+name: "Espada de Ferro"
+price: 3.0
+reward:
+  - "give {player} minecraft:iron_sword"
+icon:
+  material: IRON_SWORD
+  displayname: "&8Espada de Ferro"
+  lore:
+    - "&7Um pouco mais resistente."
+    - "&a&lR${price} &7no &b&lPIX"
+  amount: 1
+  enchanted: false

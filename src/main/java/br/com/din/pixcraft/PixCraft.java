@@ -52,7 +52,7 @@ public final class PixCraft extends JavaPlugin {
         logger.info("Carregando arquivos de configuração...");
         getConfig();
         saveDefaultConfig();
-        productManager = new ProductManager(this, "products.yml");
+        productManager = new ProductManager(this);
         orderManager = new OrderManager(this, paymentProvider, productManager);
         shopManager = new ShopManager(this, orderManager, productManager);
 
@@ -80,7 +80,7 @@ public final class PixCraft extends JavaPlugin {
     @Override
     public void onDisable() {
         logger.info("Encerrando verificador de pagamento...");
-        paymentChecker.stop();
+        if (paymentChecker != null) paymentChecker.stop();
         if (getConfig().getBoolean("payment.cancel-on-leave")) {
             logger.info("Cancelando pagamentos pendentes...");
             for (Order order : orderManager.getOrders().values()) {

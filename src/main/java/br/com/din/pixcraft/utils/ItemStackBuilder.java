@@ -87,9 +87,18 @@ public class ItemStackBuilder {
             ItemMeta meta = itemStack.getItemMeta();
             if (meta != null) {
                 meta.addEnchant(Enchantment.DURABILITY, 1, false);
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);
                 itemStack.setItemMeta(meta);
             }
+            return hideFlags();
+        }
+        return this;
+    }
+
+    public ItemStackBuilder hideFlags() {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);
+            itemStack.setItemMeta(meta);
         }
         return this;
     }

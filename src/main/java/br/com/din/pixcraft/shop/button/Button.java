@@ -1,4 +1,4 @@
-package br.com.din.pixcraft.shop;
+package br.com.din.pixcraft.shop.button;
 
 import org.bukkit.inventory.ItemStack;
 
