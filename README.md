@@ -28,7 +28,7 @@ PixCraft é um plugin para **Minecraft** que implementa um sistema de pagamentos
 
 | Comando     | Subcomando | Descrição          |Permissão               |
 |-------------|------------|--------------------|------------------------|
-| `/pixcraft` | `reload`   | Recarrega o plugin |`pixcraft.command.admin`|
+| `/pixcraft` | `reload`   | Recarrega o plugin |`pixcraft.command.reload`|
 | `/pixcraft` | `menu`     | Abre um menu       |`pixcraft.command.menu` |
 | `/pixcraft` | `product`  | Compra um produto  |`pixcraft.command.product`|
 
