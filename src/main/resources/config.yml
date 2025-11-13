@@ -17,8 +17,8 @@ shop:
   # Comando que o jogador usa para abrir a loja
   command-name: "loja"
 
-  # Categoria padrão que será aberta ao executar o comando
-  default-category: "shop"
+  # Menu padrão que será aberta ao executar o comando
+  default-menu: "shop"
 
   # Arquivo da GUI de confirmação de compra
   confirmation-gui: "confirmation_gui"

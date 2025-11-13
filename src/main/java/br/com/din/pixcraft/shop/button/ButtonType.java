@@ -1,7 +1,7 @@
 package br.com.din.pixcraft.shop.button;
 
 public enum ButtonType {
-    CATEGORY,
+    MENU,
     PRODUCT,
     DECORATIVE,
     BACK,

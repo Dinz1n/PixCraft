@@ -26,7 +26,7 @@ public class ShopManager {
     }
 
     public void open(Player player) {
-        shopGui.openCategory(player, plugin.getConfig().getString("shop.default-category"));
+        shopGui.openCategory(player, plugin.getConfig().getString("shop.default-menu"));
     }
 
     public void open(Player player, String categoryId) {

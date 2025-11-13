@@ -1,13 +1,13 @@
-# Este é o arquivo da CATEGORIA PRINCIPAL da loja.
-# Aqui você organiza o menu inicial, que leva o jogador para outras categorias.
+# Este é o arquivo do menu PRINCIPAL da loja.
+# Aqui você organiza o menu inicial, que leva o jogador para outros menus.
 
 title: "Loja" # Nome do inventário. Será exibido no topo da GUI.
 rows: 3       # Número de linhas (vai de 1 até 6). Cada linha tem 9 slots.
 
 buttons:
   11: # Posição do botão no inventário (0 até rows*9 - 1).
-    type: CATEGORY # Tipo CATEGORY abre outra categoria da pasta /categories.
-    id: "vips" # Nome da categoria alvo (arquivo vips.yml). Não precisa da extensão .yml.
+    type: MENU # Tipo MENU abre outra menu da pasta /menus.
+    id: "vips" # Nome do menu alvo (arquivo vips.yml). Não precisa da extensão .yml.
 
     icon: # Configuração do item que representa o botão.
       material: EMERALD         # Material do item. Pode ser qualquer ID válido do Minecraft.
@@ -19,7 +19,7 @@ buttons:
       enchanted: true           # Adiciona brilho de encantamento (apenas visual).
 
   13:
-    type: CATEGORY
+    type: MENU
     id: "kits"
     icon:
       material: CHEST
@@ -31,7 +31,7 @@ buttons:
       enchanted: true
 
   15:
-    type: CATEGORY
+    type: MENU
     id: "swords"
     icon:
       material: DIAMOND_SWORD

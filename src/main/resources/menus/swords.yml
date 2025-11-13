@@ -1,4 +1,4 @@
-# Esta é a categoria "Espadas".
+# Esta é o menu "Espadas".
 # Aqui você lista os produtos do tipo PRODUCT (que podem ser comprados).
 # Cada botão leva a um menu de confirmação antes da compra.
 
@@ -8,7 +8,7 @@ rows: 3          # Linhas do inventário (9 slots cada linha).
 buttons:
   11:
     type: PRODUCT # Tipo PRODUCT abre o menu de confirmação de compra.
-    id: "espada-de-pedra" # O "id" deve ter o MESMO nome definido em products.yml.
+    id: "espada-de-pedra" # O "id" deve ter o MESMO nome definido do arquivo do produto, mas sem a extensão .yml.
 
   13:
     type: PRODUCT

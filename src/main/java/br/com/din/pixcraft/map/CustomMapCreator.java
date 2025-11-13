@@ -3,7 +3,6 @@ package br.com.din.pixcraft.map;
 import br.com.din.pixcraft.utils.ItemStackBuilder;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

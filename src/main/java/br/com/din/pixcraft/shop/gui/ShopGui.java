@@ -90,7 +90,7 @@ public class ShopGui implements Listener {
 
     private void handlerButtonClick(Player player, Button button) {
         switch (button.getType()) {
-            case CATEGORY:
+            case MENU:
                 navigate(player, categoryManager.get(button.getTarget()));
                 break;
 

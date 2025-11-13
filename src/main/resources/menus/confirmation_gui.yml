@@ -32,7 +32,7 @@ buttons:
       enchanted: false
 
   18:
-    type: BACK # Volta para a categoria anterior sem gerar compra.
+    type: BACK # Volta para o menu anterior sem gerar compra.
     icon:
       material: head:http://textures.minecraft.net/texture/e35e42fc7060c223acc965f7c5996f272644af40a4723a372f5903f8e9f188e7
       displayname: "&e&lVoltar"

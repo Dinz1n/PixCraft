@@ -56,7 +56,7 @@ public class ButtonFactory {
                 itemStack = YamlConfigReader.buildItem(itemSection, Collections.emptyMap());
             }
 
-            String buttonTarget = (buttonType == ButtonType.PRODUCT || buttonType == ButtonType.CATEGORY) ? id : null;
+            String buttonTarget = (buttonType == ButtonType.PRODUCT || buttonType == ButtonType.MENU) ? id : null;
             Button button = new Button(buttonType, buttonTarget, itemStack);
 
             if (buttonType == ButtonType.DECORATIVE) {
