@@ -18,8 +18,8 @@ public class ShopCommand extends Command {
 
         this.setDescription("Abre o menu da loja.");
         this.setUsage("/" + commandName);
-        this.setPermission("pixcraft.shop");
-        this.setPermissionMessage("Permite abrir a loja");
+        this.setPermission("pixcraft.shop.command");
+        this.setPermissionMessage("§c[PixCraft] Você não tem permissão para executar este comando.");
 
         this.shopManager = shopManager;
 
