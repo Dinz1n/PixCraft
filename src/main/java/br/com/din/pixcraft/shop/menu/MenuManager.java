@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,5 +50,13 @@ public class MenuManager extends MultiYamlDataManager<Menu> {
         }
 
         return new Menu(fileName, title, size, buttons);
+    }
+
+    public Menu getMenu(String id) {
+        return super.get(id);
+    }
+
+    public Collection<Menu> getMenus() {
+        return getAll();
     }
 }
