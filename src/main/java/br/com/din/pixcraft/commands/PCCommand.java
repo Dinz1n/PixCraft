@@ -35,6 +35,11 @@ public class PCCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+        if (!sender.hasPermission("pixcraft.command")) {
+            sender.sendMessage("§c[PixCraft] Você não tem permissão para executar este comando.");
+            return true;
+        }
+
         if (args.length == 0) return false;
 
         switch (args[0]) {
@@ -50,26 +55,25 @@ public class PCCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args) {
+        if  (!sender.hasPermission("pixcraft.command")) return Collections.emptyList();
         switch (args.length) {
-            case 1: return Arrays.asList("menu", "reload", "product");
+            case 1:
+                return Arrays.asList("menu", "reload", "product");
             case 2:
                 if (args[0].equals("menu")) {
-                    return shop.getMenuManager().getAll().stream().map(Menu::getId).collect(Collectors.toList());
+                    return shop.getMenuManager().getMenus().stream().map(Menu::getId).collect(Collectors.toList());
                 }
 
                 if (args[0].equals("product")) {
                     return productManager.getProducts().stream().map(Product::getId).collect(Collectors.toList());
                 }
 
-            default: return Collections.emptyList();
+            default:
+                return Collections.emptyList();
         }
     }
 
     private boolean handleReload(CommandSender sender) {
-        if (!sender.hasPermission("pixcraft.command.reload")) {
-            sender.sendMessage("§c[PixCraft] Você não tem permissão para executar este comando.");
-            return true;
-        }
         plugin.reloadConfig();
         paymentProvider.setAccessToken(plugin.getConfig().getString("payment.provider.access-token"));
         productManager.reload();
@@ -84,12 +88,7 @@ public class PCCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (!sender.hasPermission("pixcraft.command.menu")) {
-            sender.sendMessage("§c[PixCraft] Você não tem permissão para executar este comando.");
-            return true;
-        }
-
-        if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || shop.getMenuManager().get(args[1]) == null) {
+        if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || shop.getMenuManager().getMenu(args[1]) == null) {
             sender.sendMessage("§c[PixCraft] Erro! Menu não encontrado.");
             return true;
         }
@@ -103,17 +102,12 @@ public class PCCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (!sender.hasPermission("pixcraft.command.menu")) {
-            sender.sendMessage("§c[PixCraft] Você não tem permissão para executar este comando.");
-            return true;
-        }
-
         if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || productManager.getProduct(args[1]) == null) {
             sender.sendMessage("§c[PixCraft] Erro! Produto não encontrado.");
             return true;
         }
 
-        Button productButton = shop.getMenuManager().getAll().stream()
+        Button productButton = shop.getMenuManager().getMenus().stream()
                 .flatMap(category -> category.getButtons().values().stream())
                 .filter(button -> args[1].equals(button.getTarget()))
                 .findFirst().get();
