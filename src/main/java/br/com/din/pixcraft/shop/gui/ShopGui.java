@@ -20,7 +20,7 @@ import java.util.*;
 public class ShopGui implements Listener {
     private final JavaPlugin plugin;
     private final OrderManager orderManager;
-    private final MenuManager categoryManager;
+    private final MenuManager menuManager;
     private final ProductManager productManager;
 
     private final Map<UUID, Deque<Menu>> openInventories = new HashMap<>();
@@ -32,12 +32,12 @@ public class ShopGui implements Listener {
 
         this.plugin = plugin;
         this.orderManager = orderManager;
-        this.categoryManager = categoryManager;
+        this.menuManager = categoryManager;
         this.productManager = productManager;
     }
 
     public void openCategory(Player player, String categoryId) {
-        Menu category = categoryManager.get(categoryId);
+        Menu category = menuManager.getMenu(categoryId);
         if (category == null) return;
 
         Deque<Menu> stack = new ArrayDeque<>();
@@ -91,7 +91,7 @@ public class ShopGui implements Listener {
     private void handlerButtonClick(Player player, Button button) {
         switch (button.getType()) {
             case MENU:
-                navigate(player, categoryManager.get(button.getTarget()));
+                navigate(player, menuManager.getMenu(button.getTarget()));
                 break;
 
             case PRODUCT:
@@ -99,7 +99,7 @@ public class ShopGui implements Listener {
                     break;
                 }
                 pendingPurchases.put(player.getUniqueId(), button);
-                navigate(player, categoryManager.get(plugin.getConfig().getString("shop.confirmation-gui")));
+                navigate(player, menuManager.getMenu(plugin.getConfig().getString("shop.confirmation-gui")));
                 break;
 
             case DECORATIVE: break; // Não faz nada
