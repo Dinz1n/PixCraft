@@ -35,7 +35,7 @@ public class ShopCommand extends Command {
             return true;
         }
 
-        if (!sender.hasPermission("pixcraft.shop")) {
+        if (!sender.hasPermission("pixcraft.shop.command")) {
             sender.sendMessage("§c[PixCraft] Você não tem permissão para executar este comando.");
             return true;
         }
