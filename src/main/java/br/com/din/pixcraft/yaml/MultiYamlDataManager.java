@@ -90,11 +90,11 @@ public abstract class MultiYamlDataManager<T> {
 
     protected abstract T loadSingleData(FileConfiguration config, String fileName);
 
-    public T get(String id) {
+    protected T get(String id) {
         return loadedData.get(id);
     }
 
-    public Collection<T> getAll() {
+    protected Collection<T> getAll() {
         return loadedData.values();
     }
 }
