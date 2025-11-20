@@ -48,6 +48,13 @@ public class ShopGui implements Listener {
     }
 
     public void openConfirmationMenu(Player player, Button button) {
+        if (productManager.getProduct(button.getTarget()).isRequiredPermission()) {
+            if (!player.hasPermission("pixcraft.product." + button.getTarget())) {
+                player.sendMessage("§c[PixCraft] Você não tem permissão para comprar este produto.");
+                return;
+            }
+        }
+
         pendingPurchases.put(player.getUniqueId(), button);
         openMenu(player, plugin.getConfig().getString("shop.confirmation-gui"));
     }
@@ -98,6 +105,14 @@ public class ShopGui implements Listener {
                 if (pendingPurchases.containsKey(player.getUniqueId())) {
                     break;
                 }
+
+                if (productManager.getProduct(button.getTarget()).isRequiredPermission()) {
+                    if (!player.hasPermission("pixcraft.product." + button.getTarget())) {
+                        player.sendMessage("§c[PixCraft] Você não tem permissão para comprar este produto.");
+                        return;
+                    }
+                }
+
                 pendingPurchases.put(player.getUniqueId(), button);
                 navigate(player, menuManager.getMenu(plugin.getConfig().getString("shop.confirmation-gui")));
                 break;

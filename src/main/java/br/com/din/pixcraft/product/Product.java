@@ -10,13 +10,15 @@ public class Product {
     private final double price;
     private final List<String> reward;
     private final ItemStack icon;
+    private final boolean requirePermission;
 
-    public Product(String id, String name, double price, List<String> reward, ItemStack icon) {
+    public Product(String id, String name, double price, List<String> reward, ItemStack icon, boolean requirePermission) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.reward = reward;
         this.icon = icon;
+        this.requirePermission = requirePermission;
     }
 
     public String getId() {
@@ -37,5 +39,9 @@ public class Product {
 
     public ItemStack getIcon() {
         return icon;
+    }
+
+    public boolean isRequiredPermission() {
+        return requirePermission;
     }
 }

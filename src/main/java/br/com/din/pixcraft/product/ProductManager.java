@@ -3,8 +3,10 @@ package br.com.din.pixcraft.product;
 import br.com.din.pixcraft.yaml.MultiYamlDataManager;
 import br.com.din.pixcraft.yaml.YamlConfigReader;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
@@ -43,7 +45,21 @@ public class ProductManager extends MultiYamlDataManager<Product> {
         placeholders.put("{price}", String.valueOf(price).replace(".", ","));
         ItemStack icon = YamlConfigReader.buildItem(productData.getConfigurationSection("icon"), placeholders);
 
-        return new Product(fileName, name, price, reward, icon);
+        boolean requirePermission = productData.getBoolean("require-permission");
+        String permName = "pixcraft.product." + fileName;
+
+        if (requirePermission) {
+            if (Bukkit.getPluginManager().getPermission(permName) == null) {
+                Bukkit.getPluginManager().addPermission(new Permission(permName));
+            }
+        } else {
+            Permission p = Bukkit.getPluginManager().getPermission(permName);
+            if (p != null) {
+                Bukkit.getPluginManager().removePermission(p);
+            }
+        }
+
+        return new Product(fileName, name, price, reward, icon, requirePermission);
     }
 
     public Product getProduct(String productId) {
