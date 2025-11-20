@@ -6,6 +6,7 @@ import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.product.ProductManager;
 import br.com.din.pixcraft.shop.button.Button;
 import br.com.din.pixcraft.shop.ShopManager;
+import br.com.din.pixcraft.shop.button.ButtonType;
 import br.com.din.pixcraft.shop.menu.Menu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -102,15 +103,14 @@ public class PCCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || productManager.getProduct(args[1]) == null) {
+        Product product = productManager.getProduct(args[1]);
+
+        if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || product == null) {
             sender.sendMessage("§c[PixCraft] Erro! Produto não encontrado.");
             return true;
         }
 
-        Button productButton = shop.getMenuManager().getMenus().stream()
-                .flatMap(category -> category.getButtons().values().stream())
-                .filter(button -> args[1].equals(button.getTarget()))
-                .findFirst().get();
+        Button productButton = new Button(ButtonType.PRODUCT, args[1], product.getIcon());
 
         shop.buy((Player) sender, productButton);
         return true;
