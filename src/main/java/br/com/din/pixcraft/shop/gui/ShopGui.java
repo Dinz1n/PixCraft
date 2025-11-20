@@ -36,7 +36,7 @@ public class ShopGui implements Listener {
         this.productManager = productManager;
     }
 
-    public void openCategory(Player player, String categoryId) {
+    public void openMenu(Player player, String categoryId) {
         Menu category = menuManager.getMenu(categoryId);
         if (category == null) return;
 
@@ -49,7 +49,7 @@ public class ShopGui implements Listener {
 
     public void openConfirmationMenu(Player player, Button button) {
         pendingPurchases.put(player.getUniqueId(), button);
-        openCategory(player, plugin.getConfig().getString("shop.confirmation-gui"));
+        openMenu(player, plugin.getConfig().getString("shop.confirmation-gui"));
     }
 
     private void navigate(Player player, Menu category) {

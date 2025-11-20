@@ -26,11 +26,11 @@ public class ShopManager {
     }
 
     public void open(Player player) {
-        shopGui.openCategory(player, plugin.getConfig().getString("shop.default-menu"));
+        shopGui.openMenu(player, plugin.getConfig().getString("shop.default-menu"));
     }
 
     public void open(Player player, String categoryId) {
-        shopGui.openCategory(player, categoryId);
+        shopGui.openMenu(player, categoryId);
     }
 
     public void buy(Player player, Button button) {
