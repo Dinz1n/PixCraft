@@ -15,10 +15,10 @@ public class HeadUtils {
 
     public static ItemStack getCustomHead(String textureValue) {
         try {
-            boolean legacy = !XMaterial.PLAYER_HEAD.isSupported();
-            ItemStack head = legacy
-                    ? new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3)
-                    : new ItemStack(Material.PLAYER_HEAD);
+            ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
+            if (head == null) {
+                head = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
+            }
 
             SkullMeta meta = (SkullMeta) head.getItemMeta();
             if (meta == null) return head;
@@ -28,11 +28,9 @@ public class HeadUtils {
 
             if (textureValue.startsWith("eyJ")) {
                 valueToUse = textureValue;
-            }
-            else if (textureValue.startsWith("http")) {
+            } else if (textureValue.startsWith("http")) {
                 valueToUse = encodeTexture(textureValue);
-            }
-            else {
+            } else {
                 valueToUse = encodeTexture("https://textures.minecraft.net/texture/" + textureValue);
             }
 
@@ -44,11 +42,13 @@ public class HeadUtils {
 
             head.setItemMeta(meta);
             return head;
+
         } catch (Exception e) {
             e.printStackTrace();
             return new ItemStack(Material.BARRIER);
         }
     }
+
 
     private static String encodeTexture(String url) {
         String json = "{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}";
