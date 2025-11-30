@@ -48,15 +48,8 @@ public class ProductManager extends MultiYamlDataManager<Product> {
         boolean requirePermission = productData.getBoolean("require-permission");
         String permName = "pixcraft.product." + fileName;
 
-        if (requirePermission) {
-            if (Bukkit.getPluginManager().getPermission(permName) == null) {
-                Bukkit.getPluginManager().addPermission(new Permission(permName));
-            }
-        } else {
-            Permission p = Bukkit.getPluginManager().getPermission(permName);
-            if (p != null) {
-                Bukkit.getPluginManager().removePermission(p);
-            }
+        if (Bukkit.getPluginManager().getPermission(permName) == null) {
+            Bukkit.getPluginManager().addPermission(new Permission(permName));
         }
 
         return new Product(fileName, name, price, reward, icon, requirePermission);
