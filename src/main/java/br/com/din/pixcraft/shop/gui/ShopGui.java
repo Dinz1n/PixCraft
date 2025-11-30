@@ -166,5 +166,9 @@ public class ShopGui implements Listener {
         if (!navigatingPlayers.contains(uuid)) {
             openInventories.remove(uuid);
         }
+
+        if (pendingPurchases.containsKey(uuid)) {
+            pendingPurchases.remove(uuid);
+        }
     }
 }
