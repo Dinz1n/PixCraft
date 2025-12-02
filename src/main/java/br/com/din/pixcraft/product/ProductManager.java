@@ -9,10 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProductManager extends MultiYamlDataManager<Product> {
     private final JavaPlugin plugin;
@@ -53,6 +51,20 @@ public class ProductManager extends MultiYamlDataManager<Product> {
         }
 
         return new Product(fileName, name, price, reward, icon, requirePermission);
+    }
+
+    @Override
+    protected void afterAllLoaded(Collection<Product> loadedProducts) {
+        Set<String> validPerms = loadedProducts.stream()
+                .map(p -> "pixcraft.product." + p.getId())
+                .collect(Collectors.toSet());
+
+        for (Permission perm : Bukkit.getPluginManager().getPermissions()) {
+            String name = perm.getName();
+            if (name.startsWith("pixcraft.product.") && !validPerms.contains(name)) {
+                Bukkit.getPluginManager().removePermission(perm);
+            }
+        }
     }
 
     public Product getProduct(String productId) {
