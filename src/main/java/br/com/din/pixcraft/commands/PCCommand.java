@@ -1,5 +1,6 @@
 package br.com.din.pixcraft.commands;
 
+import br.com.din.pixcraft.message.MessageManager;
 import br.com.din.pixcraft.payment.gateway.PaymentProvider;
 
 import br.com.din.pixcraft.product.Product;
@@ -20,24 +21,26 @@ import java.util.stream.Collectors;
 
 public class PCCommand implements CommandExecutor, TabCompleter {
     private final JavaPlugin plugin;
+    private final MessageManager messageManager;
     private final ProductManager productManager;
     private final ShopManager shop;
     private final PaymentProvider paymentProvider;
 
-    public PCCommand(JavaPlugin plugin, ProductManager productManager, ShopManager shop, PaymentProvider paymentProvider) {
-        plugin.getCommand("pixcraft").setExecutor(this);
-        plugin.getCommand("pixcraft").setTabCompleter(this);
-
+    public PCCommand(JavaPlugin plugin, MessageManager messageManager, ProductManager productManager, ShopManager shop, PaymentProvider paymentProvider) {
         this.plugin = plugin;
+        this.messageManager = messageManager;
         this.shop = shop;
         this.productManager = productManager;
         this.paymentProvider = paymentProvider;
+
+        plugin.getCommand("pixcraft").setExecutor(this);
+        plugin.getCommand("pixcraft").setTabCompleter(this);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (!sender.hasPermission("pixcraft.command")) {
-            sender.sendMessage("§c[PixCraft] Você não tem permissão para executar este comando.");
+            sender.sendMessage(MessageManager.COMMAND_NO_PERMISSION.replace("&", "§"));
             return true;
         }
 
@@ -76,21 +79,22 @@ public class PCCommand implements CommandExecutor, TabCompleter {
 
     private boolean handleReload(CommandSender sender) {
         plugin.reloadConfig();
+        messageManager.reload();
         paymentProvider.setAccessToken(plugin.getConfig().getString("payment.provider.access-token"));
         productManager.reload();
         shop.getMenuManager().reload();
-        sender.sendMessage("§a[PixCraft] Plugin recarregado com sucesso!");
+        sender.sendMessage(MessageManager.PLUGIN_RELOAD_SUCCESS.replace("&", "§"));
         return true;
     }
 
     private boolean handleMenu(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§cEsse comando só pode ser executado por jogadores.");
+            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER.replace("&", "§"));
             return true;
         }
 
         if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || shop.getMenuManager().getMenu(args[1]) == null) {
-            sender.sendMessage("§c[PixCraft] Erro! Menu não encontrado.");
+            sender.sendMessage(MessageManager.MENU_NOT_FOUND.replace("&", "§"));
             return true;
         }
         shop.open((Player) sender, args[1]);
@@ -99,14 +103,14 @@ public class PCCommand implements CommandExecutor, TabCompleter {
 
     private boolean handleProduct(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§cEsse comando só pode ser executado por jogadores.");
+            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER.replace("&", "§"));
             return true;
         }
 
         Product product = productManager.getProduct(args[1]);
 
         if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || product == null) {
-            sender.sendMessage("§c[PixCraft] Erro! Produto não encontrado.");
+            sender.sendMessage(MessageManager.PRODUCT_NOT_FOUND.replace("&", "§"));
             return true;
         }
 

@@ -1,6 +1,8 @@
 package br.com.din.pixcraft.shop.gui;
 
+import br.com.din.pixcraft.message.MessageManager;
 import br.com.din.pixcraft.order.OrderManager;
+import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.shop.button.Button;
 import br.com.din.pixcraft.shop.button.ButtonType;
 import br.com.din.pixcraft.shop.menu.Menu;
@@ -12,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,7 +53,7 @@ public class ShopGui implements Listener {
     public void openConfirmationMenu(Player player, Button button) {
         if (productManager.getProduct(button.getTarget()).isRequiredPermission()) {
             if (!player.hasPermission("pixcraft.product." + button.getTarget())) {
-                player.sendMessage("§c[PixCraft] Você não tem permissão para comprar este produto.");
+                player.sendMessage(MessageManager.PRODUCT_NO_PERMISSION.replace("&", "§"));
                 return;
             }
         }
@@ -59,9 +62,9 @@ public class ShopGui implements Listener {
         openMenu(player, plugin.getConfig().getString("shop.confirmation-gui"));
     }
 
-    private void navigate(Player player, Menu category) {
-        openInventories.get(player.getUniqueId()).push(category);
-        openInventory(player, category);
+    private void navigate(Player player, Menu menu) {
+        openInventories.get(player.getUniqueId()).push(menu);
+        openInventory(player, menu);
     }
 
     private void goBack(Player player) {
@@ -74,12 +77,12 @@ public class ShopGui implements Listener {
         openInventory(player, stack.peek());
     }
 
-    private void openInventory(Player player, Menu category) {
+    private void openInventory(Player player, Menu menu) {
         navigatingPlayers.add(player.getUniqueId());
 
-        Inventory inv = Bukkit.createInventory(null, category.getSize(), category.getTitle());
+        Inventory inv = Bukkit.createInventory(null, menu.getSize(), menu.getTitle());
 
-        category.getButtons().forEach((slot, button) -> {
+        menu.getButtons().forEach((slot, button) -> {
             if (button.getType() == ButtonType.PRODUCT_PREVIEW) {
                 Button product = pendingPurchases.get(player.getUniqueId());
                 if (product != null) {
@@ -108,7 +111,7 @@ public class ShopGui implements Listener {
 
                 if (productManager.getProduct(button.getTarget()).isRequiredPermission()) {
                     if (!player.hasPermission("pixcraft.product." + button.getTarget())) {
-                        player.sendMessage("§c[PixCraft] Você não tem permissão para comprar este produto.");
+                        player.sendMessage(MessageManager.PRODUCT_NO_PERMISSION.replace("&", "§"));
                         return;
                     }
                 }
@@ -116,8 +119,6 @@ public class ShopGui implements Listener {
                 pendingPurchases.put(player.getUniqueId(), button);
                 navigate(player, menuManager.getMenu(plugin.getConfig().getString("shop.confirmation-gui")));
                 break;
-
-            case DECORATIVE: break; // Não faz nada
 
             case BACK:
                 if (openInventories.get(player.getUniqueId()).peek().getId().equals(plugin.getConfig().getString("shop.confirmation-gui"))) {
@@ -128,8 +129,9 @@ public class ShopGui implements Listener {
 
             // Gui de confirmação
             case CONFIRM:
+                Product product = productManager.getProduct(pendingPurchases.remove(player.getUniqueId()).getTarget());
                 player.closeInventory();
-                orderManager.processOrder(player, productManager.getProduct(pendingPurchases.remove(player.getUniqueId()).getTarget()));
+                orderManager.processOrder(player, product);
                 break;
 
             case CANCEL:
@@ -163,6 +165,7 @@ public class ShopGui implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
         UUID uuid = e.getPlayer().getUniqueId();
+
         if (!navigatingPlayers.contains(uuid)) {
             openInventories.remove(uuid);
             if (pendingPurchases.containsKey(uuid)) {

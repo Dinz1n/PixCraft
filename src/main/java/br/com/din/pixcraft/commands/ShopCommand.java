@@ -1,5 +1,6 @@
 package br.com.din.pixcraft.commands;
 
+import br.com.din.pixcraft.message.MessageManager;
 import br.com.din.pixcraft.shop.ShopManager;
 
 import org.bukkit.command.*;
@@ -19,8 +20,6 @@ public class ShopCommand extends Command {
         this.setDescription("Abre o menu da loja.");
         this.setUsage("/" + commandName);
         this.setPermission("pixcraft.shop.command");
-        this.setPermissionMessage("§c[PixCraft] Você não tem permissão para executar este comando.");
-
         this.shopManager = shopManager;
 
         registerCommand(this);
@@ -31,12 +30,12 @@ public class ShopCommand extends Command {
         if (args.length != 0) return false;
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage("§c[PixCraft] Este comando só pode ser executado por jogadores.");
+            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER.replace("&", "§"));
             return true;
         }
 
         if (!sender.hasPermission("pixcraft.shop.command")) {
-            sender.sendMessage("§c[PixCraft] Você não tem permissão para executar este comando.");
+            sender.sendMessage(MessageManager.COMMAND_NO_PERMISSION.replace("&", "§"));
             return true;
         }
 

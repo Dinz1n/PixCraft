@@ -4,6 +4,7 @@ import br.com.din.pixcraft.commands.PCCommand;
 import br.com.din.pixcraft.commands.ShopCommand;
 import br.com.din.pixcraft.listeners.PaymentUpdate;
 import br.com.din.pixcraft.listeners.QrCodeProtect;
+import br.com.din.pixcraft.message.MessageManager;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.payment.gateway.MercadoPagoService;
@@ -25,6 +26,7 @@ import java.util.logging.Logger;
 public final class PixCraft extends JavaPlugin {
     private static JavaPlugin instance;
     private Logger logger;
+    private MessageManager messageManager;
     private ShopManager shopManager;
     private OrderManager orderManager;
     private ProductManager productManager;
@@ -52,6 +54,7 @@ public final class PixCraft extends JavaPlugin {
         logger.info("Carregando arquivos de configuração...");
         getConfig();
         saveDefaultConfig();
+        messageManager = new MessageManager(this);
         productManager = new ProductManager(this);
         orderManager = new OrderManager(this, paymentProvider, productManager);
         shopManager = new ShopManager(this, orderManager, productManager);
@@ -71,7 +74,7 @@ public final class PixCraft extends JavaPlugin {
         new PaymentUpdate(this, orderManager);
 
         logger.info("Registrando comandos...");
-        new PCCommand(this, productManager, shopManager, paymentProvider);
+        new PCCommand(this, messageManager, productManager, shopManager, paymentProvider);
         new ShopCommand(this, getConfig().getString("shop.command-name"), shopManager);
 
         logger.info("Plugin inicializado com sucesso!");

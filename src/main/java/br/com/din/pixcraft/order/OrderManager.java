@@ -1,5 +1,6 @@
 package br.com.din.pixcraft.order;
 
+import br.com.din.pixcraft.message.MessageManager;
 import br.com.din.pixcraft.qrmap.QrCodeMapCreator;
 import br.com.din.pixcraft.payment.PaymentStatus;
 import br.com.din.pixcraft.utils.NBTItemUtils;
@@ -20,12 +21,10 @@ import java.util.UUID;
 public class OrderManager {
     private final JavaPlugin plugin;
     private final OrderStorage storage;
-    private final ProductManager productManager;
     private final PaymentProvider paymentProvider;
 
     public OrderManager(JavaPlugin plugin, PaymentProvider paymentProvider, ProductManager productManager) {
         this.plugin = plugin;
-        this.productManager = productManager;
         this.storage = new OrderStorage(plugin, paymentProvider, productManager);
         this.paymentProvider = paymentProvider;
 
@@ -43,18 +42,18 @@ public class OrderManager {
 
     public void processOrder(Player player, Product product) {
         if (storage.getOrders().containsKey(player.getUniqueId())) {
-            player.sendMessage("§c[PixCraft] Você só pode fazer um pedido por vez.");
+            player.sendMessage(MessageManager.ORDER_LIMIT_ONE.replace("&", "§"));
             return;
         }
 
         if (product == null) {
-            player.sendMessage("§c[PixCraft] Erro! Produto não encontrado.");
+            player.sendMessage(MessageManager.PRODUCT_NOT_FOUND.replace("&", "§"));
             return;
         }
 
         paymentProvider.createPayment(player.getName(), product, paymentData -> {
             if (paymentData == null) {
-                player.sendMessage("§c[PixCraft] Erro! Não foi possível criar o pagamento.");
+                player.sendMessage(MessageManager.PAYMENT_CREATION_ERROR.replace("&", "§"));
                 return;
             }
 
@@ -76,7 +75,7 @@ public class OrderManager {
                 if (qrMap == null) {
                     order.cancel();
                     removeOrder(player.getUniqueId());
-                    player.sendMessage("§c[PixCraft] Aconteceu algo inesperado. Pagamento cancelado");
+                    player.sendMessage(MessageManager.PAYMENT_UNEXPECTED_ERROR.replace("&", "§"));
                     return;
                 }
 
@@ -87,7 +86,7 @@ public class OrderManager {
                 player.getInventory().setHeldItemSlot(slotMap);
                 player.getInventory().setItem(slotMap, qrMap);
 
-                player.sendMessage("§a[PixCraft] Pagamento criado!");
+                player.sendMessage(MessageManager.PAYMENT_CREATED.replace("&", "§"));
             });
         });
     }
