@@ -165,10 +165,17 @@ public class ShopGui implements Listener {
         UUID uuid = e.getPlayer().getUniqueId();
         if (!navigatingPlayers.contains(uuid)) {
             openInventories.remove(uuid);
+            if (pendingPurchases.containsKey(uuid)) {
+                pendingPurchases.remove(uuid);
+            }
         }
+    }
 
-        if (pendingPurchases.containsKey(uuid)) {
-            pendingPurchases.remove(uuid);
-        }
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        UUID uuid = e.getPlayer().getUniqueId();
+        pendingPurchases.remove(uuid);
+        openInventories.remove(uuid);
+        navigatingPlayers.remove(uuid);
     }
 }
