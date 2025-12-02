@@ -57,6 +57,7 @@ public abstract class MultiYamlDataManager<T> {
                 loadedData.put(file.getName().replace(".yml", ""), data);
             }
         }
+        afterAllLoaded(loadedData.values());
     }
 
     private void findYamlFiles(File dir, List<File> yamlFiles) {
@@ -89,6 +90,8 @@ public abstract class MultiYamlDataManager<T> {
     }
 
     protected abstract T loadSingleData(FileConfiguration config, String fileName);
+
+    protected abstract void afterAllLoaded(Collection<T> loadedData);
 
     protected T get(String id) {
         return loadedData.get(id);
