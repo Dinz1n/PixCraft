@@ -52,6 +52,11 @@ public class MenuManager extends MultiYamlDataManager<Menu> {
         return new Menu(fileName, title, size, buttons);
     }
 
+    @Override
+    protected void afterAllLoaded(Collection<Menu> loadedItems) {
+
+    }
+
     public Menu getMenu(String id) {
         return super.get(id);
     }
