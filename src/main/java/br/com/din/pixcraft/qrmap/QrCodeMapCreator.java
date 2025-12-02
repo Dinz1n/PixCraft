@@ -1,7 +1,11 @@
-package br.com.din.pixcraft.map;
+package br.com.din.pixcraft.qrmap;
 
 import br.com.din.pixcraft.utils.ItemStackBuilder;
 import com.cryptomorin.xseries.XMaterial;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.qrcode.QRCodeWriter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -14,14 +18,14 @@ import org.bukkit.map.MapView;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public class CustomMapCreator {
-    public static ItemStack create(BufferedImage image, World world, String displayname, List<String> lore) {
+public class QrCodeMapCreator {
+    public static ItemStack create(String qrData, World world, String displayname, List<String> lore) {
         MapView mapView = Bukkit.createMap(world);
         mapView.getRenderers().clear();
         mapView.addRenderer(new MapRenderer() {
             @Override
             public void render(MapView map, MapCanvas canvas, Player player) {
-                canvas.drawImage(0, 0, image);
+                canvas.drawImage(0, 0, QrCodeGenerator.generate(qrData, 128, 128));
             }
         });
 
@@ -62,6 +66,17 @@ public class CustomMapCreator {
         } catch (Throwable t) {
             t.printStackTrace();
             return -1;
+        }
+    }
+
+    private static class QrCodeGenerator {
+        public static BufferedImage generate(String data, int width, int height) {
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            try {
+                return MatrixToImageWriter.toBufferedImage(qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, width, height));
+            } catch (WriterException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

@@ -1,13 +1,12 @@
 package br.com.din.pixcraft.listeners;
 
 import br.com.din.pixcraft.listeners.custom.PaymentUpdateEvent;
-import br.com.din.pixcraft.map.CustomMapCreator;
+import br.com.din.pixcraft.qrmap.QrCodeMapCreator;
 import br.com.din.pixcraft.utils.NBTItemUtils;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.payment.PaymentStatus;
 
-import br.com.din.pixcraft.utils.QrCodeGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,8 +20,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.awt.image.BufferedImage;
 
 
 public class QrCodeProtect implements Listener {
@@ -90,10 +87,9 @@ public class QrCodeProtect implements Listener {
                 }
             }
 
-            BufferedImage qrImage = QrCodeGenerator.generate(order.getPayment().getQrData(), 128, 128);
             ConfigurationSection qrCodeMapSection = plugin.getConfig().getConfigurationSection("qr-code-map");
-            ItemStack qrMap = CustomMapCreator.create(
-                    qrImage, player.getWorld(),
+            ItemStack qrMap = QrCodeMapCreator.create(
+                    order.getPayment().getQrData(), player.getWorld(),
                     qrCodeMapSection.getString("displayname"),
                     qrCodeMapSection.getStringList("lore"));
             qrMap = NBTItemUtils.setTag(qrMap, "pixcraft_order_id", order.getId());
