@@ -1,6 +1,7 @@
 package br.com.din.pixcraft.utils;
 
 import com.cryptomorin.xseries.XMaterial;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -95,6 +96,8 @@ public class ItemStackBuilder {
     }
 
     public ItemStackBuilder hideFlags() {
+        if (Bukkit.getVersion().contains("1.7")) return this;
+
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);

@@ -3,6 +3,7 @@ package br.com.din.pixcraft.utils;
 import com.cryptomorin.xseries.XMaterial;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -14,6 +15,11 @@ import java.util.UUID;
 public class HeadUtils {
 
     public static ItemStack getCustomHead(String textureValue) {
+
+        if (Bukkit.getVersion().contains("1.7")) {
+            return new ItemStack(XMaterial.PLAYER_HEAD.parseItem());
+        }
+
         try {
             ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
             if (head == null) {
