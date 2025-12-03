@@ -6,7 +6,7 @@
 
   <groupId>br.com.din</groupId>
   <artifactId>PixCraft</artifactId>
-  <version>0.5-ALPHA</version>
+  <version>0.5.1-ALPHA</version>
   <packaging>jar</packaging>
 
   <name>PixCraft</name>
@@ -23,29 +23,30 @@
     <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.13.0</version>
-            <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
-            </configuration>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
             <version>3.5.0</version>
             <executions>
                 <execution>
                     <phase>package</phase>
-                    <goals><goal>shade</goal></goals>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
                     <configuration>
+
                         <relocations>
+                            <relocation>
+                                <pattern>com.google.common</pattern>
+                                <shadedPattern>br.com.din.pixcraft.shaded.guava</shadedPattern>
+                            </relocation>
+
                             <relocation>
                                 <pattern>de.tr7zw.changeme.nbtapi</pattern>
                                 <shadedPattern>br.com.din.pixcraft.shaded.nbtapi</shadedPattern>
                             </relocation>
                         </relocations>
-                        <minimizeJar>true</minimizeJar>
+
+                        <minimizeJar>false</minimizeJar>
+
                     </configuration>
                 </execution>
             </executions>
@@ -87,7 +88,7 @@
       <dependency>
           <groupId>com.destroystokyo.paper</groupId>
           <artifactId>paper-api</artifactId>
-          <version>1.14.4-R0.1-SNAPSHOT</version>
+          <version>1.13.2-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
       </dependency>
 
@@ -101,7 +102,7 @@
       <dependency>
           <groupId>de.tr7zw</groupId>
           <artifactId>item-nbt-api</artifactId>
-          <version>2.15.2</version>
+          <version>2.15.3</version>
       </dependency>
 
       <dependency>
@@ -132,6 +133,12 @@
           <groupId>com.google.code.gson</groupId>
           <artifactId>gson</artifactId>
           <version>2.13.1</version>
+      </dependency>
+
+      <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+          <version>21.0</version>
       </dependency>
   </dependencies>
 </project>
