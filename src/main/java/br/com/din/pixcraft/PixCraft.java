@@ -47,6 +47,11 @@ public final class PixCraft extends JavaPlugin {
         orderManager = new OrderManager(this, paymentProvider, productManager);
         shopManager = new ShopManager(this, orderManager, productManager);
 
+        logger.info("Carregando provedor de pagamento (MercadoPago)...");
+        paymentProvider = new MercadoPagoService();
+        paymentProvider.setAccessToken(getConfig().getString("payment.provider.access-token"));
+
+
         if (getConfig().getBoolean("payment.webhook.enabled")) {
             logger.info("Carregando método de verificação de pagamento (webhook)...");
             paymentChecker = new Webhook(this, paymentProvider, getConfig().getInt("payment.webhook.port"), orderManager);
@@ -70,8 +75,10 @@ public final class PixCraft extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        logger.info("Encerrando verificador de pagamento...");
-        if (paymentChecker != null) paymentChecker.stop();
+        if (paymentChecker != null) {
+            logger.info("Encerrando verificador de pagamento...");
+            paymentChecker.stop();
+        }
         if (getConfig().getBoolean("payment.cancel-on-leave")) {
             logger.info("Cancelando pagamentos pendentes...");
             for (Order order : orderManager.getOrders().values()) {

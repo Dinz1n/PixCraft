@@ -51,7 +51,7 @@ public class HeadUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ItemStack(Material.BARRIER);
+            return new ItemStack(Material.BEDROCK);
         }
     }
 

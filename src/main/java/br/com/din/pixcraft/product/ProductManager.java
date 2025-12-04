@@ -74,4 +74,8 @@ public class ProductManager extends MultiYamlDataManager<Product> {
     public Collection<Product> getProducts() {
         return getAll();
     }
+
+    public boolean containsProduct(String productId) {
+        return get(productId) != null;
+    }
 }
