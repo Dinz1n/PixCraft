@@ -3,7 +3,6 @@ package br.com.din.pixcraft.order;
 import br.com.din.pixcraft.message.MessageManager;
 import br.com.din.pixcraft.qrmap.QrCodeMapCreator;
 import br.com.din.pixcraft.payment.PaymentStatus;
-import br.com.din.pixcraft.utils.NBTItemUtils;
 import br.com.din.pixcraft.payment.gateway.PaymentProvider;
 import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.product.ProductManager;
@@ -42,18 +41,18 @@ public class OrderManager {
 
     public void processOrder(Player player, Product product) {
         if (storage.getOrders().containsKey(player.getUniqueId())) {
-            player.sendMessage(MessageManager.ORDER_LIMIT_ONE.replace("&", "§"));
+            player.sendMessage(MessageManager.ORDER_LIMIT_ONE);
             return;
         }
 
         if (product == null) {
-            player.sendMessage(MessageManager.PRODUCT_NOT_FOUND.replace("&", "§"));
+            player.sendMessage(MessageManager.PRODUCT_NOT_FOUND);
             return;
         }
 
         paymentProvider.createPayment(player.getName(), product, paymentData -> {
             if (paymentData == null) {
-                player.sendMessage(MessageManager.PAYMENT_CREATION_ERROR.replace("&", "§"));
+                player.sendMessage(MessageManager.PAYMENT_CREATION_ERROR);
                 return;
             }
 
@@ -68,25 +67,23 @@ public class OrderManager {
 
                 ConfigurationSection qrCodeMapSection = plugin.getConfig().getConfigurationSection("qr-code-map");
                 ItemStack qrMap = QrCodeMapCreator.create(
-                        paymentData.getQrData(), player.getWorld(),
+                        order.getPayment().getQrData(), player.getWorld(),
                         qrCodeMapSection.getString("displayname"),
                         qrCodeMapSection.getStringList("lore"));
 
                 if (qrMap == null) {
                     order.cancel();
                     removeOrder(player.getUniqueId());
-                    player.sendMessage(MessageManager.PAYMENT_UNEXPECTED_ERROR.replace("&", "§"));
+                    player.sendMessage(MessageManager.PAYMENT_UNEXPECTED_ERROR);
                     return;
                 }
-
-                qrMap = NBTItemUtils.setTag(qrMap, "pixcraft_order_id", order.getId());
 
                 int slotMap = qrCodeMapSection.getInt("slot");
                 if (slotMap < 0 || slotMap > 8) slotMap = 3;
                 player.getInventory().setHeldItemSlot(slotMap);
                 player.getInventory().setItem(slotMap, qrMap);
 
-                player.sendMessage(MessageManager.PAYMENT_CREATED.replace("&", "§"));
+                player.sendMessage(MessageManager.PAYMENT_CREATED);
             });
         });
     }

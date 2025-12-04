@@ -48,7 +48,7 @@ public class PaymentUpdate implements Listener {
         switch (order.getPayment().getStatus()) {
             case APPROVED:
                 if (player != null && player.isOnline()) {
-                    player.sendMessage(MessageManager.PAYMENT_APPROVED.replace("&", "§"));
+                    player.sendMessage(MessageManager.PAYMENT_APPROVED);
                     for (String command : order.getProduct().getReward()) {
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName()));
                     }
@@ -59,7 +59,7 @@ public class PaymentUpdate implements Listener {
 
             case CANCELLED:
                 if (player != null && player.isOnline()) {
-                    player.sendMessage(MessageManager.PAYMENT_CANCELLED.replace("&", "§"));
+                    player.sendMessage(MessageManager.PAYMENT_CANCELLED);
                     orderManager.removeOrder(order.getId());
                 }
                 break;

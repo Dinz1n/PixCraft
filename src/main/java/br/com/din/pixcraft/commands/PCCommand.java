@@ -40,7 +40,7 @@ public class PCCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (!sender.hasPermission("pixcraft.command")) {
-            sender.sendMessage(MessageManager.COMMAND_NO_PERMISSION.replace("&", "§"));
+            sender.sendMessage(MessageManager.COMMAND_NO_PERMISSION);
             return true;
         }
 
@@ -83,18 +83,18 @@ public class PCCommand implements CommandExecutor, TabCompleter {
         paymentProvider.setAccessToken(plugin.getConfig().getString("payment.provider.access-token"));
         productManager.reload();
         shop.getMenuManager().reload();
-        sender.sendMessage(MessageManager.PLUGIN_RELOAD_SUCCESS.replace("&", "§"));
+        sender.sendMessage(MessageManager.PLUGIN_RELOAD_SUCCESS);
         return true;
     }
 
     private boolean handleMenu(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER.replace("&", "§"));
+            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER);
             return true;
         }
 
         if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || shop.getMenuManager().getMenu(args[1]) == null) {
-            sender.sendMessage(MessageManager.MENU_NOT_FOUND.replace("&", "§"));
+            sender.sendMessage(MessageManager.MENU_NOT_FOUND);
             return true;
         }
         shop.open((Player) sender, args[1]);
@@ -103,7 +103,7 @@ public class PCCommand implements CommandExecutor, TabCompleter {
 
     private boolean handleProduct(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER.replace("&", "§"));
+            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER);
             return true;
         }
 
