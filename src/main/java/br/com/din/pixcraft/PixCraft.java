@@ -40,17 +40,18 @@ public final class PixCraft extends JavaPlugin {
         logger = getLogger();
 
         logger.info("Carregando arquivos de configuração...");
-        getConfig();
         saveDefaultConfig();
+        getConfig();
+
         messageManager = new MessageManager(this);
         productManager = new ProductManager(this);
-        orderManager = new OrderManager(this, paymentProvider, productManager);
-        shopManager = new ShopManager(this, orderManager, productManager);
 
         logger.info("Carregando provedor de pagamento (MercadoPago)...");
         paymentProvider = new MercadoPagoService();
         paymentProvider.setAccessToken(getConfig().getString("payment.provider.access-token"));
 
+        orderManager = new OrderManager(this, paymentProvider, productManager);
+        shopManager = new ShopManager(this, orderManager, productManager);
 
         if (getConfig().getBoolean("payment.webhook.enabled")) {
             logger.info("Carregando método de verificação de pagamento (webhook)...");
