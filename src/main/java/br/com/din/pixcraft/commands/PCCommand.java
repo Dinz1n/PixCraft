@@ -107,12 +107,12 @@ public class PCCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        Product product = productManager.getProduct(args[1]);
-
-        if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || product == null) {
-            sender.sendMessage(MessageManager.PRODUCT_NOT_FOUND.replace("&", "§"));
+        if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || !productManager.containsProduct(args[1])) {
+            sender.sendMessage(MessageManager.PRODUCT_NOT_FOUND);
             return true;
         }
+
+        Product product = productManager.getProduct(args[1]);
 
         Button productButton = new Button(ButtonType.PRODUCT, args[1], product.getIcon());
 
