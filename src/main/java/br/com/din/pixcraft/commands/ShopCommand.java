@@ -30,12 +30,12 @@ public class ShopCommand extends Command {
         if (args.length != 0) return false;
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER.replace("&", "§"));
+            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER);
             return true;
         }
 
         if (!sender.hasPermission("pixcraft.shop.command")) {
-            sender.sendMessage(MessageManager.COMMAND_NO_PERMISSION.replace("&", "§"));
+            sender.sendMessage(MessageManager.COMMAND_NO_PERMISSION);
             return true;
         }
 
