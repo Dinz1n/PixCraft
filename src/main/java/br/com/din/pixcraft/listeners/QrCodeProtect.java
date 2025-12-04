@@ -1,14 +1,16 @@
 package br.com.din.pixcraft.listeners;
 
 import br.com.din.pixcraft.listeners.custom.PaymentUpdateEvent;
+import br.com.din.pixcraft.qrmap.MapCompatibility;
 import br.com.din.pixcraft.qrmap.QrCodeMapCreator;
-import br.com.din.pixcraft.utils.NBTItemUtils;
+import br.com.din.pixcraft.qrmap.QrCodeMapRenderer;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.payment.PaymentStatus;
 
+import com.cryptomorin.xseries.XMaterial;
+
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +21,9 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -92,7 +97,6 @@ public class QrCodeProtect implements Listener {
                     order.getPayment().getQrData(), player.getWorld(),
                     qrCodeMapSection.getString("displayname"),
                     qrCodeMapSection.getStringList("lore"));
-            qrMap = NBTItemUtils.setTag(qrMap, "pixcraft_order_id", order.getId());
 
             int slotMap = qrCodeMapSection.getInt("slot");
             if (slotMap < 0 || slotMap > 8) slotMap = 3;
@@ -135,8 +139,26 @@ public class QrCodeProtect implements Listener {
     }
 
     private boolean isQrMap(ItemStack itemStack) {
-        if (itemStack == null || itemStack.getType().equals(Material.AIR)) return false;
-        if (NBTItemUtils.hasTag(itemStack, "pixcraft_order_id")) return true;
+        if (itemStack == null || itemStack.getType() != XMaterial.FILLED_MAP.parseMaterial()) return false;
+
+        MapView mapView = null;
+
+        try {
+            MapMeta mapMeta = (MapMeta) itemStack.getItemMeta();
+            if (mapMeta != null) mapView = mapMeta.getMapView();
+        } catch (NoSuchMethodError | NoClassDefFoundError ignored) {}
+
+        if (mapView == null) {
+            int mapId = itemStack.getDurability();
+            mapView = MapCompatibility.getMap(mapId);
+        }
+
+        if (mapView == null) return false;
+
+        for (MapRenderer renderer : mapView.getRenderers()) {
+            if (renderer instanceof QrCodeMapRenderer) return true;
+        }
+
         return false;
     }
 

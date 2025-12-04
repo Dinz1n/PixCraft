@@ -15,7 +15,6 @@ import br.com.din.pixcraft.payment.verification.Webhook;
 import br.com.din.pixcraft.shop.ShopManager;
 
 import br.com.din.pixcraft.product.ProductManager;
-import de.tr7zw.changeme.nbtapi.NBT;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -39,17 +38,6 @@ public final class PixCraft extends JavaPlugin {
 
         instance = this;
         logger = getLogger();
-
-        logger.info("Inicializando NBT-API...");
-        if (!NBT.preloadApi()) {
-            getLogger().warning("NBT-API wasn't initialized properly, disabling the plugin");
-            getPluginLoader().disablePlugin(this);
-            return;
-        }
-
-        logger.info("Carregando provedor de pagamento (MercadoPago)...");
-        paymentProvider = new MercadoPagoService();
-        paymentProvider.setAccessToken(getConfig().getString("payment.provider.access-token"));
 
         logger.info("Carregando arquivos de configuração...");
         getConfig();
