@@ -2,7 +2,9 @@
 
 [![Minecraft](https://img.shields.io/badge/Minecraft-Plugin-darkgreen.svg)]() [![MercadoPago](https://img.shields.io/badge/Payments-MercadoPago-lightblue.svg)]() [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 
-PixCraft é um plugin para **Minecraft** que implementa um sistema de pagamentos via **QR Code** integrado ao **MercadoPago**, permitindo que jogadores realizem compras dentro do jogo de forma simples e segura.  
+Transforme seu servidor Minecraft em um negócio!  **PixCraft** permite que seus 
+jogadores comprem itens direto no jogo usando **QR Code** do **MercadoPago**. 
+Simples, seguro e em tempo real com notificações no **Discord**.
 
 ---
 
