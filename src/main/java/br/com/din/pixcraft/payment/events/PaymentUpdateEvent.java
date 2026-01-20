@@ -1,4 +1,4 @@
-package br.com.din.pixcraft.listeners.custom;
+package br.com.din.pixcraft.payment.events;
 
 import br.com.din.pixcraft.order.Order;
 import org.bukkit.event.Event;
