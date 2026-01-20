@@ -2,7 +2,7 @@ package br.com.din.pixcraft.listeners;
 
 import br.com.din.pixcraft.discord.DiscordWebhook;
 import br.com.din.pixcraft.discord.WebhookConfigLoader;
-import br.com.din.pixcraft.listeners.custom.PaymentUpdateEvent;
+import br.com.din.pixcraft.payment.events.PaymentUpdateEvent;
 import br.com.din.pixcraft.message.MessageManager;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
@@ -20,11 +20,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PaymentUpdate implements Listener {
+public class PaymentUpdateListener implements Listener {
     private final JavaPlugin plugin;
     private final OrderManager orderManager;
 
-    public PaymentUpdate(JavaPlugin plugin, OrderManager orderManager) {
+    public PaymentUpdateListener(JavaPlugin plugin, OrderManager orderManager) {
         this.plugin = plugin;
         this.orderManager = orderManager;
         Bukkit.getPluginManager().registerEvents(this, plugin);
