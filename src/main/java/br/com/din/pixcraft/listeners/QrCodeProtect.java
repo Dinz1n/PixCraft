@@ -4,9 +4,8 @@ import br.com.din.pixcraft.listeners.custom.PaymentUpdateEvent;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.payment.PaymentStatus;
-import br.com.din.pixcraft.qrmap.QrCodeMapCreator;
-import br.com.din.pixcraft.qrmap.QrMapRegistry;
 
+import br.com.din.pixcraft.qrmap.QrMapService;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,17 +19,18 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
-import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class QrCodeProtect implements Listener {
     private final JavaPlugin plugin;
     private final OrderManager orderManager;
+    private final QrMapService qrMapService;
 
-    public QrCodeProtect(JavaPlugin plugin, OrderManager orderManager) {
+    public QrCodeProtect(JavaPlugin plugin, OrderManager orderManager, QrMapService qrMapService) {
         this.plugin = plugin;
         this.orderManager = orderManager;
+        this.qrMapService = qrMapService;
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
@@ -78,8 +78,8 @@ public class QrCodeProtect implements Listener {
         // Remove mapas antigos
         for (ItemStack item : player.getInventory().getContents()) {
             if (isQrMap(item)) {
-                if (QrMapRegistry.containsQrMapId(item.getDurability())) {
-                    QrMapRegistry.removeQrMapId(item.getDurability());
+                if (qrMapService.getQrMapRegistry().containsQrMapId(item.getDurability())) {
+                    qrMapService.getQrMapRegistry().removeQrMapId(item.getDurability());
                 }
                 player.getInventory().remove(item);
             }
@@ -87,7 +87,7 @@ public class QrCodeProtect implements Listener {
 
         // Cria novo QR Map
         ConfigurationSection qrCodeMapSection = plugin.getConfig().getConfigurationSection("qr-code-map");
-        ItemStack qrMap = QrCodeMapCreator.create(
+        ItemStack qrMap = qrMapService.createMap(
                 order.getPayment().getQrData(),
                 player.getWorld(),
                 qrCodeMapSection.getString("displayname"),
@@ -123,7 +123,7 @@ public class QrCodeProtect implements Listener {
     private void removeQrMap(Player player) {
         for (ItemStack item : player.getInventory().getContents()) {
             if (isQrMap(item)) {
-                QrMapRegistry.removeQrMapId(item.getDurability());
+                qrMapService.getQrMapRegistry().removeQrMapId(item.getDurability());
                 player.getInventory().remove(item);
             }
         }
@@ -137,10 +137,10 @@ public class QrCodeProtect implements Listener {
         try {
             MapView mapView = ((MapMeta) item.getItemMeta()).getMapView();
             if (mapView != null) {
-                return QrMapRegistry.containsQrMapId(mapView.getId());
+                return qrMapService.getQrMapRegistry().containsQrMapId(mapView.getId());
             }
         } catch (NoSuchMethodError e) {
-            return QrMapRegistry.containsQrMapId(item.getDurability());
+            return qrMapService.getQrMapRegistry().containsQrMapId(item.getDurability());
         }
         return false;
     }

@@ -1,12 +1,12 @@
 package br.com.din.pixcraft.order;
 
 import br.com.din.pixcraft.message.MessageManager;
-import br.com.din.pixcraft.qrmap.QrCodeMapCreator;
 import br.com.din.pixcraft.payment.PaymentStatus;
 import br.com.din.pixcraft.payment.gateway.PaymentProvider;
 import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.product.ProductManager;
 
+import br.com.din.pixcraft.qrmap.QrMapService;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -21,9 +21,11 @@ public class OrderManager {
     private final JavaPlugin plugin;
     private final OrderStorage storage;
     private final PaymentProvider paymentProvider;
+    private final QrMapService qrMapService;
 
-    public OrderManager(JavaPlugin plugin, PaymentProvider paymentProvider, ProductManager productManager) {
+    public OrderManager(JavaPlugin plugin, PaymentProvider paymentProvider, ProductManager productManager, QrMapService qrMapService) {
         this.plugin = plugin;
+        this.qrMapService = qrMapService;
         this.storage = new OrderStorage(plugin, paymentProvider, productManager);
         this.paymentProvider = paymentProvider;
 
@@ -66,7 +68,7 @@ public class OrderManager {
                 }
 
                 ConfigurationSection qrCodeMapSection = plugin.getConfig().getConfigurationSection("qr-code-map");
-                ItemStack qrMap = QrCodeMapCreator.create(
+                ItemStack qrMap = qrMapService.createMap(
                         order.getPayment().getQrData(), player.getWorld(),
                         qrCodeMapSection.getString("displayname"),
                         qrCodeMapSection.getStringList("lore"));

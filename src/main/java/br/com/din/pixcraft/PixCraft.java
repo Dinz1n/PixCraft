@@ -12,6 +12,7 @@ import br.com.din.pixcraft.payment.gateway.PaymentProvider;
 import br.com.din.pixcraft.payment.verification.PaymentChecker;
 import br.com.din.pixcraft.payment.verification.Polling;
 import br.com.din.pixcraft.payment.verification.Webhook;
+import br.com.din.pixcraft.qrmap.QrMapService;
 import br.com.din.pixcraft.shop.ShopManager;
 
 import br.com.din.pixcraft.product.ProductManager;
@@ -25,12 +26,16 @@ import java.util.logging.Logger;
 public final class PixCraft extends JavaPlugin {
     private static JavaPlugin instance;
     private Logger logger;
+
     private MessageManager messageManager;
     private ShopManager shopManager;
     private OrderManager orderManager;
     private ProductManager productManager;
+
     private PaymentProvider paymentProvider;
     private PaymentChecker paymentChecker;
+
+    private QrMapService qrMapService;
 
     @Override
     public void onEnable() {
@@ -50,7 +55,9 @@ public final class PixCraft extends JavaPlugin {
         paymentProvider = new MercadoPagoService();
         paymentProvider.setAccessToken(getConfig().getString("payment.provider.access-token"));
 
-        orderManager = new OrderManager(this, paymentProvider, productManager);
+        qrMapService = new QrMapService();
+
+        orderManager = new OrderManager(this, paymentProvider, productManager, qrMapService);
         shopManager = new ShopManager(this, orderManager, productManager);
 
         if (getConfig().getBoolean("payment.webhook.enabled")) {
@@ -64,7 +71,7 @@ public final class PixCraft extends JavaPlugin {
         }
 
         logger.info("Registrando listeners...");
-        new QrCodeProtect(this, orderManager);
+        new QrCodeProtect(this, orderManager, qrMapService);
         new PaymentUpdate(this, orderManager);
 
         logger.info("Registrando comandos...");

@@ -1,22 +1,41 @@
 package br.com.din.pixcraft.qrmap;
 
+import br.com.din.pixcraft.PixCraft;
+import br.com.din.pixcraft.yaml.YamlDataManager;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class QrMapRegistry {
+public class QrMapRegistry extends YamlDataManager {
     private static final Set<Integer> qrMapIds = new HashSet<>();
 
-    private QrMapRegistry(){}
-
-    public static void addQrMapId(int id) {
-        qrMapIds.add(id);
+    protected QrMapRegistry() {
+        super(PixCraft.getInstance(), "qrmaps.yml");
+        loadData();
     }
 
-    public static void removeQrMapId(int id) {
-        qrMapIds.remove(id);
+    public void addQrMapId(int id) {
+        if (qrMapIds.add(id)) {
+            getFileConfiguration().set("active-qrmap-ids", new ArrayList<>(qrMapIds));
+            save();
+        }
     }
 
-    public static boolean containsQrMapId(int id) {
+    public void removeQrMapId(int id) {
+        if (qrMapIds.remove(id)) {
+            getFileConfiguration().set("active-qrmap-ids", new ArrayList<>(qrMapIds));
+            save();
+        }
+    }
+
+    public boolean containsQrMapId(int id) {
         return qrMapIds.contains(id);
+    }
+
+    @Override
+    protected void loadData() {
+        qrMapIds.clear();
+        qrMapIds.addAll(getFileConfiguration().getIntegerList("active-qrmap-ids"));
     }
 }
