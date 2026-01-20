@@ -76,6 +76,21 @@ qr-code-map:
   slot: 3
 
 #===============================
+# Configuração da Loja         |
+#===============================
+shop:
+  # Comando que o jogador usa para abrir a loja
+  command-aliases:
+    - "loja"
+    - "shop"
+
+  # Menu padrão que será aberta ao executar o comando
+  default-menu: "shop"
+
+  # Arquivo da GUI de confirmação de compra
+  confirmation-gui: "confirmation_gui"
+
+#===============================
 # Notificações via Discord     |
 #===============================
 discord:

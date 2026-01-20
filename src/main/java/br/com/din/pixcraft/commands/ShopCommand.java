@@ -8,17 +8,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class ShopCommand extends Command {
     private final JavaPlugin plugin;
     private final ShopManager shopManager;
 
-    public ShopCommand(JavaPlugin plugin, String commandName, ShopManager shopManager) {
-        super(commandName);
+    public ShopCommand(JavaPlugin plugin, List<String> commandAliases, ShopManager shopManager) {
+        super(commandAliases.get(0));
         this.plugin = plugin;
 
         this.setDescription("Abre o menu da loja.");
-        this.setUsage("/" + commandName);
         this.setPermission("pixcraft.shop.command");
         this.shopManager = shopManager;
 

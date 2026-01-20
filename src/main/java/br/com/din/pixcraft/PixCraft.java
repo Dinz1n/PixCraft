@@ -2,7 +2,7 @@ package br.com.din.pixcraft;
 
 import br.com.din.pixcraft.commands.PCCommand;
 import br.com.din.pixcraft.commands.ShopCommand;
-import br.com.din.pixcraft.listeners.PaymentUpdate;
+import br.com.din.pixcraft.listeners.PaymentUpdateListener;
 import br.com.din.pixcraft.listeners.QrCodeProtect;
 import br.com.din.pixcraft.message.MessageManager;
 import br.com.din.pixcraft.order.Order;
@@ -72,11 +72,11 @@ public final class PixCraft extends JavaPlugin {
 
         logger.info("Registrando listeners...");
         new QrCodeProtect(this, orderManager, qrMapService);
-        new PaymentUpdate(this, orderManager);
+        new PaymentUpdateListener(this, orderManager);
 
         logger.info("Registrando comandos...");
-        new PCCommand(this, messageManager, productManager, shopManager, paymentProvider);
-        new ShopCommand(this, getConfig().getString("shop.command-name"), shopManager);
+        new PCCommand(this, messageManager, productManager, shopManager, paymentProvider, orderManager);
+        new ShopCommand(this, getConfig().getStringList("shop.command-aliases"), shopManager);
 
         logger.info("Plugin inicializado com sucesso!");
     }
