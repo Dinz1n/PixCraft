@@ -1,6 +1,6 @@
 package br.com.din.pixcraft.payment.verification;
 
-import br.com.din.pixcraft.listeners.custom.PaymentUpdateEvent;
+import br.com.din.pixcraft.payment.events.PaymentUpdateEvent;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.payment.PaymentStatus;
@@ -10,13 +10,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-public class Polling implements PaymentChecker {
+public class PollingPaymentVerifier implements PaymentVerifier {
     private final JavaPlugin plugin;
     private BukkitTask task;
     private final PaymentProvider paymentProvider;
     private final OrderManager orderManager;
 
-    public Polling(JavaPlugin plugin, PaymentProvider paymentProvider, OrderManager orderManager) {
+    public PollingPaymentVerifier(JavaPlugin plugin, PaymentProvider paymentProvider, OrderManager orderManager) {
         this.plugin = plugin;
         this.paymentProvider = paymentProvider;
         this.orderManager = orderManager;

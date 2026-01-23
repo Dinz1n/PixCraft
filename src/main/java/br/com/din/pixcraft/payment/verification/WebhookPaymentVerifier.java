@@ -1,6 +1,6 @@
 package br.com.din.pixcraft.payment.verification;
 
-import br.com.din.pixcraft.listeners.custom.PaymentUpdateEvent;
+import br.com.din.pixcraft.payment.events.PaymentUpdateEvent;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.payment.PaymentStatus;
@@ -17,7 +17,7 @@ import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class Webhook implements PaymentChecker {
+public class WebhookPaymentVerifier implements PaymentVerifier {
     private final JavaPlugin plugin;
     private final PaymentProvider paymentProvider;
     private final int port;
@@ -26,7 +26,7 @@ public class Webhook implements PaymentChecker {
     private final OrderManager orderManager;
     private final Logger logger = Logger.getLogger("HTTP Server");
 
-    public Webhook(JavaPlugin plugin, PaymentProvider paymentProvider, int port, OrderManager orderManager) {
+    public WebhookPaymentVerifier(JavaPlugin plugin, PaymentProvider paymentProvider, int port, OrderManager orderManager) {
         this.plugin = plugin;
         this.paymentProvider = paymentProvider;
         this.port = port;
