@@ -83,7 +83,7 @@ public class PCCommand implements CommandExecutor, TabCompleter {
 
     private boolean handleReload(CommandSender sender) {
         plugin.reloadConfig();
-        messageManager.reload();
+        messages.reload();
         paymentProvider.setAccessToken(plugin.getConfig().getString("payment.provider.access-token"));
         productManager.reload();
         shop.getMenuManager().reload();

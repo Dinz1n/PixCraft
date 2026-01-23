@@ -1,6 +1,6 @@
 package br.com.din.pixcraft.commands;
 
-import br.com.din.pixcraft.message.MessageManager;
+import br.com.din.pixcraft.message.Messages;
 import br.com.din.pixcraft.shop.ShopManager;
 
 import org.bukkit.command.*;
@@ -30,12 +30,12 @@ public class ShopCommand extends Command {
         if (args.length != 0) return false;
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER);
+            sender.sendMessage(Messages.COMMAND_ONLY_PLAYER);
             return true;
         }
 
         if (!sender.hasPermission("pixcraft.shop.command")) {
-            sender.sendMessage(MessageManager.COMMAND_NO_PERMISSION);
+            sender.sendMessage(Messages.COMMAND_NO_PERMISSION);
             return true;
         }
 

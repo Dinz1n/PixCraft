@@ -1,17 +1,18 @@
 package br.com.din.pixcraft;
 
 import br.com.din.pixcraft.commands.PCCommand;
+import br.com.din.pixcraft.commands.PixCommand;
 import br.com.din.pixcraft.commands.ShopCommand;
 import br.com.din.pixcraft.listeners.PaymentUpdateListener;
 import br.com.din.pixcraft.listeners.QrCodeProtect;
-import br.com.din.pixcraft.message.MessageManager;
+import br.com.din.pixcraft.message.Messages;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
-import br.com.din.pixcraft.payment.gateway.MercadoPagoService;
+import br.com.din.pixcraft.payment.gateway.MercadoPagoProvider;
 import br.com.din.pixcraft.payment.gateway.PaymentProvider;
-import br.com.din.pixcraft.payment.verification.PaymentChecker;
-import br.com.din.pixcraft.payment.verification.Polling;
-import br.com.din.pixcraft.payment.verification.Webhook;
+import br.com.din.pixcraft.payment.verification.PaymentVerifier;
+import br.com.din.pixcraft.payment.verification.PollingPaymentVerifier;
+import br.com.din.pixcraft.payment.verification.WebhookPaymentVerifier;
 import br.com.din.pixcraft.qrmap.QrMapService;
 import br.com.din.pixcraft.shop.ShopManager;
 
@@ -27,13 +28,13 @@ public final class PixCraft extends JavaPlugin {
     private static JavaPlugin instance;
     private Logger logger;
 
-    private MessageManager messageManager;
+    private Messages messages;
     private ShopManager shopManager;
     private OrderManager orderManager;
     private ProductManager productManager;
 
     private PaymentProvider paymentProvider;
-    private PaymentChecker paymentChecker;
+    private PaymentVerifier paymentChecker;
 
     private QrMapService qrMapService;
 
@@ -48,11 +49,11 @@ public final class PixCraft extends JavaPlugin {
         saveDefaultConfig();
         getConfig();
 
-        messageManager = new MessageManager(this);
+        messages = new Messages(this);
         productManager = new ProductManager(this);
 
         logger.info("Carregando provedor de pagamento (MercadoPago)...");
-        paymentProvider = new MercadoPagoService();
+        paymentProvider = new MercadoPagoProvider();
         paymentProvider.setAccessToken(getConfig().getString("payment.provider.access-token"));
 
         qrMapService = new QrMapService();
@@ -62,11 +63,11 @@ public final class PixCraft extends JavaPlugin {
 
         if (getConfig().getBoolean("payment.webhook.enabled")) {
             logger.info("Carregando método de verificação de pagamento (webhook)...");
-            paymentChecker = new Webhook(this, paymentProvider, getConfig().getInt("payment.webhook.port"), orderManager);
+            paymentChecker = new WebhookPaymentVerifier(this, paymentProvider, getConfig().getInt("payment.webhook.port"), orderManager);
             paymentChecker.start();
         } else {
             logger.info("Carregando método de verificação de pagamento (polling)...");
-            paymentChecker = new Polling(this, paymentProvider, orderManager);
+            paymentChecker = new PollingPaymentVerifier(this, paymentProvider, orderManager);
             paymentChecker.start();
         }
 
@@ -75,8 +76,9 @@ public final class PixCraft extends JavaPlugin {
         new PaymentUpdateListener(this, orderManager);
 
         logger.info("Registrando comandos...");
-        new PCCommand(this, messageManager, productManager, shopManager, paymentProvider, orderManager);
+        new PCCommand(this, messages, productManager, shopManager, paymentProvider, orderManager);
         new ShopCommand(this, getConfig().getStringList("shop.command-aliases"), shopManager);
+        new PixCommand(this, orderManager);
 
         logger.info("Plugin inicializado com sucesso!");
     }

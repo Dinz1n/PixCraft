@@ -1,6 +1,6 @@
 package br.com.din.pixcraft.shop.gui;
 
-import br.com.din.pixcraft.message.MessageManager;
+import br.com.din.pixcraft.message.Messages;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.product.Product;
 import br.com.din.pixcraft.shop.button.Button;
@@ -53,7 +53,7 @@ public class ShopGui implements Listener {
     public void openConfirmationMenu(Player player, Button button) {
         if (productManager.getProduct(button.getTarget()).isRequiredPermission()) {
             if (!player.hasPermission("pixcraft.product." + button.getTarget())) {
-                player.sendMessage(MessageManager.PRODUCT_NO_PERMISSION);
+                player.sendMessage(Messages.PRODUCT_NO_PERMISSION);
                 return;
             }
         }
@@ -111,7 +111,7 @@ public class ShopGui implements Listener {
 
                 if (productManager.getProduct(button.getTarget()).isRequiredPermission()) {
                     if (!player.hasPermission("pixcraft.product." + button.getTarget())) {
-                        player.sendMessage(MessageManager.PRODUCT_NO_PERMISSION);
+                        player.sendMessage(Messages.PRODUCT_NO_PERMISSION);
                         return;
                     }
                 }
