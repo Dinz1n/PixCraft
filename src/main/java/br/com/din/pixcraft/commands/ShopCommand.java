@@ -17,7 +17,7 @@ public class ShopCommand extends Command {
     public ShopCommand(JavaPlugin plugin, List<String> commandAliases, ShopManager shopManager) {
         super(commandAliases.get(0));
         this.plugin = plugin;
-
+        this.setAliases(commandAliases);
         this.setDescription("Abre o menu da loja.");
         this.setPermission("pixcraft.shop.command");
         this.shopManager = shopManager;
