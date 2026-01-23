@@ -14,3 +14,11 @@ commands:
         pixcraft.command:
           description: Permite o uso do comando principal do plugin.
           default: op
+
+  pix:
+    description: Cancela um pagamento
+    usage: "§cUse: /pix cancel"
+    permissions:
+      pixcraft.command.pix:
+        description: Permite o uso do comando /pix
+        default: op
