@@ -13,14 +13,14 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-public class MercadoPagoService implements PaymentProvider {
+public class MercadoPagoProvider implements PaymentProvider {
     private String accessToken;
     private static final transient Logger logger = Logger.getLogger("PixCraft");
     private static final Gson gson = new Gson();
     private static final OkHttpClient client = new OkHttpClient();
     private static final MediaType JSON = MediaType.parse("application/json");
 
-    public MercadoPagoService() {
+    public MercadoPagoProvider() {
     }
 
     @Override
