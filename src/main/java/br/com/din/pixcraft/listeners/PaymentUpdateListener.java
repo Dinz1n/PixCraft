@@ -3,7 +3,7 @@ package br.com.din.pixcraft.listeners;
 import br.com.din.pixcraft.discord.DiscordWebhook;
 import br.com.din.pixcraft.discord.WebhookConfigLoader;
 import br.com.din.pixcraft.payment.events.PaymentUpdateEvent;
-import br.com.din.pixcraft.message.MessageManager;
+import br.com.din.pixcraft.message.Messages;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 
@@ -48,7 +48,7 @@ public class PaymentUpdateListener implements Listener {
         switch (order.getPayment().getStatus()) {
             case APPROVED:
                 if (player != null && player.isOnline()) {
-                    player.sendMessage(MessageManager.PAYMENT_APPROVED);
+                    player.sendMessage(Messages.PAYMENT_APPROVED);
                     for (String command : order.getProduct().getReward()) {
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName()));
                     }
@@ -59,7 +59,7 @@ public class PaymentUpdateListener implements Listener {
 
             case CANCELLED:
                 if (player != null && player.isOnline()) {
-                    player.sendMessage(MessageManager.PAYMENT_CANCELLED);
+                    player.sendMessage(Messages.PAYMENT_CANCELLED);
                     orderManager.removeOrder(order.getId());
                 }
                 break;

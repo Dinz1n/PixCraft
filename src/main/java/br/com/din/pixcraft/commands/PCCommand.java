@@ -1,6 +1,7 @@
 package br.com.din.pixcraft.commands;
 
-import br.com.din.pixcraft.message.MessageManager;
+import br.com.din.pixcraft.message.Messages;
+import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.payment.gateway.PaymentProvider;
 
 import br.com.din.pixcraft.product.Product;
@@ -9,6 +10,7 @@ import br.com.din.pixcraft.shop.button.Button;
 import br.com.din.pixcraft.shop.ShopManager;
 import br.com.din.pixcraft.shop.button.ButtonType;
 import br.com.din.pixcraft.shop.menu.Menu;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,17 +23,19 @@ import java.util.stream.Collectors;
 
 public class PCCommand implements CommandExecutor, TabCompleter {
     private final JavaPlugin plugin;
-    private final MessageManager messageManager;
+    private final Messages messages;
     private final ProductManager productManager;
     private final ShopManager shop;
     private final PaymentProvider paymentProvider;
+    private final OrderManager orderManager;
 
-    public PCCommand(JavaPlugin plugin, MessageManager messageManager, ProductManager productManager, ShopManager shop, PaymentProvider paymentProvider) {
+    public PCCommand(JavaPlugin plugin, Messages messages, ProductManager productManager, ShopManager shop, PaymentProvider paymentProvider, OrderManager orderManager) {
         this.plugin = plugin;
-        this.messageManager = messageManager;
+        this.messages = messages;
         this.shop = shop;
         this.productManager = productManager;
         this.paymentProvider = paymentProvider;
+        this.orderManager = orderManager;
 
         plugin.getCommand("pixcraft").setExecutor(this);
         plugin.getCommand("pixcraft").setTabCompleter(this);
@@ -40,7 +44,7 @@ public class PCCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (!sender.hasPermission("pixcraft.command")) {
-            sender.sendMessage(MessageManager.COMMAND_NO_PERMISSION);
+            sender.sendMessage(Messages.COMMAND_NO_PERMISSION);
             return true;
         }
 
@@ -83,18 +87,18 @@ public class PCCommand implements CommandExecutor, TabCompleter {
         paymentProvider.setAccessToken(plugin.getConfig().getString("payment.provider.access-token"));
         productManager.reload();
         shop.getMenuManager().reload();
-        sender.sendMessage(MessageManager.PLUGIN_RELOAD_SUCCESS);
+        sender.sendMessage(Messages.PLUGIN_RELOAD_SUCCESS);
         return true;
     }
 
     private boolean handleMenu(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER);
+            sender.sendMessage(Messages.COMMAND_ONLY_PLAYER);
             return true;
         }
 
         if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || shop.getMenuManager().getMenu(args[1]) == null) {
-            sender.sendMessage(MessageManager.MENU_NOT_FOUND);
+            sender.sendMessage(Messages.MENU_NOT_FOUND);
             return true;
         }
         shop.open((Player) sender, args[1]);
@@ -103,12 +107,12 @@ public class PCCommand implements CommandExecutor, TabCompleter {
 
     private boolean handleProduct(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(MessageManager.COMMAND_ONLY_PLAYER);
+            sender.sendMessage(Messages.COMMAND_ONLY_PLAYER);
             return true;
         }
 
         if (args.length == 1 || args[1].isEmpty() || args[1].equals("") || !productManager.containsProduct(args[1])) {
-            sender.sendMessage(MessageManager.PRODUCT_NOT_FOUND);
+            sender.sendMessage(Messages.PRODUCT_NOT_FOUND);
             return true;
         }
 

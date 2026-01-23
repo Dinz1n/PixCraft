@@ -4,7 +4,7 @@ import br.com.din.pixcraft.yaml.YamlDataManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class MessageManager extends YamlDataManager {
+public class Messages extends YamlDataManager {
     public static String PREFIX;
     public static String COMMAND_NO_PERMISSION;
     public static String COMMAND_ONLY_PLAYER;
@@ -19,7 +19,7 @@ public class MessageManager extends YamlDataManager {
     public static String PAYMENT_CREATION_ERROR;
     public static String PAYMENT_UNEXPECTED_ERROR;
 
-    public MessageManager(JavaPlugin plugin) {
+    public Messages(JavaPlugin plugin) {
         super(plugin, "messages.yml");
         loadData();
     }

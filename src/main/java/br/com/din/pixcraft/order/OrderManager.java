@@ -1,6 +1,6 @@
 package br.com.din.pixcraft.order;
 
-import br.com.din.pixcraft.message.MessageManager;
+import br.com.din.pixcraft.message.Messages;
 import br.com.din.pixcraft.payment.PaymentStatus;
 import br.com.din.pixcraft.payment.gateway.PaymentProvider;
 import br.com.din.pixcraft.product.Product;
@@ -43,18 +43,18 @@ public class OrderManager {
 
     public void processOrder(Player player, Product product) {
         if (storage.getOrders().containsKey(player.getUniqueId())) {
-            player.sendMessage(MessageManager.ORDER_LIMIT_ONE);
+            player.sendMessage(Messages.ORDER_LIMIT_ONE);
             return;
         }
 
         if (product == null) {
-            player.sendMessage(MessageManager.PRODUCT_NOT_FOUND);
+            player.sendMessage(Messages.PRODUCT_NOT_FOUND);
             return;
         }
 
         paymentProvider.createPayment(player.getName(), product, paymentData -> {
             if (paymentData == null) {
-                player.sendMessage(MessageManager.PAYMENT_CREATION_ERROR);
+                player.sendMessage(Messages.PAYMENT_CREATION_ERROR);
                 return;
             }
 
@@ -67,7 +67,7 @@ public class OrderManager {
                     return;
                 }
 
-                ConfigurationSection qrCodeMapSection = plugin.getConfig().getConfigurationSection("qr-code-map");
+                ConfigurationSection qrCodeMapSection = plugin.getConfig().getConfigurationSection("payment.qr-code-map");
                 ItemStack qrMap = qrMapService.createMap(
                         order.getPayment().getQrData(), player.getWorld(),
                         qrCodeMapSection.getString("displayname"),
@@ -76,7 +76,7 @@ public class OrderManager {
                 if (qrMap == null) {
                     order.cancel();
                     removeOrder(player.getUniqueId());
-                    player.sendMessage(MessageManager.PAYMENT_UNEXPECTED_ERROR);
+                    player.sendMessage(Messages.PAYMENT_UNEXPECTED_ERROR);
                     return;
                 }
 
@@ -85,7 +85,7 @@ public class OrderManager {
                 player.getInventory().setHeldItemSlot(slotMap);
                 player.getInventory().setItem(slotMap, qrMap);
 
-                player.sendMessage(MessageManager.PAYMENT_CREATED);
+                player.sendMessage(Messages.PAYMENT_CREATED);
             });
         });
     }
