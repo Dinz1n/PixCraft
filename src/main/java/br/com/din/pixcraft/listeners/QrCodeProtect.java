@@ -1,15 +1,15 @@
 package br.com.din.pixcraft.listeners;
 
-import br.com.din.pixcraft.listeners.custom.PaymentUpdateEvent;
 import br.com.din.pixcraft.order.Order;
 import br.com.din.pixcraft.order.OrderManager;
 import br.com.din.pixcraft.payment.PaymentStatus;
-
+import br.com.din.pixcraft.payment.events.PaymentUpdateEvent;
 import br.com.din.pixcraft.qrmap.QrMapService;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
@@ -23,134 +23,136 @@ import org.bukkit.map.MapView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class QrCodeProtect implements Listener {
+
     private final JavaPlugin plugin;
     private final OrderManager orderManager;
     private final QrMapService qrMapService;
+    private final ConfigurationSection mapConfig;
 
     public QrCodeProtect(JavaPlugin plugin, OrderManager orderManager, QrMapService qrMapService) {
         this.plugin = plugin;
         this.orderManager = orderManager;
         this.qrMapService = qrMapService;
+        this.mapConfig = plugin.getConfig().getConfigurationSection("payment.qr-code-map");
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
         if (classExists("org.bukkit.event.player.PlayerSwapHandItemsEvent")) {
-            Bukkit.getPluginManager().registerEvents(new Listener() {
-                @EventHandler
-                public void onPlayerSwapHandItems(org.bukkit.event.player.PlayerSwapHandItemsEvent event) {
-                    event.setCancelled(isQrMap(event.getOffHandItem()));
-                }
-            }, plugin);
+            Bukkit.getPluginManager().registerEvents(new SwapListener(), plugin);
         }
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getClick() == ClickType.NUMBER_KEY) {
-            int hotbarButton = event.getHotbarButton();
-            ItemStack hotbarItem = event.getWhoClicked().getInventory().getItem(hotbarButton);
-            if (isQrMap(hotbarItem)) {
-                event.setCancelled(true);
-                return;
-            }
+    public void onInventoryClick(InventoryClickEvent e) {
+        if (e.getClick() == ClickType.NUMBER_KEY) {
+            cancelIfQrMap(e.getWhoClicked().getInventory().getItem(e.getHotbarButton()), e);
         }
-
-        if (isQrMap(event.getCurrentItem()) || isQrMap(event.getCursor())) {
-            event.setCancelled(true);
-        }
+        cancelIfQrMap(e.getCurrentItem(), e);
+        cancelIfQrMap(e.getCursor(), e);
     }
 
     @EventHandler
-    public void onPlayerDropItem(PlayerDropItemEvent event) {
-        event.setCancelled(isQrMap(event.getItemDrop().getItemStack()));
+    public void onDrop(PlayerDropItemEvent e) {
+        cancelIfQrMap(e.getItemDrop().getItemStack(), e);
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        Order order = orderManager.getOrder(player.getUniqueId());
+    public void onJoin(PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+        Order order = orderManager.getOrder(p.getUniqueId());
 
-        if (order == null || !order.getPayment().getStatus().equals(PaymentStatus.PENDING)) {
-            removeQrMap(player);
-            return;
-        }
+        removeAllQrMaps(p);
 
-        // Remove mapas antigos
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (isQrMap(item)) {
-                if (qrMapService.getQrMapRegistry().containsQrMapId(item.getDurability())) {
-                    qrMapService.getQrMapRegistry().removeQrMapId(item.getDurability());
-                }
-                player.getInventory().remove(item);
-            }
-        }
+        if (order == null || order.getPayment().getStatus() != PaymentStatus.PENDING) return;
 
-        // Cria novo QR Map
-        ConfigurationSection qrCodeMapSection = plugin.getConfig().getConfigurationSection("qr-code-map");
         ItemStack qrMap = qrMapService.createMap(
                 order.getPayment().getQrData(),
-                player.getWorld(),
-                qrCodeMapSection.getString("displayname"),
-                qrCodeMapSection.getStringList("lore")
+                p.getWorld(),
+                mapConfig.getString("displayname"),
+                mapConfig.getStringList("lore")
         );
 
-        int slotMap = qrCodeMapSection.getInt("slot");
-        if (slotMap < 0 || slotMap > 8) slotMap = 3;
-        player.getInventory().setItem(slotMap, qrMap);
-        player.getInventory().setHeldItemSlot(slotMap);
+        int slot = mapConfig.getInt("slot", 3);
+        if (slot < 0 || slot > 8) slot = 3;
+
+        p.getInventory().setItem(slot, qrMap);
+        p.getInventory().setHeldItemSlot(slot);
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        Order order = orderManager.getOrder(player.getUniqueId());
+    public void onQuit(PlayerQuitEvent e) {
+        if (!plugin.getConfig().getBoolean("payment.cancel-on-leave")) return;
 
-        if (order != null && plugin.getConfig().getBoolean("payment.cancel-on-leave")) {
+        Player p = e.getPlayer();
+        Order order = orderManager.getOrder(p.getUniqueId());
+        if (order != null) {
             order.cancel();
-            orderManager.removeOrder(player.getUniqueId());
-            removeQrMap(player);
+            orderManager.removeOrder(p.getUniqueId());
+            removeAllQrMaps(p);
         }
     }
 
     @EventHandler
-    public void onPaymentUpdate(PaymentUpdateEvent event) {
-        Player player = Bukkit.getPlayer(event.getOrder().getId());
-        if (player != null && player.isOnline()) {
-            removeQrMap(player);
+    public void onPaymentUpdate(PaymentUpdateEvent e) {
+        Player p = Bukkit.getPlayer(e.getOrder().getId());
+        if (p != null && p.isOnline()) {
+            removeAllQrMaps(p);
         }
     }
 
-    private void removeQrMap(Player player) {
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (isQrMap(item)) {
-                qrMapService.getQrMapRegistry().removeQrMapId(item.getDurability());
+
+    private void removeAllQrMaps(Player player) {
+        ItemStack[] contents = player.getInventory().getContents();
+        if (contents == null) return;
+
+        for (ItemStack item : contents) {
+            Integer mapId = getQrMapId(item);
+            if (mapId != null) {
+                qrMapService.getQrMapRegistry().removeQrMapId(mapId);
                 player.getInventory().remove(item);
             }
         }
     }
 
-    private boolean isQrMap(ItemStack item) {
-        if (item == null || item.getType() != XMaterial.FILLED_MAP.parseMaterial()) return false;
-
-        if (!(item.getItemMeta() instanceof MapMeta)) return false;
-
-        try {
-            MapView mapView = ((MapMeta) item.getItemMeta()).getMapView();
-            if (mapView != null) {
-                return qrMapService.getQrMapRegistry().containsQrMapId(mapView.getId());
-            }
-        } catch (NoSuchMethodError e) {
-            return qrMapService.getQrMapRegistry().containsQrMapId(item.getDurability());
+    private void cancelIfQrMap(ItemStack item, Cancellable e) {
+        if (getQrMapId(item) != null) {
+            e.setCancelled(true);
         }
-        return false;
     }
 
-    private static boolean classExists(String className) {
+    private Integer getQrMapId(ItemStack item) {
+        if (item == null) return null;
+        if (item.getType() != XMaterial.FILLED_MAP.parseMaterial()) return null;
+        if (!(item.getItemMeta() instanceof MapMeta)) return null;
+
+        MapMeta meta = (MapMeta) item.getItemMeta();
+
         try {
-            Class.forName(className);
+            MapView view = meta.getMapView();
+            if (view != null && qrMapService.getQrMapRegistry().containsQrMapId(view.getId())) {
+                return view.getId();
+            }
+        } catch (NoSuchMethodError e) {
+            if (qrMapService.getQrMapRegistry().containsQrMapId(item.getDurability())) {
+                return (int) item.getDurability();
+            }
+        }
+        return null;
+    }
+
+    private static boolean classExists(String name) {
+        try {
+            Class.forName(name);
             return true;
         } catch (ClassNotFoundException e) {
             return false;
+        }
+    }
+
+    private class SwapListener implements Listener {
+        @EventHandler
+        public void onSwap(org.bukkit.event.player.PlayerSwapHandItemsEvent e) {
+            cancelIfQrMap(e.getOffHandItem(), e);
         }
     }
 }
