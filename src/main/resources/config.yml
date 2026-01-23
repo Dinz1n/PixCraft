@@ -1,45 +1,17 @@
-# |========================================================|
-# |   ______   ______   .__   __.  _______  __    _______  |
-# |  /      | /  __  \  |  \ |  | |   ____||  |  /  _____| |
-# | |  ,----'|  |  |  | |   \|  | |  |__   |  | |  |  __   |
-# | |  |     |  |  |  | |  . `  | |   __|  |  | |  | |_ |  |
-# | |  `----.|  `--'  | |  |\   | |  |     |  | |  |__| |  |
-# |  \______| \______/  |__| \__| |__|     |__|  \______|  |
-# |                                                        |
-# |========================================================|
-# | Arquivo gerado para a versão 0.3 do plugin PixCraft    |
-# |========================================================|
-
-#===============================
-# Configuração da Loja         |
-#===============================
-shop:
-  # Comando que o jogador usa para abrir a loja
-  command-name: "loja"
-
-  # Menu padrão que será aberta ao executar o comando
-  default-menu: "shop"
-
-  # Arquivo da GUI de confirmação de compra
-  confirmation-gui: "confirmation_gui"
-
 #===============================
 # Configuração de Pagamento    |
 #===============================
 payment:
   provider:
-    # Nome do provedor de pagamento. No momento, só existe suporte ao Mercadopago.
+    # Nome do provedor de pagamento. No momento, só existe suporte ao MercadoPago.
     name: MERCADOPAGO
 
     # Token de acesso do provedor de pagamento (ex: Pix ou API externa)
     # IMPORTANTE:
-    # Esta integração requer CHECKOUT TRANSPARENTE do Mercado Pago.
+    # Esta integração requer CHECKOUT TRANSPARENTE do MercadoPago.
     # Configure corretamente seu token de acesso.
     # Tutorial de integração: https://www.youtube.com/watch?v=T39m3F71po8&t=556s
     access-token: "SEU_TOKEN_DE_ACESSO"
-
-  # Se true, o pagamento será cancelado caso o jogador saia do jogo ou o servidor desligue
-  cancel-on-leave: false
 
   # Habilita o webhook para receber notificações de pagamento em tempo real.
   # Se estiver "false", o plugin usará polling automaticamente.
@@ -59,21 +31,21 @@ payment:
     enabled: false
     port: 8080
 
-#===============================
-# Configuração do QR Code      |
-#===============================
-qr-code-map:
-  # Nome que será exibido no mapa
-  displayname: "&b&lCódigo QR"
+  # Cancela o pedido caso o jogador saia ou o servidor seja desligado.
+  cancel-on-leave: true
 
-  # Texto de descrição (lore) do item
-  lore:
-    - "&7Escaneie este código"
-    - "&7para realizar o pagamento."
+  qr-code-map:
+    # Nome que será exibido no mapa
+    displayname: "&b&lCódigo QR"
 
-  # Slot onde o item do QR Code aparecerá na sua hotbar
-  # Aceita valores de 0 a 8; se for inválido, retorna 3 por padrão
-  slot: 3
+    # Texto de descrição (lore) do item
+    lore:
+      - "&7Escaneie este código"
+      - "&7para realizar o pagamento."
+
+    # Slot onde o item do QR Code aparecerá na sua hotbar
+    # Aceita valores de 0 a 8; se for inválido, retorna 3 por padrão
+    slot: 3
 
 #===============================
 # Configuração da Loja         |
