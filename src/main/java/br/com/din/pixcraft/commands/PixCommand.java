@@ -53,6 +53,9 @@ public class PixCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        return Arrays.asList("cancel");
+        if (strings.length == 1) {
+            return Arrays.asList("cancel");
+        }
+        return Arrays.asList();
     }
 }
