@@ -23,7 +23,7 @@ Simples, seguro e em tempo real com notificações no **Discord**.
 
 | Comando     | Descrição                   | Permissão        |
 |-------------|-----------------------------|------------------|
-| `/pixcraft` | Comando principal do plugin | `pixcraft.admin` |
+| `/pixcraft` | Comando principal do plugin | `pixcraft.command` |
 | `/loja`     | Abre a loja do plugin       | `pixcraft.shop`  |
 
 ### Subcomandos  
