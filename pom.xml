@@ -2,132 +2,137 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>br.com.din</groupId>
-  <artifactId>PixCraft</artifactId>
-  <version>0.6.0-ALPHA</version>
-  <packaging>jar</packaging>
+    <groupId>br.com.din</groupId>
+    <artifactId>PixCraft</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
 
-  <name>PixCraft</name>
+    <name>PixCraft</name>
 
-  <description>Sistema de pagamentos via PIX no Minecraft</description>
+    <description>Sistema de pagamentos via PIX no Minecraft</description>
 
-  <properties>
-    <java.version>1.8</java.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.deploy.skip>true</maven.deploy.skip>
-  </properties>
+    <properties>
+        <revision>0.6.0-ALPHA</revision>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
 
-  <build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>3.5.0</version>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>shade</goal>
-                    </goals>
-                    <configuration>
+    <modules>
+        <module>core</module>
+    </modules>
 
-                        <relocations>
-                            <relocation>
-                                <pattern>com.google.common</pattern>
-                                <shadedPattern>br.com.din.pixcraft.shaded.guava</shadedPattern>
-                            </relocation>
-                        </relocations>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
 
-                        <minimizeJar>false</minimizeJar>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.google.common</pattern>
+                                    <shadedPattern>br.com.din.pixcraft.shaded.guava</shadedPattern>
+                                </relocation>
+                            </relocations>
 
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
+                            <minimizeJar>false</minimizeJar>
 
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-  </build>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
 
-  <repositories>
-      <repository>
-          <id>papermc-repo</id>
-          <url>https://repo.papermc.io/repository/maven-public/</url>
-      </repository>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
 
-      <repository>
-          <id>codemc-nms</id>
-          <url>https://repo.codemc.io/repository/nms/</url>
-      </repository>
+    <repositories>
+        <repository>
+            <id>papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
 
-      <repository>
-          <id>sonatype</id>
-          <url>https://oss.sonatype.org/content/groups/public/</url>
-      </repository>
+        <repository>
+            <id>codemc-nms</id>
+            <url>https://repo.codemc.io/repository/nms/</url>
+        </repository>
 
-      <repository>
-          <id>codemc-repo</id>
-          <url>https://repo.codemc.io/repository/maven-public/</url>
-          <layout>default</layout>
-      </repository>
-  </repositories>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
 
-  <dependencies>
-      <dependency>
-          <groupId>com.destroystokyo.paper</groupId>
-          <artifactId>paper-api</artifactId>
-          <version>1.13.2-R0.1-SNAPSHOT</version>
-          <scope>provided</scope>
-      </dependency>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
 
-      <dependency>
-          <groupId>org.spigotmc</groupId>
-          <artifactId>spigot</artifactId>
-          <version>1.8.8-R0.1-SNAPSHOT</version>
-          <scope>provided</scope>
-      </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>com.destroystokyo.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
 
-      <dependency>
-          <groupId>com.github.cryptomorin</groupId>
-          <artifactId>XSeries</artifactId>
-          <version>13.3.3</version>
-      </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
 
-      <dependency>
-          <groupId>com.google.zxing</groupId>
-          <artifactId>core</artifactId>
-          <version>3.3.3</version>
-      </dependency>
+        <dependency>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>13.3.3</version>
+        </dependency>
 
-      <dependency>
-          <groupId>com.google.zxing</groupId>
-          <artifactId>javase</artifactId>
-          <version>3.3.3</version>
-      </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.3.3</version>
+        </dependency>
 
-      <dependency>
-          <groupId>com.squareup.okhttp</groupId>
-          <artifactId>okhttp</artifactId>
-          <version>2.7.5</version>
-      </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.3.3</version>
+        </dependency>
 
-      <dependency>
-          <groupId>com.google.code.gson</groupId>
-          <artifactId>gson</artifactId>
-          <version>2.13.1</version>
-      </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>2.7.5</version>
+        </dependency>
 
-      <dependency>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-          <version>21.0</version>
-      </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0</version>
+        </dependency>
+    </dependencies>
 </project>
