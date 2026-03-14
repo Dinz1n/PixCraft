@@ -1,0 +1,4 @@
+name: v1_7_10_hybrid
+version: '${project.version}'
+main: br.com.din.v1_7_10_hybrid.PixCraft
+api-version: '1.13'

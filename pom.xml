@@ -22,6 +22,7 @@
 
     <modules>
         <module>core</module>
+        <module>v1_7_10_forge_spigot</module>
     </modules>
 
     <build>
