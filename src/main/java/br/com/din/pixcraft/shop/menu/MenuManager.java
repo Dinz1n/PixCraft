@@ -27,6 +27,7 @@ public class MenuManager extends MultiYamlDataManager<Menu> {
         );
         this.plugin = plugin;
         this.productManager = productManager;
+        plugin.getLogger().info("Carregando menus e botões...");
         loadAll();
     }
 

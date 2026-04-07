@@ -21,6 +21,7 @@ public class ShopManager {
         this.productManager = productManager;
 
         this.orderManager = orderManager;
+        plugin.getLogger().info("Iniciando gerenciador de menus...");
         this.menuManager = new MenuManager(plugin, productManager);
         this.shopGui = new ShopGui(plugin, orderManager, menuManager, productManager);
     }
