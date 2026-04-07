@@ -105,7 +105,7 @@ public final class PixCraft extends JavaPlugin {
         String[] lines = {
                 "§c-----------------------",
                 "§a __",
-                "§a|__) | \\_/ §6by Din",
+                "§a|__) | \\_/ §6by Din :)",
                 "§a|    | / \\ §6v" + version,
                 "§b __   __        ___ ___ ",
                 "§b/  ` |__)  /\\  |__   |  ",
