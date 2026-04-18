@@ -24,12 +24,14 @@ public class YamlConfigReader {
                 s -> applyPlaceholder(s, placeholders)).collect(Collectors.toList());
         int amount = itemData.getInt("amount");
         boolean enchanted = itemData.getBoolean("enchanted");
+        Integer customModelData = itemData.contains("custom-model-data") ? itemData.getInt("custom-model-data") : null;
 
         return new ItemStackBuilder()
                 .setMaterial(material)
                 .setDisplayName(displayname)
                 .setLore(lore)
                 .setAmount(amount)
+                .setCustomModelData(customModelData)
                 .setEnchanted(enchanted)
                 .hideFlags()
                 .build();
