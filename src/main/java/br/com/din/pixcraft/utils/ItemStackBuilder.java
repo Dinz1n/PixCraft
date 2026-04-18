@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,12 @@ public class ItemStackBuilder {
                 return this;
             }
 
+            ItemStack itemsAdderItem = parseItemsAdderItem(materialName);
+            if (itemsAdderItem != null) {
+                this.itemStack = itemsAdderItem;
+                return this;
+            }
+
             XMaterial xMat = XMaterial.matchXMaterial(materialName).orElse(null);
             if (xMat != null) {
                 ItemStack parsed = xMat.parseItem();
@@ -57,6 +64,27 @@ public class ItemStackBuilder {
         }
 
         this.itemStack = new ItemStack(Material.BEDROCK);
+        return this;
+    }
+
+    public ItemStackBuilder setCustomModelData(Integer customModelData) {
+        if (customModelData == null || customModelData <= 0 || itemStack == null) {
+            return this;
+        }
+
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) {
+            return this;
+        }
+
+        try {
+            Method method = meta.getClass().getMethod("setCustomModelData", Integer.class);
+            method.invoke(meta, customModelData);
+            itemStack.setItemMeta(meta);
+        } catch (Exception ignored) {
+            // Versões antigas (ex: 1.8 - 1.13) não suportam CustomModelData.
+        }
+
         return this;
     }
 
@@ -108,5 +136,36 @@ public class ItemStackBuilder {
 
     public ItemStack build() {
         return itemStack;
+    }
+
+    private ItemStack parseItemsAdderItem(String materialName) {
+        String lowerMaterial = materialName.toLowerCase();
+        if (!lowerMaterial.startsWith("itemsadder:") && !lowerMaterial.startsWith("ia:")) {
+            return null;
+        }
+
+        String namespacedId = materialName.substring(materialName.indexOf(':') + 1);
+        if (namespacedId.isEmpty()) {
+            return null;
+        }
+
+        try {
+            Class<?> customStackClass = Class.forName("dev.lone.itemsadder.api.CustomStack");
+            Method getInstanceMethod = customStackClass.getMethod("getInstance", String.class);
+            Object customStack = getInstanceMethod.invoke(null, namespacedId);
+            if (customStack == null) {
+                return null;
+            }
+
+            Method getItemStackMethod = customStackClass.getMethod("getItemStack");
+            Object result = getItemStackMethod.invoke(customStack);
+            if (result instanceof ItemStack) {
+                return ((ItemStack) result).clone();
+            }
+        } catch (Exception ignored) {
+            // ItemsAdder ausente ou API indisponível.
+        }
+
+        return null;
     }
 }
