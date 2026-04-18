@@ -99,7 +99,10 @@ public class OrderManager {
     }
 
     public Order getOrderByPaymentId(long paymentId) {
-        return storage.getOrders().values().stream().filter(order -> order.getPayment().getId() == paymentId).findFirst().get();
+        return storage.getOrders().values().stream()
+                .filter(order -> order.getPayment().getId() == paymentId)
+                .findFirst()
+                .orElse(null);
     }
 
     public Map<UUID, Order> getOrders() {
