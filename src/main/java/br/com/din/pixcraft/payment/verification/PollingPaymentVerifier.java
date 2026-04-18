@@ -28,7 +28,7 @@ public class PollingPaymentVerifier implements PaymentVerifier {
             if (orderManager.getOrders().isEmpty()) return;
 
             for (Order order : orderManager.getOrders().values()) {
-                if (!order.getPayment().getStatus().equals(PaymentStatus.PENDING)) return;
+                if (!order.getPayment().getStatus().equals(PaymentStatus.PENDING)) continue;
 
                 paymentProvider.getStatus(order.getPayment().getId(), paymentStatus -> {
                     if (paymentStatus.equals(PaymentStatus.PENDING)) return;

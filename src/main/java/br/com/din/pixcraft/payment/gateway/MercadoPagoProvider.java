@@ -25,9 +25,12 @@ public class MercadoPagoProvider implements PaymentProvider {
 
     @Override
     public void createPayment(String payerName, Product product, Consumer<Payment> callback) {
+        String safePayerName = payerName == null ? "player" : payerName.trim();
+        if (safePayerName.isEmpty()) safePayerName = "player";
+
         JsonObject payer = new JsonObject();
-        payer.addProperty("first_name", payerName);
-        payer.addProperty("email", payerName + "@pixcraft.com");
+        payer.addProperty("first_name", safePayerName);
+        payer.addProperty("email", "pixcraft+" + UUID.randomUUID() + "@example.com");
 
         JsonObject body = new JsonObject();
         body.add("payer", payer);
@@ -70,8 +73,8 @@ public class MercadoPagoProvider implements PaymentProvider {
 
             @Override
             public void onFailure(Request request, IOException e) {
-                logger.severe("Erro na requisição");
-                e.printStackTrace();
+                logger.severe("Erro na requisição de criação do pagamento: " + e.getMessage());
+                callback.accept(null);
             }
         });
     }
@@ -102,14 +105,15 @@ public class MercadoPagoProvider implements PaymentProvider {
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.severe("Erro ao processar status do pagamento " + paymentId + ": " + e.getMessage());
+                    callback.accept(PaymentStatus.CANCELLED);
                 }
             }
 
             @Override
             public void onFailure(Request request, IOException e) {
-                System.err.println("[PixCraft] Falha na requisição");
-                e.printStackTrace();
+                logger.severe("Falha ao consultar status do pagamento " + paymentId + ": " + e.getMessage());
+                callback.accept(PaymentStatus.CANCELLED);
             }
         });
     }
