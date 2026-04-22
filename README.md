@@ -16,6 +16,29 @@ Simples, seguro e em tempo real com notificações no **Discord**.
 - ✅ Integração com **webhook no Discord** para notificação de novos pagamentos  
 - ✅ Loja com interface de **baú**  
 - ✅ Nome do comando para abrir a loja **personalizável**  
+- ✅ Suporte a itens com **Custom Model Data** e integração com **ItemsAdder** nas ícones da GUI  
+
+---
+
+## 🧩 Ícones com ItemsAdder e Custom Model Data
+
+Nos arquivos de menu/produto (`icon`), agora você pode usar:
+
+- `material: itemsadder:namespace:item_id` (ou `material: ia:namespace:item_id`) para carregar um item do ItemsAdder.
+- `custom-model-data: <numero>` para aplicar o Custom Model Data em versões compatíveis.
+
+Exemplo:
+
+```yml
+icon:
+  material: itemsadder:my_pack:ruby_sword
+  custom-model-data: 1010
+  displayname: "&c&lEspada Ruby"
+  lore:
+    - "&7Exemplo de item customizado"
+  amount: 1
+  enchanted: false
+```
 
 ---
 
