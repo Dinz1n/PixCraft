@@ -41,6 +41,9 @@ public abstract class YamlDataManager<T> {
 
     protected void save() {
         try {
+            if (!file.exists()) {
+                file.mkdirs();
+            }
             fileConfiguration.save(file);
         } catch (IOException e) {
             throw new RuntimeException(e);
